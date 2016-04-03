@@ -64,7 +64,7 @@ public:
 	COLORREF m_clrChar;		//字符颜色
 	COLORREF m_clrComment;	//注释颜色
 
-	
+	bool GetClipboardText(CString& clipboardText, int& clipboardTextLineCount);
 	/**
 	 * 加载编辑器颜色方案
 	 * @param BOOL bRedraw 是否重绘

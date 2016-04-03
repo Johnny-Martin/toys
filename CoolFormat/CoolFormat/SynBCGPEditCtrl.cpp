@@ -530,10 +530,70 @@ static CString ColorMyTag (COLORREF clr)
 	return strColorTag;
 }
 
+bool CSynBCGPEditCtrl::GetClipboardText(CString& clipboardText, int& clipboardTextLineCount)
+{
+	RegisterClipboardFormat(_T("HTML Format"));
+
+	if (!OpenClipboard())
+		return false;
+
+	HANDLE hData = GetClipboardData(CF_TEXT);
+	if (hData == NULL)
+		return false;
+
+	size_t length = GlobalSize(hData);
+	char * text = (char*)malloc(length + 1);
+	char * pData = (char*)GlobalLock(hData);
+	strcpy(text, pData);
+	GlobalUnlock(hData);
+	CloseClipboard();
+
+	clipboardText = CString(text);
+	clipboardTextLineCount = 0;
+	for (int i = 0; i < length; ++i)
+		if (text[i] == '\n')
+			++clipboardTextLineCount;
+
+	EmptyClipboard();
+	return true;
+}
+int GetStringLine(CString& str)
+{
+	int iCount = 0;
+	for (int i = 0; i < str.GetLength(); ++i)
+	{
+		if (str[i] == '\n')
+			++iCount;
+	}
+
+	return iCount;
+}
 void CSynBCGPEditCtrl::ExportToMyHTML( CString& strHTML )
 {
 	g_uHtmlPos = 0;
 	int nStartOffset = 0; 
+
+	CString m_strBufferOld; 
+	bool bHasOldBuf = false;
+	CString strSelected = GetSelText();
+
+	/*
+	CString strSelected;
+	int iSelectedLineCount;
+	GetClipboardText(strSelected, iSelectedLineCount);*/
+	if (strSelected.GetLength() > 0)
+	{
+		bHasOldBuf = true;
+		m_nTotalLines = GetStringLine(strSelected);
+
+		m_strBufferOld = m_strBuffer;
+		m_strBuffer = strSelected;
+	}
+	else
+	{
+		m_nTotalLines = GetStringLine(m_strBuffer);
+	}
+
 	int nEndOffset = m_strBuffer.GetLength () - 1;
 
 	COLORREF clrDefaultText = GetDefaultTextColor ();
@@ -799,7 +859,10 @@ void CSynBCGPEditCtrl::ExportToMyHTML( CString& strHTML )
 	if (g_uHtmlPos != 0)
 	{
 		strHTML += _T("</span>");
-	}	
+	}
+
+	if (bHasOldBuf)
+		m_strBuffer = m_strBufferOld;
 }
 //////////////////////////////////////////////////////////////////////////
 void CSynBCGPEditCtrl::InsertComment(BOOL bForward)
