@@ -518,9 +518,9 @@
     <Image Include="res\ribbonmain.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010Black.rc" />
-    <ResourceCompile Include="..\..\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010Blue.rc" />
-    <ResourceCompile Include="..\..\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010White.rc" />
+    <ResourceCompile Include="C:\Program Files (x86)\BCGSoft\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010Black.rc" />
+    <ResourceCompile Include="C:\Program Files (x86)\BCGSoft\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010Blue.rc" />
+    <ResourceCompile Include="C:\Program Files (x86)\BCGSoft\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010White.rc" />
     <ResourceCompile Include="CoolFormat3.rc" />
   </ItemGroup>
   <ItemGroup>
