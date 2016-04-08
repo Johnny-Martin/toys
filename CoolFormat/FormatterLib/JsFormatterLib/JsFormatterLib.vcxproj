@@ -174,9 +174,13 @@ echo D | xcopy "$(ProjectDir)CFJsTidy.h" "$(SolutionDir)Include" /y </Command>
     <ClInclude Include="jsparser.h" />
     <ClInclude Include="CFJsTidy.h" />
     <ClInclude Include="realjsformatter.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="JsFormatterLib.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -175,6 +175,10 @@ echo D | xcopy "$(ProjectDir)..\..\..\src\CFCppTidy.h" "$(SolutionDir)Include" /
     <ClInclude Include="..\..\..\src\astyle.h" />
     <ClInclude Include="..\..\..\src\astyle_main.h" />
     <ClInclude Include="..\..\..\src\CFCppTidy.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AStyleLib.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
