@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClassMemLayout", "ClassMemLayout\ClassMemLayout.vcproj", "{6FD056ED-7E12-46AD-B027-C5AE5546D017}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6FD056ED-7E12-46AD-B027-C5AE5546D017}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6FD056ED-7E12-46AD-B027-C5AE5546D017}.Debug|Win32.Build.0 = Debug|Win32
+		{6FD056ED-7E12-46AD-B027-C5AE5546D017}.Release|Win32.ActiveCfg = Release|Win32
+		{6FD056ED-7E12-46AD-B027-C5AE5546D017}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
