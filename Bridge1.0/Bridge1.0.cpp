@@ -9,6 +9,7 @@ extern "C"{
 #include"lua/lauxlib.h"
 };
 #include "Bridge.h"
+#include "Bridge11.h"
 
 #pragma comment(lib, "lua/lua53.lib")
 
@@ -43,7 +44,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	luaL_openlibs(L);
 
-	Bridge<Fuck>::RegisterClass(L);
+	Bridge11<Fuck>::RegisterClass(L);
 	luaL_dofile(L, "E:\\project\\toys\\trunk\\Bridge1.0\\test.lua");
 
 	lua_close(L);

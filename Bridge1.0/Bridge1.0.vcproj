@@ -205,6 +205,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Bridge11.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>
