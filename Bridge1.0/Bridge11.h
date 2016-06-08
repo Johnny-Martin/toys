@@ -35,10 +35,15 @@ public:
 private:
 	static int thunk(lua_State* L){
 		int i = (int) lua_tonumber(L, lua_upvalueindex(1));
-
+		if(LUA_TTABLE != lua_type(L, 1)) 
+			return 0;
+		//Lua代码必须这样调 obj:Fun(...) 或者obj.Fun(obj, ...) 才行，
+		//若只是obj.Fun(...)，obj没压入栈底，这里调不到的.
 		lua_rawgeti(L, 1, 0);
-		T** obj = static_cast <T**>(lua_touserdata(L, -1));
-		lua_pop(L, 1);
+		//luaL_checkudata(L, index, tname)检查两件事: 栈的index处是不是一个userdata、该userdata的
+		//元表的名字是不是叫tname。任何一个不符合，就会引发一个错误,并将错误信息压栈
+		//这里可根据需要使用luaL_checkudata 或者 luaL_testudata，后者只检查，不抛错。
+		T** obj = static_cast < T ** >(luaL_checkudata(L, -1, T::szClassName));
 		return ((*obj)->*(T::RegisterInfo[i].mFun)) (L);
 	}
 	
@@ -65,8 +70,7 @@ private:
 	static int Destructor(lua_State* L){
 		//当table object不再被引用时，会被销毁，位于t[0]处的 userdata 也会随之被销毁，销毁userdata
 		//时，会使用它的元表的__gc方法，也就是这里。(table object的销毁是不用我们操心的)
-		//luaL_checkudata(L, index, tname)检查两件事: 栈的index处是不是一个userdata、该userdata的
-		//元表的名字是不是叫tname。任何一个不符合，就会引发一个错误（longjmp?）
+		//此时栈中只有一个元素:userdata本身
 		T** obj = static_cast < T ** >(luaL_checkudata(L, -1, T::szClassName));
 
 		if (obj != NULL && *obj != NULL)
