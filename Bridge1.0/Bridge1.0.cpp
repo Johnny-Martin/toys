@@ -45,7 +45,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	luaL_openlibs(L);
 
 	Bridge11<Fuck>::RegisterClass(L);
-	luaL_dofile(L, "D:\\code\\toys\\trunk\\Bridge1.0\\test.lua");
+	luaL_dofile(L, "D:\\code\\toys\\Bridge1.0\\test.lua");
 
 	lua_close(L);
 
