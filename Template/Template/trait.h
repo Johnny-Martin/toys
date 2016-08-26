@@ -93,6 +93,54 @@ private:
 public:
 	enum{YES = 1 == sizeof(test<T>(0))};
 	enum{NO = !YES};
+};
+
+/////////////////////////promotion trait////////////////////
+template<bool B, typename T1, typename T2>
+class IfThenElse;
+
+template<typename T1, typename T2>
+class IfThenElse<true, T1, T2> {
+public:
+	typedef T1 ResultType;
 
 };
+
+template<typename T1, typename T2>
+class IfThenElse<false, T1, T2> {
+public:
+	typedef T2 ResultType;
+
+};
+
+template<typename T1, typename T2>
+class Promotion {
+public:
+	typedef typename
+		IfThenElse<(sizeof(T1)>sizeof(T2)), 
+		           T1,
+		           typename IfThenElse<(sizeof(T1)<sizeof(T2)),
+									   T2, 
+									   void>::ResultType
+				   >::ResultType ResultType;
+};
+
+template<typename T>
+class Promotion<T, T> {
+public:
+	typedef T ResultType;
+};
+
+#define MK_PROMOTION(T1, T2, Tr)        \
+	template<> class Promotion<T1, T2> {\
+	    public:                         \
+		typedef Tr ResultType;          \
+	};                                  \
+										\
+	template<> class Promotion<T2, T1> {\
+		public:                         \
+		typedef Tr ResultType;          \
+	};                                  
+
+
 #endif
