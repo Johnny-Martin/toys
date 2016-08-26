@@ -13,6 +13,14 @@ public:
 		return 0.0;
 	}
 };
+
+struct str_a {
+	int data;
+};
+
+class cls_a {
+	int data;
+};
 int main()
 {
 	int iarr[] = { 1,3,5,7,9 };
@@ -27,7 +35,9 @@ int main()
 
 	auto ffret = Accum<float, Special>::accum(&farr[0], &farr[5]);
 	cout << ffret << "    " << typeid(ffret).name() << endl;
-
+	 
+	cout << IsClassType<str_a>::YES << endl;
+	cout << IsClassType<cls_a>::YES << endl;
+	cout << IsClassType<int>::YES << endl;
 	return 0;
 }
-

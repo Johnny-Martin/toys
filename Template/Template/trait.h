@@ -80,4 +80,22 @@ public:
 		return total;
 	}
 };
+
+template<typename T>
+class IsClassType {
+private:
+	typedef char one;
+	typedef struct { char a[2]; } two;
+
+	template<typename C>
+	static one test(int C::*);
+
+	template<typename C>
+	static two test(...);
+
+public:
+	enum{YES = 1 == sizeof(IsClassType<T>::test<T>(0))};
+	enum{NO = !YES};
+
+};
 #endif
