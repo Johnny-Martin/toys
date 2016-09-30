@@ -23,6 +23,7 @@ class cls_a {
 };
 int main()
 {
+	/*
 	int iarr[] = { 1,3,5,7,9 };
 	float farr[] = { 3.8, 4.4, 5.5, 6.8, 9.9 };
 
@@ -39,5 +40,15 @@ int main()
 	cout << IsClassType<str_a>::YES << endl;
 	cout << IsClassType<cls_a>::YES << endl;
 	cout << IsClassType<int>::YES << endl;
+	*/
+
+	/////////////////////////promotion trait////////////////////
+	auto AddRetA = Add(123, 333.4);
+	cout << AddRetA << "    " << typeid(AddRetA).name() << endl;
+	cout << 333.4 << "    " << typeid(333.4).name() << endl;
+
+	auto AddRetB = Add(123, 'a');
+	cout << AddRetB << "    " << typeid(AddRetB).name() << endl;
+
 	return 0;
 }

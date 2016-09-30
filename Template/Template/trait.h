@@ -142,5 +142,14 @@ public:
 		typedef Tr ResultType;          \
 	};                                  
 
+MK_PROMOTION(int, char, long int)
+
+template<typename T1, typename T2>
+typename Promotion<T1, T2>::ResultType
+Add(T1 left, T2 right) {
+	typedef typename Promotion<T1, T2>::ResultType ResultType;
+		return ResultType{ left + right };
+}
+
 
 #endif
