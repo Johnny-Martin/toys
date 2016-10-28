@@ -1,0 +1,20 @@
+﻿package com.qiyi.player.core.video.engine.dm.provider
+{
+    import flash.utils.*;
+
+    public class MediaData extends Object
+    {
+        public var headers:ByteArray = null;
+        public var bytes:ByteArray = null;
+        public var duration:int;
+        public var time:int;
+        public var jumpFragment:Boolean = false;
+        public var encode:Boolean = false;
+
+        public function MediaData()
+        {
+            return;
+        }// end function
+
+    }
+}
