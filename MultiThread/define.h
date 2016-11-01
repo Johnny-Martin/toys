@@ -1,6 +1,7 @@
 #pragma once
 #include "windows.h"
 #include"string"
+#include "ostream"
 #include "iostream"
 
 class Locker {
@@ -38,13 +39,25 @@ private:
 
 }
 
+class AtomCout {
+public:
+	template <typename T>
+	AtomCout& operator<< (T);
+
+	AtomCout& operator<< (std::ostream& (*op)(std::ostream&));
+private:
+	static  CSLocker::CriticalSection* m_pcs;
+};
+
+extern AtomCout atomcout;
+
 class Helper {
 public:
 	Helper(const std::string& sOwnerThreadName) :m_ThreadName(sOwnerThreadName) {
-		std::cout << m_ThreadName << " thread begin!" << std::endl;
+		//atomcout << m_ThreadName << " thread begin!" << std::endl;
 	}
 	~Helper() {
-		std::cout << m_ThreadName << " thread finish!" << std::endl;
+		//atomcout << m_ThreadName << " thread finish!" << std::endl;
 	}
 private:
 	std::string m_ThreadName;
