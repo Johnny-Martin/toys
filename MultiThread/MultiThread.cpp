@@ -13,6 +13,7 @@ CSLocker::CriticalSection g_cs;
 HANDLE hArr[2];
 DWORD WINAPI Producer(LPVOID);
 DWORD WINAPI Customer(LPVOID);
+AtomCout atomcout = AtomCout{};
 
 int main(){
 	DWORD  idP;

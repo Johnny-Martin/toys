@@ -49,16 +49,17 @@ private:
 	static  CSLocker::CriticalSection* m_pcs;
 };
 
-extern AtomCout atomcout;
-
 class Helper {
 public:
-	Helper(const std::string& sOwnerThreadName) :m_ThreadName(sOwnerThreadName) {
-		//atomcout << m_ThreadName << " thread begin!" << std::endl;
+	Helper(const std::string& sOwnerThreadName) :m_ThreadName(sOwnerThreadName) 
+											//	, m_atomcout(AtomCout())
+	{
+		std::cout << m_ThreadName << " thread begin!" << std::endl;
 	}
 	~Helper() {
-		//atomcout << m_ThreadName << " thread finish!" << std::endl;
+		std::cout << m_ThreadName << " thread finish!" << std::endl;
 	}
 private:
 	std::string m_ThreadName;
+	//AtomCout m_atomcout;
 };

@@ -38,8 +38,6 @@ CSLocker::Locker::~Locker() {
 
 CSLocker::CriticalSection* AtomCout::m_pcs = new CSLocker::CriticalSection();
 
-AtomCout atomcout = AtomCout();
-
 template <typename T>
 AtomCout& AtomCout::operator<< (T param) {
 	m_pcs->Lock();
