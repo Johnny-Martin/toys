@@ -9,25 +9,19 @@
 using namespace std;
 
 int iRes = 0;
-CRITICAL_SECTION g_CriticalSection;
+CSLocker::CriticalSection g_cs;
 HANDLE hArr[2];
 DWORD WINAPI Producer(LPVOID);
 DWORD WINAPI Customer(LPVOID);
 
 int main(){
-	HANDLE hP;
 	DWORD  idP;
-	HANDLE hC;
 	DWORD  idC;
-
-	InitializeCriticalSection(&g_CriticalSection);
 
 	hArr[0] = CreateThread(NULL, 0, Producer, 0, 0, &idP);
 	hArr[1] = CreateThread(NULL, 0, Customer, 0, 0, &idC);
 
 	WaitForMultipleObjects(2, hArr, true, INFINITE);
-
-	DeleteCriticalSection(&g_CriticalSection);
     return 0;
 }
 
@@ -35,10 +29,10 @@ DWORD WINAPI Producer(LPVOID){
 	Helper helper("Producer");
 	int count = 5;//让生产者工作5次后结束
 	while(count-- > 0){ 
-		EnterCriticalSection(&g_CriticalSection);
+		g_cs.Lock();
 			iRes++;
 			cout << iRes << endl;
-		LeaveCriticalSection(&g_CriticalSection);
+		g_cs.UnLock();
 		Sleep(1000);
 	}
 	return 0;
@@ -49,10 +43,10 @@ DWORD WINAPI Customer(LPVOID){
 	int errCount = 0;//消费者失败3次就退出
 	while (true){
 		if (iRes > 0){
-			EnterCriticalSection(&g_CriticalSection);
+			g_cs.Lock();
 				--iRes;
 				cout << iRes << "  消费1次" << endl;
-			LeaveCriticalSection(&g_CriticalSection);
+			g_cs.UnLock();
 			Sleep(1000);
 		}else{
 			errCount++;
