@@ -14,7 +14,7 @@ struct Res {
 void SwapResData(Res& A, Res& B) {
 	A.cs.Lock();
 		B.cs.Lock();
-			atomcout.out("SwapResData  ", A.data, "  ->  ", B.data);
+			atomcout.out("SwapResData  ", A.data, " && ", B.data, "  ->  ", B.data, " && ", A.data);
 			int tmp = A.data;
 			A.data = B.data;
 			B.data = tmp;
