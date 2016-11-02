@@ -58,6 +58,13 @@ public:
 		std::cout << value;
 		m_pcs->UnLock();
 	}
+
+	template<>
+	void out<EndlType>(EndlType endl) {
+		m_pcs->Lock();
+		std::cout << endl;
+		m_pcs->UnLock();
+	}
 private:
 	CSLocker::CriticalSection* m_pcs;
 };
@@ -68,7 +75,7 @@ public:
 	Helper(const std::string& sOwnerThreadName) :m_ThreadName(sOwnerThreadName) 
 											//	, m_atomcout(AtomCout())
 	{
-		atomcout.out(m_ThreadName, " thread begin! ");
+		atomcout.out(m_ThreadName, " thread begin! \n", "sss");
 	}
 	~Helper() {
 		atomcout.out(m_ThreadName , " thread finish! \n");
