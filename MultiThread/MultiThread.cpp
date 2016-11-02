@@ -13,7 +13,7 @@ CSLocker::CriticalSection g_cs;
 HANDLE hArr[2];
 DWORD WINAPI Producer(LPVOID);
 DWORD WINAPI Customer(LPVOID);
-AtomCout atomcout = AtomCout{};
+AtomCout atomcout = AtomCout(&g_cs);
 
 int main(){
 	DWORD  idP;
@@ -32,7 +32,7 @@ DWORD WINAPI Producer(LPVOID){
 	while(count-- > 0){ 
 		g_cs.Lock();
 			iRes++;
-			cout << iRes << endl;
+			std::cout << iRes << endl;
 		g_cs.UnLock();
 		Sleep(1000);
 	}
@@ -46,7 +46,7 @@ DWORD WINAPI Customer(LPVOID){
 		if (iRes > 0){
 			g_cs.Lock();
 				--iRes;
-				cout << iRes << "  消费1次" << endl;
+				std::cout << iRes << "  消费1次" << endl;
 			g_cs.UnLock();
 			Sleep(1000);
 		}else{
@@ -54,7 +54,7 @@ DWORD WINAPI Customer(LPVOID){
 			if (errCount > 3){
 				return 0;
 			}
-			cout <<" 啊哦，资源不足，等待" << endl;
+			std::cout <<" 啊哦，资源不足，等待" << endl;
 			Sleep(1000);
 		}
 	}

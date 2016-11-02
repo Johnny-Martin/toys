@@ -41,25 +41,38 @@ private:
 
 class AtomCout {
 public:
-	template <typename T>
-	AtomCout& operator<< (T);
+	AtomCout(CSLocker::CriticalSection* pcs): m_pcs(pcs){}
+	typedef std::ostream& (*EndlType)(std::ostream&);
 
-	AtomCout& operator<< (std::ostream& (*op)(std::ostream&));
+	template<typename T, typename... Args>
+	void out(T value, Args... args) {
+		m_pcs->Lock();
+		std::cout << value;
+		out(args...);
+		m_pcs->UnLock();
+	}
+
+	template<typename T>
+	void out(T value) {
+		m_pcs->Lock();
+		std::cout << value;
+		m_pcs->UnLock();
+	}
 private:
-	static  CSLocker::CriticalSection* m_pcs;
+	CSLocker::CriticalSection* m_pcs;
 };
 
+extern AtomCout atomcout;
 class Helper {
 public:
 	Helper(const std::string& sOwnerThreadName) :m_ThreadName(sOwnerThreadName) 
 											//	, m_atomcout(AtomCout())
 	{
-		std::cout << m_ThreadName << " thread begin!" << std::endl;
+		atomcout.out(m_ThreadName, " thread begin! ");
 	}
 	~Helper() {
-		std::cout << m_ThreadName << " thread finish!" << std::endl;
+		atomcout.out(m_ThreadName , " thread finish! \n");
 	}
 private:
 	std::string m_ThreadName;
-	//AtomCout m_atomcout;
 };
