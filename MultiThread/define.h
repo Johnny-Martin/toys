@@ -44,6 +44,12 @@ public:
 	AtomCout(CSLocker::CriticalSection* pcs): m_pcs(pcs){}
 	typedef std::ostream& (*EndlType)(std::ostream&);
 
+	template<typename charT, typename Traits, typename ...Args>
+	void out(std::basic_ostream<charT, Traits> &(*func)(std::basic_ostream<charT, Traits> &)) {
+
+	}
+
+
 	template<typename T, typename... Args>
 	void out(T value, Args... args) {
 		m_pcs->Lock();

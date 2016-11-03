@@ -22,13 +22,14 @@ DWORD WINAPI SwaperA(LPVOID);
 DWORD WINAPI SwaperB(LPVOID);
 
 
-Res a(5);
-Res b(6);
+ResEx a(5);
+ResEx b(1);
 
 int main(){
 	DWORD  idP;
 	DWORD  idC;
-
+	a.hMutex = CreateMutex(NULL, false, NULL);
+	b.hMutex = CreateMutex(NULL, false, NULL);
 
 	hArr[0] = CreateThread(NULL, 0, SwaperA, 0, 0, &idP);
 	hArr[1] = CreateThread(NULL, 0, SwaperB, 0, 0, &idC);
@@ -39,14 +40,14 @@ int main(){
 
 DWORD WINAPI SwaperA(LPVOID) {
 	while (true) {
-		SwapResData(a, b);
+		SwapResDataEx(a, b);
 		Sleep(1000);
 	}
 	return 0;
 }
 DWORD WINAPI SwaperB(LPVOID) {
 	while (true) {
-		SwapResData(b, a);
+		SwapResDataEx(b, a);
 		Sleep(1000);
 	}
 	return 0;
