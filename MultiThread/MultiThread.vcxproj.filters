@@ -33,6 +33,9 @@
     <ClInclude Include="Producer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="AtomCout.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

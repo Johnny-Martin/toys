@@ -7,13 +7,14 @@
 #include "define.h"
 #include "Producer.h"
 #include "DeadLock.h"
+#include "AtomCout.h"
 
 using namespace std;
 
 CSLocker::CriticalSection g_cs;
 AtomCout atomcout = AtomCout(&g_cs);
 
-HANDLE hArr[2];
+HANDLE hArr[6];
 DWORD WINAPI Producer(LPVOID);
 DWORD WINAPI Customer(LPVOID);
 void SwapResData(Res& A, Res& B);
@@ -21,20 +22,31 @@ void SwapResData(Res& A, Res& B);
 DWORD WINAPI SwaperA(LPVOID);
 DWORD WINAPI SwaperB(LPVOID);
 
+HANDLE hFull;
+HANDLE hEmpty;
+HANDLE hMutex;
+
+class Fuck : public std::ostream {
+
+};
 
 ResEx a(5);
 ResEx b(1);
+int iRes = 0;
 
 int main(){
+	AtomCoutEx << "111 " << 222 << std::endl;
 	DWORD  idP;
 	DWORD  idC;
-	a.hMutex = CreateMutex(NULL, false, NULL);
-	b.hMutex = CreateMutex(NULL, false, NULL);
+	hFull = CreateSemaphore(NULL, 0, 10, NULL);
+	hEmpty = CreateSemaphore(NULL, 10, 10, NULL);
 
-	hArr[0] = CreateThread(NULL, 0, SwaperA, 0, 0, &idP);
-	hArr[1] = CreateThread(NULL, 0, SwaperB, 0, 0, &idC);
+	for(int i = 0; i<3; ++i){
+		hArr[i+3] = CreateThread(NULL, 0, Producer, 0, 0, &idP);
+		hArr[i]   = CreateThread(NULL, 0, Customer, 0, 0, &idC);
+	}
 
-	WaitForMultipleObjects(2, hArr, true, INFINITE);
+	WaitForMultipleObjects(6, hArr, true, INFINITE);
     return 0;
 }
 
