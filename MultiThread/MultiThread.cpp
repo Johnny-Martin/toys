@@ -26,10 +26,6 @@ HANDLE hFull;
 HANDLE hEmpty;
 HANDLE hMutex;
 
-class Fuck : public std::ostream {
-
-};
-
 ResEx a(5);
 ResEx b(1);
 int iRes = 0;
