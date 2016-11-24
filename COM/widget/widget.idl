@@ -1,0 +1,35 @@
+// widget.idl : widget的 IDL 源
+//
+
+// 此文件将由 MIDL 工具处理以
+// 产生类型库(widget.tlb)和封送处理代码。
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(961D73F5-D6C6-45D7-B127-96FB62ABB7CE),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface ICalc : IDispatch{
+	[id(1)] HRESULT Add([in] DOUBLE first, [in] DOUBLE second, [out, retval] DOUBLE* out);
+};
+[
+	uuid(C18C1CFA-0E90-4102-83EC-52273EF3E0DA),
+	version(1.0),
+]
+library widgetLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(869ED3A1-1714-4D86-B063-C5C8583333DA)		
+	]
+	coclass Calc
+	{
+		[default] interface ICalc;
+	};
+};
+
