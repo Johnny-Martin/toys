@@ -1,0 +1,35 @@
+// ATLProject.idl : ATLProject的 IDL 源
+//
+
+// 此文件将由 MIDL 工具处理以
+// 产生类型库(ATLProject.tlb)和封送处理代码。
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(BFB088A8-8482-41AB-8C8B-0216256FFFBB),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface ISmpMath : IDispatch{
+	[id(101)] HRESULT Add([in] DOUBLE f, [in] DOUBLE s, [out, retval] DOUBLE* o);
+};
+[
+	uuid(A5E51041-424E-480D-9A48-B1AD199D6D30),
+	version(1.0),
+]
+library ATLProjectLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(FF06C94D-06C2-4225-9CD4-7843C744DBD2)		
+	]
+	coclass SmpMath
+	{
+		[default] interface ISmpMath;
+	};
+};
+

@@ -1,0 +1,26 @@
+HKCR
+{
+	SmpMath.1 = s 'SmpMath Class'
+	{
+		CLSID = s '{FF06C94D-06C2-4225-9CD4-7843C744DBD2}'
+	}
+	SmpMath = s 'SmpMath Class'
+	{		
+		CurVer = s 'SmpMath.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {FF06C94D-06C2-4225-9CD4-7843C744DBD2} = s 'SmpMath Class'
+		{
+			ProgID = s 'SmpMath.1'
+			VersionIndependentProgID = s 'SmpMath'
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			TypeLib = s '{A5E51041-424E-480D-9A48-B1AD199D6D30}'
+			Version = s '1.0'
+		}
+	}
+}

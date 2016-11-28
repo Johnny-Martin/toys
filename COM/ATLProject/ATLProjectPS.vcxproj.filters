@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{7eb1f5e7-66ec-4689-8110-3d1fb45d735f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="生成的文件">
+      <UniqueIdentifier>{70356278-3d2e-4b07-97c2-e6cef79b8416}</UniqueIdentifier>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ATLProjectps.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ATLProject_i.c">
+      <Filter>生成的文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ATLProject_p.c">
+      <Filter>生成的文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dlldata.c">
+      <Filter>生成的文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
