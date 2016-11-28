@@ -6,14 +6,14 @@
 //widget.dll
 
 #include "atlcomcli.h"  
-#import "C:\\tmpcode\\toys\\COM\\Debug\\widget.dll" no_namespace  
+#import "Debug\\ATLProject.dll" no_namespace  
 
 int main()
 {
 	CoInitialize(NULL);
 	CLSID clsid;
-	CLSIDFromProgID(OLESTR("ICalc.1"), &clsid);
-	CComPtr<ICalc> pFirstClass;//智能指针  
+	CLSIDFromProgID(OLESTR("SmpMath.1"), &clsid);
+	CComPtr<ISmpMath> pFirstClass;//智能指针  
 	pFirstClass.CoCreateInstance(clsid);
 	long ret = pFirstClass->Add(1, 2);
 	printf("%d\n", ret);
