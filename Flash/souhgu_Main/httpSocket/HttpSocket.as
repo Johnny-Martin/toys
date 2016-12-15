@@ -3,6 +3,7 @@
     import flash.errors.*;
     import flash.events.*;
     import flash.net.*;
+    import flash.system.*;
     import flash.utils.*;
     import httpSocket.parse.*;
     import httpSocket.utils.*;
@@ -81,6 +82,8 @@
             }
             try
             {
+                Security.allowDomain(this._host);
+                Security.allowInsecureDomain(this._host);
                 this._socket = new Socket();
                 this._socket.addEventListener(Event.CLOSE, this.onClose);
                 this._socket.addEventListener(Event.CONNECT, this.onConnect);
@@ -462,7 +465,7 @@
                         continue;
                     }
                 }
-                if (_loc_7.indexOf("302") != -1 || _loc_7.indexOf("301") != -1)
+                if (_loc_7.indexOf("302") != -1)
                 {
                     this.gc();
                     if (_loc_9 == false)

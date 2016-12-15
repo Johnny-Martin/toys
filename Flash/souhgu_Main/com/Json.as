@@ -38,48 +38,22 @@
 
         private static function decodeDetailMth(param1:String) : Object
         {
-            var _loc_3:String = null;
-            var _loc_4:Array = null;
             var _loc_5:String = null;
             var _loc_6:Array = null;
             var _loc_7:String = null;
-            var _loc_8:int = 0;
-            var _loc_9:int = 0;
             if (param1.substr(0, 1) != "{")
             {
                 return null;
             }
             var _loc_2:* = new Object();
-            if (param1.indexOf("[") == -1)
+            var _loc_3:* = param1.substring(1, (param1.length - 1));
+            var _loc_4:* = _loc_3.split(",");
+            for each (_loc_5 in _loc_4)
             {
-                _loc_3 = param1.substring(1, (param1.length - 1));
-                _loc_4 = _loc_3.split(",");
-                for each (_loc_5 in _loc_4)
-                {
-                    
-                    _loc_6 = _loc_5.split("\":\"");
-                    _loc_7 = _loc_6[0].substring(1, _loc_6[0].length);
-                    _loc_2[_loc_7] = String(_loc_6[1].substring(0, (_loc_6[1].length - 1)));
-                }
-            }
-            else
-            {
-                _loc_8 = param1.indexOf("[{");
-                _loc_9 = param1.indexOf("}]");
-                _loc_3 = param1.slice(_loc_8 + 2, _loc_9);
-                _loc_4 = _loc_3.split(",");
-                for each (_loc_5 in _loc_4)
-                {
-                    
-                    _loc_6 = _loc_5.split("\":");
-                    _loc_7 = _loc_6[0].substring(1, _loc_6[0].length);
-                    if (_loc_7 == "url")
-                    {
-                        _loc_2[_loc_7] = String(_loc_6[1].substring(1, (_loc_6[1].length - 1)));
-                        continue;
-                    }
-                    _loc_2[_loc_7] = Number(_loc_6[1]);
-                }
+                
+                _loc_6 = _loc_5.split("\":\"");
+                _loc_7 = _loc_6[0].substring(1, _loc_6[0].length);
+                _loc_2[_loc_7] = String(_loc_6[1].substring(0, (_loc_6[1].length - 1)));
             }
             return _loc_2;
         }// end function

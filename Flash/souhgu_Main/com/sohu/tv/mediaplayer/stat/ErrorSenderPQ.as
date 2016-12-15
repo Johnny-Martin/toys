@@ -33,6 +33,7 @@
 
         public function sendPQStat(param1:Object = null) : void
         {
+            return;
             var _loc_2:String = null;
             var _loc_3:String = null;
             var _loc_4:String = null;
@@ -493,6 +494,7 @@
 
         public function sendDebugInfo(param1:Object) : void
         {
+            return;
             var _loc_2:Object = {type:param1.type, code:param1.code, error:param1.error, debuginfo:param1.debuginfo, uid:param1.uid, sid:param1.sid, time:param1.time};
             new URLLoaderUtil().send(param1.url, {method:"POST", dataType:"u", data:_loc_2});
             return;
@@ -500,6 +502,7 @@
 
         public function sendFeedback() : void
         {
+            return;
             var _loc_1:String = "http://feedback.vrs.sohu.com/uploadLog.html";
             var _loc_2:* = new URLRequest(_loc_1);
             this._loader = new URLLoader();
@@ -542,6 +545,7 @@
 
         private function openWindow(param1:String) : void
         {
+            return;
             var _loc_2:URLRequest = null;
             if (!Eif.available)
             {
@@ -557,6 +561,7 @@
 
         private function sendAndLoadPlayCount() : void
         {
+            return;
             var enc:String;
             var isHdVid:Boolean;
             var tArr:Array;

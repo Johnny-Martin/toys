@@ -188,11 +188,10 @@
 
         public function pingback() : void
         {
-            var _loc_1:RegExp = null;
-            if (this._adPingback != "" && this._adPingback != null)
+            return;
+            if (this._adPingback != "")
             {
-                _loc_1 = /\[_TIME]""\[_TIME]/gi;
-                new TvSohuURLLoaderUtil().multiSend(this._adPingback.replace(_loc_1, new Date().getTime()));
+                new TvSohuURLLoaderUtil().multiSend(this._adPingback);
             }
             return;
         }// end function

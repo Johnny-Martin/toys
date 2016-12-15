@@ -15,6 +15,7 @@
 
         public function sendPQ(param1:String, param2:Number = 0) : void
         {
+            return;
             var _loc_3:String = "http://click.hd.sohu.com.cn/s.gif?";
             var _loc_4:* = PlayerConfig.currentPageUrl == "" ? (escape(PlayerConfig.outReferer)) : (escape(PlayerConfig.currentPageUrl));
             var _loc_5:* = new URLVariables();
@@ -35,6 +36,7 @@
 
         public function sendPQVPC(param1:String) : void
         {
+            return;
             var _loc_2:String = "http://click.hd.sohu.com.cn/s.gif?";
             var _loc_3:* = PlayerConfig.currentPageUrl == "" ? (escape(PlayerConfig.outReferer)) : (escape(PlayerConfig.currentPageUrl));
             var _loc_4:* = new URLVariables();
@@ -55,6 +57,7 @@
 
         public function sendPQVPCU(param1:String) : void
         {
+            return;
             var _loc_2:String = "http://click.hd.sohu.com.cn/s.gif?";
             var _loc_3:* = PlayerConfig.currentPageUrl == "" ? (escape(PlayerConfig.outReferer)) : (escape(PlayerConfig.currentPageUrl));
             var _loc_4:* = new URLVariables();
@@ -76,6 +79,7 @@
 
         public function sendPQDrog(param1:String) : void
         {
+            return;
             var _loc_2:* = new URLRequest(param1);
             _loc_2.method = URLRequestMethod.GET;
             sendToURL(_loc_2);
@@ -84,6 +88,7 @@
 
         public function sendPlayerTest(param1:String) : void
         {
+            return;
             var _loc_2:String = "http://click2.hd.sohu.com/x.gif?";
             var _loc_3:* = new URLVariables();
             _loc_3.type = param1;

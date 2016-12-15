@@ -117,19 +117,5 @@
             return;
         }// end function
 
-        override public function get hasAd() : Boolean
-        {
-            var _loc_1:Boolean = false;
-            if (_adList.length > 0 && TvSohuAds.getInstance().hasAds)
-            {
-                _loc_1 = true;
-            }
-            else
-            {
-                _loc_1 = false;
-            }
-            return _loc_1;
-        }// end function
-
     }
 }

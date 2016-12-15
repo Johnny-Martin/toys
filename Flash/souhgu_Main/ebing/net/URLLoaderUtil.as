@@ -118,6 +118,7 @@
 
         public function send(param1:String, param2:Object = null) : void
         {
+            return;
             var _loc_4:URLVariables = null;
             var _loc_5:* = undefined;
             var _loc_3:* = new URLRequest(param1);
@@ -154,6 +155,7 @@
 
         public function multiSend(param1:String) : void
         {
+            return;
             if (param1 == null || param1 == "")
             {
                 return;

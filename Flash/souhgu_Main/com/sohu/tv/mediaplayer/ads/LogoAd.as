@@ -8,7 +8,6 @@
     import flash.display.*;
     import flash.events.*;
     import flash.net.*;
-    import flash.text.*;
     import flash.utils.*;
 
     public class LogoAd extends EventDispatcher
@@ -46,19 +45,12 @@
         private var _smallH:Number;
         private var _bigW:Number;
         private var _bigH:Number;
-        private var _adDspSource:String = "";
-        private var _adIconTxt:TextField;
-        private var _adIconTxt1:TextField;
 
         public function LogoAd()
         {
-            this._adIconTxt = new TextField();
-            this._adIconTxt1 = new TextField();
             this._flogoadSmallLoader = new Loader();
             this._flogoadBigLoader = new Loader();
             this._owner = this;
-            this._adIcon = new Sprite();
-            this._adIcon1 = new Sprite();
             return;
         }// end function
 
@@ -80,13 +72,13 @@
             {
                 this._adIcon1.visible = true;
                 this._adIcon.visible = false;
-                this.setIconState(this._adIcon1, this._bigW, this._bigH);
+                this.setIconState(this._adIcon1["littleIcon"], this._bigW, this._bigH, this._adIcon1);
             }
             else
             {
                 this._adIcon1.visible = false;
                 this._adIcon.visible = true;
-                this.setIconState(this._adIcon, this._smallW, this._smallH);
+                this.setIconState(this._adIcon["littleIcon"], this._smallW, this._smallH, this._adIcon);
             }
             return;
         }// end function
@@ -95,7 +87,6 @@
         {
             this._adPath = param1.adPar;
             this._adDelay = param1.adDelayPar;
-            PlayerConfig.allTimeLogo = this._adDelay == "36000" ? (true) : (false);
             this._adInternal = param1.adIntervalPar != null && param1.adIntervalPar != undefined && param1.adIntervalPar != "undefined" ? (param1.adIntervalPar) : ("0");
             this._adClick = param1.adClick;
             this._adClickStat = param1.adClickStat != null && param1.adClickStat != undefined && param1.adClickStat != "undefined" ? (param1.adClickStat) : ("");
@@ -103,26 +94,6 @@
             this._adClicklayerflogo = param1.adClicklayerflogo != null && param1.adClicklayerflogo != undefined && param1.adClicklayerflogo != "undefined" && param1.adClicklayerflogo != "" && (param1.adClicklayerflogo == "true" || param1.adClicklayerflogo == true) ? (true) : (false);
             this._adFirsttime = param1.adFirsttimePar != null && param1.adFirsttimePar != undefined && param1.adFirsttimePar != "undefined" ? (param1.adFirsttimePar) : ("0");
             this._adHardFlag = param1.hardFlag != null && param1.hardFlag != undefined && param1.hardFlag != "undefined" && param1.hardFlag != "" ? (param1.hardFlag) : ("0");
-            this._adDspSource = param1.flogodspsource != null && param1.flogodspsource != undefined && param1.flogodspsource != "undefined" && param1.flogodspsource != "" ? (param1.flogodspsource + " ") : ("");
-            var _loc_2:* = new TextFormat();
-            _loc_2.color = 16777215;
-            _loc_2.leading = -2;
-            _loc_2.size = 9;
-            _loc_2.font = PlayerConfig.MICROSOFT_YAHEI;
-            this._adIconTxt.autoSize = TextFieldAutoSize.LEFT;
-            this._adIconTxt.selectable = false;
-            this._adIconTxt.text = this._adDspSource + "广告";
-            this._adIconTxt.setTextFormat(_loc_2);
-            Utils.drawRect(this._adIcon, 0, 0, this._adIconTxt.width, this._adIconTxt.height, 0, 0.6);
-            this._adIconTxt1.autoSize = TextFieldAutoSize.LEFT;
-            this._adIconTxt1.selectable = false;
-            this._adIconTxt1.text = this._adDspSource + "广告";
-            this._adIconTxt1.setTextFormat(_loc_2);
-            Utils.drawRect(this._adIcon1, 0, 0, this._adIconTxt1.width, this._adIconTxt1.height, 0, 0.6);
-            this._adIconTxt.x = (this._adIcon.width - this._adIconTxt.textWidth) / 2 - 1.7;
-            this._adIconTxt.y = (this._adIcon.height - this._adIconTxt.height) / 2 - 1.8;
-            this._adIconTxt1.x = (this._adIcon1.width - this._adIconTxt1.textWidth) / 2 - 1.7;
-            this._adIconTxt1.y = (this._adIcon1.height - this._adIconTxt1.height) / 2 - 1.8;
             return;
         }// end function
 
@@ -135,9 +106,10 @@
             this._flogoadSmallLoader.visible = false;
             this._hitAreSmall = new Sprite();
             Utils.drawRect(this._hitAreSmall, 0, 0, this._flogoadSmallLoader.contentLoaderInfo.width, this._flogoadSmallLoader.contentLoaderInfo.height, 16711680, 0);
-            this._adIcon.addChild(this._adIconTxt);
             this._flogoadSprite.addChild(this._adIcon);
-            this.setIconState(this._adIcon, this._flogoadSmallLoader.contentLoaderInfo.width, this._flogoadSmallLoader.contentLoaderInfo.height);
+            this._adIcon["littleIcon"].visible = true;
+            this._adIcon["bigIcon"].visible = false;
+            this.setIconState(this._adIcon["littleIcon"], this._flogoadSmallLoader.contentLoaderInfo.width, this._flogoadSmallLoader.contentLoaderInfo.height, this._adIcon);
             this._flogoadSprite.addChild(this._hitAreSmall);
             this._hitAreSmall.buttonMode = true;
             this._hitAreSmall.addEventListener(MouseEvent.CLICK, this.adClickHandler);
@@ -182,9 +154,10 @@
             this._flogoadBigLoader.visible = false;
             this._hitAreBig = new Sprite();
             Utils.drawRect(this._hitAreBig, 0, 0, this._flogoadBigLoader.contentLoaderInfo.width, this._flogoadBigLoader.contentLoaderInfo.height, 255, 0);
-            this._adIcon1.addChild(this._adIconTxt1);
             this._flogoadSprite.addChild(this._adIcon1);
-            this.setIconState(this._adIcon1, this._flogoadBigLoader.contentLoaderInfo.width, this._flogoadBigLoader.contentLoaderInfo.height);
+            this._adIcon1["littleIcon"].visible = true;
+            this._adIcon1["bigIcon"].visible = false;
+            this.setIconState(this._adIcon1["littleIcon"], this._flogoadBigLoader.contentLoaderInfo.width, this._flogoadBigLoader.contentLoaderInfo.height, this._adIcon1);
             this._flogoadSprite.addChild(this._hitAreBig);
             this._hitAreBig.buttonMode = true;
             this._hitAreBig.addEventListener(MouseEvent.CLICK, this.adClickHandler);
@@ -214,38 +187,38 @@
             return;
         }// end function
 
-        private function setIconState(param1:Sprite, param2:Number, param3:Number) : void
+        private function setIconState(param1:Sprite, param2:Number, param3:Number, param4:Sprite = null) : void
         {
-            var _loc_4:int = 0;
             switch(this._adHardFlag)
             {
                 case "0":
                 {
-                    param1.visible = false;
+                    param4.visible = false;
                     break;
                 }
                 case "1":
                 {
-                    param1.x = _loc_4;
-                    param1.y = _loc_4;
+                    var _loc_5:int = 2;
+                    param4.y = 2;
+                    param4.x = _loc_5;
                     break;
                 }
                 case "2":
                 {
-                    param1.x = _loc_4;
-                    param1.y = param3 - param1.height - _loc_4;
+                    param4.x = 2;
+                    param4.y = param3 - param1.height - 2;
                     break;
                 }
                 case "3":
                 {
-                    param1.x = param2 - param1.width - _loc_4;
-                    param1.y = _loc_4;
+                    param4.x = param2 - param1.width - 2;
+                    param4.y = 2;
                     break;
                 }
                 case "4":
                 {
-                    param1.x = param2 - param1.width - _loc_4;
-                    param1.y = param3 - param1.height - _loc_4;
+                    param4.x = param2 - param1.width - 2;
+                    param4.y = param3 - param1.height - 2;
                     break;
                 }
                 default:
@@ -258,14 +231,12 @@
 
         private function adClickHandler(event:MouseEvent) : void
         {
-            var _loc_2:RegExp = null;
             if (this._adClick != "")
             {
                 Utils.openWindow(this._adClick);
                 if (this._adClickStat != "")
                 {
-                    _loc_2 = /\[_TIME]""\[_TIME]/gi;
-                    new TvSohuURLLoaderUtil().multiSend(this._adClickStat.replace(_loc_2, new Date().getTime()));
+                    new TvSohuURLLoaderUtil().multiSend(this._adClickStat);
                 }
             }
             return;
@@ -404,7 +375,7 @@
                     _loc_2 = new JSON().parse(param1.data);
                     if (_loc_2.status == 1)
                     {
-                        _loc_3 = {adPar:_loc_2.data.flogoad, adClick:_loc_2.data.flogoclickurl, adClickStat:_loc_2.data.flogoclickmonitor, adDelayPar:_loc_2.data.flogodelay, adIntervalPar:_loc_2.data.flogointerval, adPingback:_loc_2.data.flogopingback, adClicklayerflogo:_loc_2.data.clicklayerflogo, hardFlag:_loc_2.data.flogohardflag, flogodspsource:_loc_2.data.flogodspsource};
+                        _loc_3 = {adPar:_loc_2.data.flogoad, adClick:_loc_2.data.flogoclickurl, adClickStat:_loc_2.data.flogoclickmonitor, adDelayPar:_loc_2.data.flogodelay, adIntervalPar:_loc_2.data.flogointerval, adPingback:_loc_2.data.flogopingback, adClicklayerflogo:_loc_2.data.clicklayerflogo, hardFlag:_loc_2.data.flogohardflag};
                         softInit(_loc_3);
                         play();
                     }
@@ -490,11 +461,11 @@
 
         public function pingback() : void
         {
+            return;
             var _loc_1:String = null;
             var _loc_2:String = null;
             var _loc_3:String = null;
             var _loc_4:String = null;
-            var _loc_5:RegExp = null;
             if (!this._isSendAdPlayStock && this._adPingback != "")
             {
                 this._isSendAdPlayStock = true;
@@ -510,8 +481,7 @@
             }
             if (this._adPingback != "")
             {
-                _loc_5 = /\[_TIME]""\[_TIME]/gi;
-                new TvSohuURLLoaderUtil().multiSend(this._adPingback.replace(_loc_5, new Date().getTime()));
+                new TvSohuURLLoaderUtil().multiSend(this._adPingback);
             }
             return;
         }// end function

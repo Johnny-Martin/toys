@@ -8,7 +8,6 @@
     import flash.display.*;
     import flash.events.*;
     import flash.external.*;
-    import flash.text.*;
 
     public class PauseAd2 extends EventDispatcher implements IAds
     {
@@ -17,7 +16,6 @@
         private var _adClick:String = "";
         private var _adClickStat:String = "";
         protected var _showPause:Boolean;
-        private var _loadDataAndShow:Boolean = true;
         protected var _normalAdContent:Loader;
         protected var _fullAdContent:Loader;
         protected var _owner:PauseAd;
@@ -48,21 +46,14 @@
         private var _adIcon:Sprite;
         private var _adIcon1:Sprite;
         private var _adHardFlag:String = "0";
-        private var _adDspSource:String = "";
-        private var _adIconTxt:TextField;
-        private var _adIconTxt1:TextField;
 
         public function PauseAd2()
         {
-            this._adIconTxt = new TextField();
-            this._adIconTxt1 = new TextField();
             this._normalAdCloseBtn = new Sprite();
             this._fullAdCloseBtn = new Sprite();
             this._normalAd_c = new Sprite();
             this._fullAd_c = new Sprite();
             this._adLoader = new URLLoaderUtil();
-            this._adIcon = new Sprite();
-            this._adIcon1 = new Sprite();
             return;
         }// end function
 
@@ -79,15 +70,15 @@
 
         public function softInit(param1:Object) : void
         {
-            var _loc_3:String = null;
-            var _loc_4:Array = null;
+            var _loc_2:String = null;
+            var _loc_3:Array = null;
             if (param1.adPar != null && param1.adPar != "")
             {
-                _loc_3 = param1.adPar;
-                this._adPath = _loc_3;
-                _loc_4 = this._adPath.split("|");
-                this._normalAdPath = _loc_4[0];
-                this._fullAdPath = _loc_4.length > 1 ? (_loc_4[1]) : ("");
+                _loc_2 = param1.adPar;
+                this._adPath = _loc_2;
+                _loc_3 = this._adPath.split("|");
+                this._normalAdPath = _loc_3[0];
+                this._fullAdPath = _loc_3.length > 1 ? (_loc_3[1]) : ("");
             }
             this._adClick = param1.adClick;
             this._adClickStat = param1.adClickStat != null && param1.adClickStat != undefined && param1.adClickStat != "undefined" ? (param1.adClickStat) : ("");
@@ -96,35 +87,11 @@
             this._adAlign = param1.adAlign != null && param1.adAlign != undefined && param1.adAlign != "undefined" && param1.adAlign != "" ? (param1.adAlign) : ("");
             this._adClickLayer = param1.adClickLayer != null && param1.adClickLayer != undefined && param1.adClickLayer != "undefined" && param1.adClickLayer != "" && (param1.adClickLayer == "true" || param1.adClickLayer == true) ? (true) : (false);
             this._adHardFlag = param1.hardFlag != null && param1.hardFlag != undefined && param1.hardFlag != "undefined" && param1.hardFlag != "" ? (param1.hardFlag) : ("0");
-            this._adDspSource = param1.dspSource != null && param1.dspSource != undefined && param1.dspSource != "undefined" && param1.dspSource != "" ? (param1.dspSource + " ") : ("");
-            var _loc_2:* = new TextFormat();
-            _loc_2.color = 16777215;
-            _loc_2.leading = -3;
-            _loc_2.size = 12;
-            _loc_2.font = PlayerConfig.MICROSOFT_YAHEI;
-            this._adIconTxt.autoSize = TextFieldAutoSize.LEFT;
-            this._adIconTxt.selectable = false;
-            this._adIconTxt.text = this._adDspSource + "广告";
-            this._adIconTxt.setTextFormat(_loc_2);
-            Utils.drawRect(this._adIcon, 0, 0, this._adIconTxt.width + 10, 19, 0, 0.6);
-            this._adIconTxt1.autoSize = TextFieldAutoSize.LEFT;
-            this._adIconTxt1.selectable = false;
-            this._adIconTxt1.text = this._adDspSource + "广告";
-            this._adIconTxt1.setTextFormat(_loc_2);
-            Utils.drawRect(this._adIcon1, 0, 0, this._adIconTxt1.width + 10, 19, 0, 0.6);
-            this._adIconTxt.x = (this._adIcon.width - this._adIconTxt.textWidth) / 2 - 1;
-            this._adIconTxt.y = (this._adIcon.height - this._adIconTxt.height) / 2 - 1;
-            this._adIconTxt1.x = (this._adIcon1.width - this._adIconTxt1.textWidth) / 2 - 1;
-            this._adIconTxt1.y = (this._adIcon1.height - this._adIconTxt1.height) / 2 - 1;
             return;
         }// end function
 
         public function play() : void
         {
-            if (!this._loadDataAndShow)
-            {
-                return;
-            }
             var vipUser:* = Utils.getBrowserCookie("fee_status");
             var vu:* = PlayerConfig.passportMail != "" && vipUser != "" && PlayerConfig.passportMail == vipUser ? ("&vu=" + vipUser) : (vipUser);
             var ptCode:* = /&pageUrl=""&pageUrl=/;
@@ -142,7 +109,7 @@
                     if (_loc_2.status == 1)
                     {
                         destroy();
-                        softInit({adPar:_loc_2.data.pad, adClick:_loc_2.data.padclickurl, adPingback:_loc_2.data.padpingback, adClickStat:_loc_2.data.clickmonitor, padsfunc:_loc_2.data.padsfunc, adAlign:_loc_2.data.align, adClickLayer:_loc_2.data.clicklayer, hardFlag:_loc_2.data.padhardflag, dspSource:_loc_2.data.dspsource});
+                        softInit({adPar:_loc_2.data.pad, adClick:_loc_2.data.padclickurl, adPingback:_loc_2.data.padpingback, adClickStat:_loc_2.data.clickmonitor, padsfunc:_loc_2.data.padsfunc, adAlign:_loc_2.data.align, adClickLayer:_loc_2.data.clicklayer, hardFlag:_loc_2.data.padhardflag});
                         if (_normalAdPath != "" || _fullAdPath != "")
                         {
                             AdLog.msg("暂停广告地址 : :" + _normalAdPath + "|" + _fullAdPath);
@@ -197,11 +164,11 @@
 
         public function pingback() : void
         {
+            return;
             var _loc_1:String = null;
             var _loc_2:String = null;
             var _loc_3:String = null;
             var _loc_4:String = null;
-            var _loc_5:RegExp = null;
             if (!this._isSendAdPlayStock && this._adPingback != "")
             {
                 this._isSendAdPlayStock = true;
@@ -217,8 +184,6 @@
             }
             if (this._adPingback != "")
             {
-                _loc_5 = /\[_TIME]""\[_TIME]/gi;
-                this._adPingback = this._adPingback.replace(_loc_5, new Date().getTime());
                 if (this._padSfunc != "" && ExternalInterface.available)
                 {
                     ExternalInterface.call(this._padSfunc, 0, this._adPingback);
@@ -251,8 +216,9 @@
                     this._normalAdContent.mask = this._normalAdMask;
                 }
                 this._normalAd_c.addChild(this._normalAdContent);
-                this._adIcon.addChild(this._adIconTxt);
                 this._normalAd_c.addChild(this._adIcon);
+                this._adIcon["littleIcon"].visible = false;
+                this._adIcon["bigIcon"].visible = true;
                 this.setIconState(this._adIcon, this._normalAdW, this._normalAdH);
                 this._normalAdHitAre = new Sprite();
                 Utils.drawRect(this._normalAdHitAre, 0, 0, this._normalAdW, this._normalAdH, 16711680, 0);
@@ -293,7 +259,6 @@
 
         private function setIconState(param1:Sprite, param2:Number, param3:Number) : void
         {
-            var _loc_4:int = 0;
             switch(this._adHardFlag)
             {
                 case "0":
@@ -303,26 +268,26 @@
                 }
                 case "1":
                 {
-                    param1.x = _loc_4;
-                    param1.y = _loc_4;
+                    param1.x = 2;
+                    param1.y = 2;
                     break;
                 }
                 case "2":
                 {
-                    param1.x = _loc_4;
-                    param1.y = param3 - param1.height - _loc_4;
+                    param1.x = 2;
+                    param1.y = param3 - param1.height - 2;
                     break;
                 }
                 case "3":
                 {
-                    param1.x = param2 - param1.width - _loc_4;
-                    param1.y = _loc_4;
+                    param1.x = param2 - param1.width - 2;
+                    param1.y = 2;
                     break;
                 }
                 case "4":
                 {
-                    param1.x = param2 - param1.width - _loc_4;
-                    param1.y = param3 - param1.height - _loc_4;
+                    param1.x = param2 - param1.width - 2;
+                    param1.y = param3 - param1.height - 2;
                     break;
                 }
                 default:
@@ -353,8 +318,9 @@
                     this._fullAdContent.mask = this._fullAdMask;
                 }
                 this._fullAd_c.addChild(this._fullAdContent);
-                this._adIcon1.addChild(this._adIconTxt1);
                 this._fullAd_c.addChild(this._adIcon1);
+                this._adIcon1["littleIcon"].visible = false;
+                this._adIcon1["bigIcon"].visible = true;
                 this.setIconState(this._adIcon1, this._fullAdW, this._fullAdH);
                 this._fullAdHitAre = new Sprite();
                 Utils.drawRect(this._fullAdHitAre, 0, 0, this._fullAdW, this._fullAdH, 16711680, 0);
@@ -422,14 +388,12 @@
 
         private function adClickHandler(event:MouseEvent) : void
         {
-            var _loc_2:RegExp = null;
             if (this._adClick != "")
             {
                 Utils.openWindow(this._adClick);
                 if (this._adClickStat != "")
                 {
-                    _loc_2 = /\[_TIME]""\[_TIME]/gi;
-                    new TvSohuURLLoaderUtil().multiSend(this._adClickStat.replace(_loc_2, new Date().getTime()));
+                    new TvSohuURLLoaderUtil().multiSend(this._adClickStat);
                 }
             }
             return;
@@ -474,14 +438,6 @@
                 {
                     this._normalAdHitAre.visible = false;
                 }
-                if (this._adIcon != null)
-                {
-                    this._adIcon.visible = false;
-                }
-                if (this._adIcon1 != null && this._adHardFlag != "0")
-                {
-                    this._adIcon1.visible = true;
-                }
             }
             else
             {
@@ -500,14 +456,6 @@
                 if (this._normalAdHitAre != null)
                 {
                     this._normalAdHitAre.visible = this._adClickLayer;
-                }
-                if (this._adIcon != null && this._adHardFlag != "0")
-                {
-                    this._adIcon.visible = true;
-                }
-                if (this._adIcon1 != null)
-                {
-                    this._adIcon1.visible = false;
                 }
             }
             return;
@@ -625,7 +573,7 @@
 
         public function get hasAd() : Boolean
         {
-            return true;
+            return false;
         }// end function
 
         public function get adAlign() : String
@@ -685,10 +633,8 @@
                 this._normalAdContent.contentLoaderInfo.sharedEvents.removeEventListener("noPad", this.noPadHandler);
                 try
                 {
-                    this._adIcon.removeChild(this._adIconTxt);
                     this._normalAd_c.removeChild(this._normalAdContent);
                     this._normalAd_c.removeChild(this._normalAdCloseBtn);
-                    this._normalAd_c.removeChild(this._adIcon);
                     this._container.removeChild(this._normalAd_c);
                 }
                 catch (evt)
@@ -701,10 +647,8 @@
                 this._fullAdContent.contentLoaderInfo.sharedEvents.removeEventListener("noPad", this.noPadHandler);
                 try
                 {
-                    this._adIcon1.removeChild(this._adIconTxt1);
                     this._fullAd_c.removeChild(this._fullAdContent);
                     this._fullAd_c.removeChild(this._fullAdCloseBtn);
-                    this._fullAd_c.removeChild(this._adIcon1);
                     this._container.removeChild(this._fullAd_c);
                 }
                 catch (evt)
@@ -821,17 +765,6 @@
         {
             this._adIcon = new param1;
             this._adIcon1 = new param1;
-            return;
-        }// end function
-
-        public function get loadDataAndShow() : Boolean
-        {
-            return this._loadDataAndShow;
-        }// end function
-
-        public function set loadDataAndShow(param1:Boolean) : void
-        {
-            this._loadDataAndShow = param1;
             return;
         }// end function
 

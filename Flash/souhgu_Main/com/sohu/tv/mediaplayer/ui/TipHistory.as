@@ -62,7 +62,6 @@
         private var _isShowVolKeyboardTip:Boolean = false;
         private var _isShowProKeyboardTip:Boolean = false;
         private var _jb:Sprite;
-        private var isFirst:Boolean = true;
         public static const SEEK:String = "seekkk";
         public static const TOSTART_BTN_ONCLICK:String = "tostart_btn_onclick";
 
@@ -1247,77 +1246,109 @@
         public function playProgress(param1) : void
         {
             var _loc_4:String = null;
-            var _loc_5:Number = NaN;
-            var _loc_6:Boolean = false;
-            var _loc_7:uint = 0;
-            var _loc_8:Object = null;
-            var _loc_9:Array = null;
+            var _loc_5:Boolean = false;
+            var _loc_6:uint = 0;
+            var _loc_7:Object = null;
+            var _loc_8:Array = null;
             var _loc_2:* = param1.obj.nowTime;
             var _loc_3:* = param1.obj.totTime;
             if (Eif.available && ExternalInterface.available)
             {
-                if (this.isFirst && this._so)
-                {
-                    this.isFirst = false;
-                    this._so.data.lastPlayedDate = new Date().getTime();
-                    this._so.data.lastPlayedVid = PlayerConfig.vid;
-                    try
-                    {
-                        this._so.flush();
-                    }
-                    catch (e:Error)
-                    {
-                    }
-                }
-                if (Math.abs(Math.floor(_loc_2) - this._playedTime) >= 30)
+                if (Math.abs(_loc_2 - this._playedTime) >= 30)
                 {
                     _loc_4 = "";
-                    _loc_5 = new Date().getTime();
-                    this._so.data.lastPlayedDate = _loc_5;
-                    this._so.data.lastPlayedVid = PlayerConfig.vid;
                     if (this._so.data.list != undefined && this._so.data.list != null)
                     {
-                        _loc_6 = false;
-                        _loc_7 = 0;
-                        while (_loc_7 < this._so.data.list.length)
+                        _loc_5 = false;
+                        _loc_6 = 0;
+                        while (_loc_6 < this._so.data.list.length)
                         {
                             
-                            if (this._so.data.list[_loc_7].vid == PlayerConfig.vid)
+                            if (this._so.data.list[_loc_6].vid == PlayerConfig.vid)
                             {
-                                _loc_6 = true;
-                                if (this._so.data.list[_loc_7].playedTime != _loc_2)
+                                _loc_5 = true;
+                                if (this._so.data.list[_loc_6].playedTime != _loc_2)
                                 {
-                                    this._so.data.list[_loc_7].playedTime = _loc_2;
+                                    this._so.data.list[_loc_6].playedTime = _loc_2;
+                                    try
+                                    {
+                                        _loc_4 = this._so.flush();
+                                        if (_loc_4 == SharedObjectFlushStatus.PENDING)
+                                        {
+                                            this._so.addEventListener(NetStatusEvent.NET_STATUS, this.onStatusShare);
+                                        }
+                                        else if (_loc_4 == SharedObjectFlushStatus.FLUSHED)
+                                        {
+                                        }
+                                    }
+                                    catch (e:Error)
+                                    {
+                                    }
                                     break;
                                 }
                             }
-                            _loc_7 = _loc_7 + 1;
+                            _loc_6 = _loc_6 + 1;
                         }
-                        if (!_loc_6)
+                        if (!_loc_5)
                         {
-                            _loc_8 = {vid:PlayerConfig.vid, playedTime:_loc_2};
+                            _loc_7 = {vid:PlayerConfig.vid, playedTime:_loc_2};
                             if (this._so.data.list.length < 20)
                             {
-                                this._so.data.list.push(_loc_8);
+                                this._so.data.list.push(_loc_7);
+                                try
+                                {
+                                    _loc_4 = this._so.flush();
+                                    if (_loc_4 == SharedObjectFlushStatus.PENDING)
+                                    {
+                                        this._so.addEventListener(NetStatusEvent.NET_STATUS, this.onStatusShare);
+                                    }
+                                    else if (_loc_4 == SharedObjectFlushStatus.FLUSHED)
+                                    {
+                                    }
+                                }
+                                catch (e:Error)
+                                {
+                                }
                             }
                             else
                             {
                                 this._so.data.list.shift();
-                                this._so.data.list.push(_loc_8);
+                                this._so.data.list.push(_loc_7);
+                                try
+                                {
+                                    _loc_4 = this._so.flush();
+                                    if (_loc_4 == SharedObjectFlushStatus.PENDING)
+                                    {
+                                        this._so.addEventListener(NetStatusEvent.NET_STATUS, this.onStatusShare);
+                                    }
+                                    else if (_loc_4 == SharedObjectFlushStatus.FLUSHED)
+                                    {
+                                    }
+                                }
+                                catch (e:Error)
+                                {
+                                }
                             }
                         }
                     }
                     else
                     {
-                        _loc_9 = [{vid:PlayerConfig.vid, playedTime:_loc_2}];
-                        this._so.data.list = _loc_9;
-                    }
-                    try
-                    {
-                        _loc_4 = this._so.flush();
-                    }
-                    catch (e:Error)
-                    {
+                        _loc_8 = [{vid:PlayerConfig.vid, playedTime:_loc_2}];
+                        this._so.data.list = _loc_8;
+                        try
+                        {
+                            _loc_4 = this._so.flush();
+                            if (_loc_4 == SharedObjectFlushStatus.PENDING)
+                            {
+                                this._so.addEventListener(NetStatusEvent.NET_STATUS, this.onStatusShare);
+                            }
+                            else if (_loc_4 == SharedObjectFlushStatus.FLUSHED)
+                            {
+                            }
+                        }
+                        catch (e:Error)
+                        {
+                        }
                     }
                     if (PlayerConfig.preludeTime > 0)
                     {

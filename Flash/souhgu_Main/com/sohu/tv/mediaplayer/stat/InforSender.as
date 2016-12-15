@@ -55,6 +55,7 @@
 
         public function sendMesg(param1:String, param2:Number, param3:String = "", param4:String = "", param5:String = "http://data.vrs.sohu.com/player.gif", param6:uint = 0, param7:Object = null) : void
         {
+            return;
             var _loc_21:String = null;
             var _loc_22:String = null;
             var _loc_23:Array = null;
@@ -669,6 +670,7 @@
 
         public function sendCustomMesg(param1:String) : void
         {
+            return;
             var _loc_2:URLRequest = null;
             if (PlayerConfig.isPreview)
             {

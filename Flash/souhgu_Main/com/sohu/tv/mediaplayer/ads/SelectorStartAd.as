@@ -348,8 +348,8 @@
 
         public function play() : void
         {
-            this._container.visible = true;
             this._state = "playing";
+            return;
             this.showSelector();
             this.dispatch(TvSohuAdsEvent.SCREENSHOWN);
             return;

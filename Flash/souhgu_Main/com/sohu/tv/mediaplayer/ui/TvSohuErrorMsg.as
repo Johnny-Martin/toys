@@ -4,10 +4,8 @@
     import com.sohu.tv.mediaplayer.stat.*;
     import ebing.*;
     import ebing.net.*;
-    import ebing.utils.*;
     import flash.display.*;
     import flash.events.*;
-    import flash.external.*;
     import flash.text.*;
     import flash.utils.*;
 
@@ -198,12 +196,6 @@
 
         private function linkHandler(event:TextEvent) : void
         {
-            if (event.text == "limit")
-            {
-                ExternalInterface.call("window.fb_pullIPFeedback");
-                LogManager.msg("点击反馈弹窗！");
-                return;
-            }
             ErrorSenderPQ.getInstance().sendFeedback();
             return;
         }// end function

@@ -474,6 +474,7 @@
             if (this.peer != null && this.peer.mainPeer != null)
             {
                 this.logstr = this.logstr + (_loc_6 + "--" + this.peer.mainPeer.slice(0, 8) + ":" + param1 + "\n");
+                trace(Config.getInstance().vid + ":" + Config.getInstance().pid);
                 if (Config.getInstance().isLog && Config.getInstance().pid == Config.getInstance().testpid)
                 {
                     if (Config.getInstance().isfirstlog)
@@ -1081,8 +1082,10 @@
         public function nsTime() : Number
         {
             var _loc_1:Number = NaN;
-            var _loc_3:Number = NaN;
+            var _loc_4:Number = NaN;
             var _loc_2:* = this.streamMang.nsTime;
+            var _loc_3:* = "nsTime  isseek:" + this._isSeek + " oldtime:" + this.oldtime + " seekoutoffset:" + this.seekoutoffset + " seekinoffset:" + this.seekinoffset + " isSeekInsertByte:" + this.isSeekInsertByte + " time:" + _loc_2 + " realseek:" + this.realseek + " _seekoffset:" + this._seekoffset + " fileretime:" + (this.fileo != null ? (this.fileo.retime) : (0));
+            trace(_loc_3);
             this.checkNsDataMth();
             if (this._isSeek)
             {
@@ -1094,8 +1097,8 @@
             }
             else if (this.isSeekInsertByte)
             {
-                _loc_3 = _loc_2 + this.seekoutoffset;
-                _loc_1 = _loc_3 > this._seekoffset ? (_loc_3) : (this._seekoffset);
+                _loc_4 = _loc_2 + this.seekoutoffset;
+                _loc_1 = _loc_4 > this._seekoffset ? (_loc_4) : (this._seekoffset);
                 if (_loc_1 > this.fileList.timestotal)
                 {
                     _loc_1 = this.oldtime;

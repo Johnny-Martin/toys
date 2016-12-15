@@ -7,7 +7,6 @@
     import ebing.net.*;
     import flash.display.*;
     import flash.events.*;
-    import flash.text.*;
 
     public class CtrlBarAd extends EventDispatcher
     {
@@ -35,22 +34,15 @@
         private var _adIcon:Sprite;
         private var _adIcon1:Sprite;
         private var _adHardFlag:String = "0";
-        private var _adDspSource:String = "";
-        private var _adIconTxt:TextField;
-        private var _adIconTxt1:TextField;
 
         public function CtrlBarAd()
         {
-            this._adIconTxt = new TextField();
-            this._adIconTxt1 = new TextField();
             this._normalAdMask = new Sprite();
             this._normalAd_c = new Sprite();
             this._fullAd_c = new Sprite();
             this._fullAdMask = new Sprite();
             Utils.drawRect(this._normalAdMask, 0, 0, 280, 20, 0, 1);
             Utils.drawRect(this._fullAdMask, 0, 0, 420, 20, 0, 1);
-            this._adIcon = new Sprite();
-            this._adIcon1 = new Sprite();
             return;
         }// end function
 
@@ -76,26 +68,6 @@
             this._adPingback = param1.adPingback != null && param1.adPingback != undefined && param1.adPingback != "undefined" ? (param1.adPingback) : ("");
             this._adClicklayerfbar = param1.adClicklayerfbar != null && param1.adClicklayerfbar != undefined && param1.adClicklayerfbar != "undefined" && param1.adClicklayerfbar != "" && (param1.adClicklayerfbar == true || param1.adClicklayerfbar == "true") ? (true) : (false);
             this._adHardFlag = param1.hardFlag != null && param1.hardFlag != undefined && param1.hardFlag != "undefined" && param1.hardFlag != "" ? (param1.hardFlag) : ("0");
-            this._adDspSource = param1.fbardspsource != null && param1.fbardspsource != undefined && param1.fbardspsource != "undefined" && param1.fbardspsource != "" ? (param1.fbardspsource + " ") : ("");
-            var _loc_3:* = new TextFormat();
-            _loc_3.color = 16777215;
-            _loc_3.leading = -2;
-            _loc_3.size = 9;
-            _loc_3.font = PlayerConfig.MICROSOFT_YAHEI;
-            this._adIconTxt.autoSize = TextFieldAutoSize.LEFT;
-            this._adIconTxt.selectable = false;
-            this._adIconTxt.text = this._adDspSource + "广告";
-            this._adIconTxt.setTextFormat(_loc_3);
-            Utils.drawRect(this._adIcon, 0, 0, this._adIconTxt.width, this._adIconTxt.height, 0, 0.6);
-            this._adIconTxt1.autoSize = TextFieldAutoSize.LEFT;
-            this._adIconTxt1.selectable = false;
-            this._adIconTxt1.text = this._adDspSource + "广告";
-            this._adIconTxt1.setTextFormat(_loc_3);
-            Utils.drawRect(this._adIcon1, 0, 0, this._adIconTxt1.width, this._adIconTxt1.height, 0, 0.6);
-            this._adIconTxt.x = (this._adIcon.width - this._adIconTxt.textWidth) / 2 - 1.7;
-            this._adIconTxt.y = (this._adIcon.height - this._adIconTxt.height) / 2 - 1;
-            this._adIconTxt1.x = (this._adIcon1.width - this._adIconTxt1.textWidth) / 2 - 1.7;
-            this._adIconTxt1.y = (this._adIcon1.height - this._adIconTxt1.height) / 2 - 1;
             return;
         }// end function
 
@@ -116,11 +88,11 @@
 
         public function pingback() : void
         {
+            return;
             var _loc_1:String = null;
             var _loc_2:String = null;
             var _loc_3:String = null;
             var _loc_4:String = null;
-            var _loc_5:RegExp = null;
             if (!this._isSendAdPlayStock && this._adPingback != "")
             {
                 this._isSendAdPlayStock = true;
@@ -136,8 +108,7 @@
             }
             if (this._adPingback != "")
             {
-                _loc_5 = /\[_TIME]""\[_TIME]/gi;
-                new TvSohuURLLoaderUtil().multiSend(this._adPingback.replace(_loc_5, new Date().getTime()));
+                new TvSohuURLLoaderUtil().multiSend(this._adPingback);
                 this._adPingback = "";
             }
             return;
@@ -172,8 +143,9 @@
                         _width = obj.data.contentLoaderInfo.width;
                         _height = obj.data.contentLoaderInfo.height;
                     }
-                    _adIcon.addChild(_adIconTxt);
                     _normalAd_c.addChild(_adIcon);
+                    _adIcon["littleIcon"].visible = false;
+                    _adIcon["bigIcon"].visible = true;
                     setIconState(_adIcon, obj.data.contentLoaderInfo.width, obj.data.contentLoaderInfo.height);
                     _normalAdHitAre = new Sprite();
                     var _loc_3:* = obj.data.contentLoaderInfo.height;
@@ -234,8 +206,9 @@
                         _width = obj.data.contentLoaderInfo.width;
                         _height = obj.data.contentLoaderInfo.height;
                     }
-                    _adIcon1.addChild(_adIconTxt1);
                     _fullAd_c.addChild(_adIcon1);
+                    _adIcon1["littleIcon"].visible = false;
+                    _adIcon1["bigIcon"].visible = true;
                     setIconState(_adIcon1, obj.data.contentLoaderInfo.width, obj.data.contentLoaderInfo.height);
                     _fullAdHitAre = new Sprite();
                     Utils.drawRect(_fullAdHitAre, 0, 0, obj.data.contentLoaderInfo.width, obj.data.contentLoaderInfo.height, 15790320, 0);
@@ -267,7 +240,6 @@
 
         private function setIconState(param1:Sprite, param2:Number, param3:Number) : void
         {
-            var _loc_4:int = 0;
             switch(this._adHardFlag)
             {
                 case "0":
@@ -277,26 +249,26 @@
                 }
                 case "1":
                 {
-                    param1.x = _loc_4;
-                    param1.y = _loc_4;
+                    param1.x = 2;
+                    param1.y = 2;
                     break;
                 }
                 case "2":
                 {
-                    param1.x = _loc_4;
-                    param1.y = param3 - param1.height - _loc_4;
+                    param1.x = 2;
+                    param1.y = param3 - param1.height - 2;
                     break;
                 }
                 case "3":
                 {
-                    param1.x = param2 - param1.width - _loc_4;
-                    param1.y = _loc_4;
+                    param1.x = param2 - param1.width - 2;
+                    param1.y = 2;
                     break;
                 }
                 case "4":
                 {
-                    param1.x = param2 - param1.width - _loc_4;
-                    param1.y = param3 - param1.height - _loc_4;
+                    param1.x = param2 - param1.width - 2;
+                    param1.y = param3 - param1.height - 2;
                     break;
                 }
                 default:
@@ -348,14 +320,12 @@
 
         private function adClickHandler(event:MouseEvent) : void
         {
-            var _loc_2:RegExp = null;
             if (this._adClick != "")
             {
                 Utils.openWindow(this._adClick);
                 if (this._adClickStat != "")
                 {
-                    _loc_2 = /\[_TIME]""\[_TIME]/gi;
-                    new TvSohuURLLoaderUtil().multiSend(this._adClickStat.replace(_loc_2, new Date().getTime()));
+                    new TvSohuURLLoaderUtil().multiSend(this._adClickStat);
                 }
             }
             return;

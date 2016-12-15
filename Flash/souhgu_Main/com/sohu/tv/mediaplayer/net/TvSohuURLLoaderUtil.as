@@ -1,7 +1,5 @@
 ﻿package com.sohu.tv.mediaplayer.net
 {
-    import com.adobe.crypto.*;
-    import com.sohu.tv.mediaplayer.*;
     import ebing.net.*;
     import flash.events.*;
     import flash.utils.*;
@@ -20,20 +18,16 @@
         private var _isnp:Boolean = false;
         private var _isWriteLog:Boolean = false;
         private var _statusCode:int = 0;
-        private var _xMode:XModel;
 
         public function TvSohuURLLoaderUtil()
         {
             this._errCdnIds = new Array();
-            this._xMode = new XModel();
             return;
         }// end function
 
         override public function multiSend(param1:String) : void
         {
-            var _loc_8:Array = null;
-            var _loc_9:String = null;
-            var _loc_10:String = null;
+            return;
             if (param1 == null || param1 == "")
             {
                 return;
@@ -50,13 +44,6 @@
                 _loc_6 = _loc_7 > 0 ? ("http") : ("");
                 _loc_6 = _loc_6 + _loc_5[_loc_7];
                 _loc_6 = _loc_2.test(_loc_6) || _loc_3.test(_loc_6) || _loc_4.test(_loc_6) ? (_loc_6 + "&t=" + new Date().time) : (_loc_6);
-                _loc_8 = _loc_6.split("?");
-                if (_loc_8[0].indexOf("aty.sohu.com") != -1)
-                {
-                    _loc_9 = MD5.hash(_loc_8[1]);
-                    _loc_10 = this._xMode.encryptBase64(_loc_9, "47985");
-                    _loc_6 = _loc_6 + "&encrypt=" + _loc_10;
-                }
                 send(_loc_6);
                 _loc_7++;
             }
@@ -65,6 +52,7 @@
 
         public function multiSendAndCallBack(param1:String, param2:Function) : void
         {
+            return;
             var _loc_10:Boolean = false;
             if (param1 == null || param1 == "")
             {

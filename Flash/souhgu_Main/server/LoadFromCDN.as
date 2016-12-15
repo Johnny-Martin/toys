@@ -29,7 +29,6 @@
         private var _piceStartT:Number;
         private var _cont:Number;
         private var _staticST:String;
-        private var _cdnStr:String = "";
 
         public function LoadFromCDN()
         {
@@ -102,7 +101,6 @@
             this._cdnInfo.recdnurl = encodeURI(this._cdnInfo.recdnurl);
             this.p2pSohuLib.showTestInfo("loadCDN----------cdn:" + this._cdnInfo.recdnurl, true);
             this.p2pSohuLib.showTestInfo("loadCDNMth----------cdn:" + this._cdnInfo.ip + " fileidx:" + this._cdnInfo.fileidx + " sockettype:" + this._httpsocket.socketType + " _hasDataT:" + this._hasDataT + " connectTimer running:" + this.connectTimer.running + " recdnurl:" + this._cdnInfo.recdnurl);
-            this._cdnStr = this._cdnStr + (this._cdnInfo.recdnurl + ";");
             if (!this._httpsocket.socketType)
             {
                 _loc_4 = new URLRequest(this._cdnInfo.recdnurl);
@@ -311,7 +309,6 @@
             {
                 this._302ChangeIdx = 0;
             }
-            this._cdnStr = "";
             this._piceStartT = getTimer();
             var _loc_3:* = new Object();
             param1.position = 0;
@@ -421,7 +418,6 @@
                 if (this._302ChangeIdx > ByteSize.ROLLBACKIDX302 && !this.p2pSohuLib.config.is301)
                 {
                     this.p2pSohuLib.cleanMth(true);
-                    this.p2pSohuLib.showTestInfo("cdn 302 error:" + this._cdnStr, true);
                     this.p2pSohuLib.showFailInfoMth("schedulfail");
                     return;
                 }
@@ -579,7 +575,6 @@
             }
             this._beginIdx = 0;
             this._cont = 0;
-            this._cdnStr = "";
             this.connectTimer.stop();
             this.connectTimer.removeEventListener(TimerEvent.TIMER, this.diePeerMth);
             this._isCDNLoading = false;

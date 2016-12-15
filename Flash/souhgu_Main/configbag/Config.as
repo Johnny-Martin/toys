@@ -3,7 +3,7 @@
 
     public class Config extends Object
     {
-        public var version:Number = 1609221422;
+        public var version:Number = 1512071747;
         public var COMVERSION:int = 4;
         public var isLog:Boolean = false;
         public var isRtmfpTest:Boolean = false;

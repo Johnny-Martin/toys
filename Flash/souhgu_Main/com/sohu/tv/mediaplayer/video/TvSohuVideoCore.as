@@ -516,10 +516,6 @@
 
         public function displayZoom(param1:Number = 1) : void
         {
-            if (PlayerConfig.isBackgorundShowing)
-            {
-                return;
-            }
             if (param1 > 0 && param1 <= 1)
             {
                 this._displayRate = param1;
@@ -585,13 +581,10 @@
 
         public function setR(param1:int) : void
         {
-            if (PlayerConfig.vrModel != "1" && PlayerConfig.vrModel != "2")
-            {
-                this._rotateType = param1;
-                this._isDirectRotation = true;
-                this.refresh();
-                this.resize(_width_num, _height_num);
-            }
+            this._rotateType = param1;
+            this._isDirectRotation = true;
+            this.refresh();
+            this.resize(_width_num, _height_num);
             return;
         }// end function
 
@@ -615,37 +608,15 @@
             return _downloadIndex_uint;
         }// end function
 
-        private function onVideoHander(event:Event) : void
-        {
-            playOrPause();
-            return;
-        }// end function
-
         override public function resize(param1:Number, param2:Number) : void
         {
-            var _loc_3:Number = NaN;
-            var _loc_4:Boolean = false;
-            var _loc_5:int = 0;
-            var _loc_6:* = param1;
+            var _loc_3:int = 0;
+            var _loc_4:* = param1;
             _bg_spr.width = param1;
-            _width_num = _loc_6;
-            var _loc_6:* = param2;
+            _width_num = _loc_4;
+            var _loc_4:* = param2;
             _bg_spr.height = param2;
-            _height_num = _loc_6;
-            if (PlayerConfig.isBackgorundShowing)
-            {
-                _bg_spr.visible = false;
-                _video_c.buttonMode = true;
-                Utils.prorata(_video_c, 0.5 * _bg_spr.width, 0.5 * _bg_spr.height);
-                _loc_3 = (_bg_spr.width - 2 * _video_c.width) / 2;
-                _video_c.x = 2 * _video_c.width * 0.1 + _loc_3;
-                _video_c.y = _bg_spr.height - _video_c.height >> 1;
-                _loc_4 = _video_c.hasEventListener(MouseEvent.CLICK);
-                _video_c.addEventListener(MouseEvent.CLICK, this.onVideoHander);
-                return;
-            }
-            _bg_spr.visible = true;
-            _video_c.buttonMode = false;
+            _height_num = _loc_4;
             if (this._scaleState == "full")
             {
                 if (this._rotateType % 2 != 0)
@@ -696,49 +667,49 @@
                 }
                 if (this._isDirectRotation)
                 {
-                    _loc_5 = 0;
+                    _loc_3 = 0;
                     if (this._rotateType == 1)
                     {
-                        _loc_5 = 0;
-                        while (_loc_5 < this._videoArr.length)
+                        _loc_3 = 0;
+                        while (_loc_3 < this._videoArr.length)
                         {
                             
-                            this._videoArr[_loc_5].x = this._videoArr[_loc_5].width;
-                            this._videoArr[_loc_5].y = 0;
-                            _loc_5++;
+                            this._videoArr[_loc_3].x = this._videoArr[_loc_3].width;
+                            this._videoArr[_loc_3].y = 0;
+                            _loc_3++;
                         }
                     }
                     else if (this._rotateType == 2)
                     {
-                        _loc_5 = 0;
-                        while (_loc_5 < this._videoArr.length)
+                        _loc_3 = 0;
+                        while (_loc_3 < this._videoArr.length)
                         {
                             
-                            this._videoArr[_loc_5].x = this._videoArr[_loc_5].width;
-                            this._videoArr[_loc_5].y = this._videoArr[_loc_5].height;
-                            _loc_5++;
+                            this._videoArr[_loc_3].x = this._videoArr[_loc_3].width;
+                            this._videoArr[_loc_3].y = this._videoArr[_loc_3].height;
+                            _loc_3++;
                         }
                     }
                     else if (this._rotateType == 3)
                     {
-                        _loc_5 = 0;
-                        while (_loc_5 < this._videoArr.length)
+                        _loc_3 = 0;
+                        while (_loc_3 < this._videoArr.length)
                         {
                             
-                            this._videoArr[_loc_5].x = 0;
-                            this._videoArr[_loc_5].y = this._videoArr[_loc_5].height;
-                            _loc_5++;
+                            this._videoArr[_loc_3].x = 0;
+                            this._videoArr[_loc_3].y = this._videoArr[_loc_3].height;
+                            _loc_3++;
                         }
                     }
                     else if (this._rotateType == 0)
                     {
-                        _loc_5 = 0;
-                        while (_loc_5 < this._videoArr.length)
+                        _loc_3 = 0;
+                        while (_loc_3 < this._videoArr.length)
                         {
                             
-                            this._videoArr[_loc_5].x = 0;
-                            this._videoArr[_loc_5].y = 0;
-                            _loc_5++;
+                            this._videoArr[_loc_3].x = 0;
+                            this._videoArr[_loc_3].y = 0;
+                            _loc_3++;
                         }
                     }
                 }
@@ -929,28 +900,7 @@
             {
                 _video_arr[this._previousIndex_int].sendVV = false;
             }
-            var _loc_3:uint = 0;
-            while (_loc_3 < _video_arr.length)
-            {
-                
-                _video_arr[_loc_3].ns.client = _clientTem_obj;
-                _loc_3 = _loc_3 + 1;
-            }
-            _video_arr[param1].ns.client = _client_obj;
-            var _loc_4:* = /\?""\?/.test(_video_arr[param1].flv);
-            var _loc_5:* = param2 == null ? (_video_arr[param1].flv) : (_video_arr[param1].flv + (_loc_4 ? ("&") : ("?")) + "start=" + param2);
-            LogManager.msg("预加载视频执行了(" + param1 + ")url:" + _loc_5);
-            _downloadIndex_uint = param1;
-            if (param2 == null || param2 == 0)
-            {
-                _video_arr[param1].download = "loading";
-            }
-            else
-            {
-                _video_arr[param1].download = "part_loading";
-            }
-            _video_arr[param1].ns.play(_loc_5);
-            _video_arr[param1].ns.pause();
+            super.download(param1, param2);
             _video_arr[_downloadIndex_uint].ns.addEventListener(NetStatusEvent.NET_STATUS, this.downLoadStreamStatus);
             return;
         }// end function
@@ -1031,7 +981,6 @@
 
         private function bbb() : void
         {
-            var _loc_1:Boolean = false;
             clearTimeout(this._intervalRetry);
             _video_arr[_currentIndex_uint].iserr = false;
             _video_arr[_currentIndex_uint].ns.removeEventListener(NetStatusEvent.NET_STATUS, this.downLoadStreamStatus);
@@ -1049,8 +998,7 @@
             }
             else
             {
-                _loc_1 = /\?""\?/.test(_video_arr[_currentIndex_uint].flv);
-                _video_arr[_currentIndex_uint].ns.play(_video_arr[_currentIndex_uint].flv + (_startTime > 0 ? ((_loc_1 ? ("&") : ("?")) + "start=" + _startTime) : ("")));
+                _video_arr[_currentIndex_uint].ns.play(_video_arr[_currentIndex_uint].flv + (_startTime > 0 ? ("?start=" + _startTime) : ("")));
             }
             if (TvSohuAds.getInstance().startAd.hasAd && TvSohuAds.getInstance().startAd.state == "playing" || _sysStatus_str == "4")
             {
@@ -1533,11 +1481,9 @@
         private function downLoadStreamStatus(event:NetStatusEvent) : void
         {
             var ns:TvSohuNetStream;
-            var boo:Boolean;
             var obj:Object;
             var evt:* = event;
             ns = _video_arr[_downloadIndex_uint].ns;
-            boo = /\?""\?/.test(_video_arr[_downloadIndex_uint].flv);
             switch(evt.info.code)
             {
                 case "NetStream.Play.StreamNotFound":
@@ -1568,7 +1514,7 @@
                 _video_arr[_downloadIndex_uint].iserr = false;
                 var _loc_1:* = ns;
                 _loc_1.ns["setP2PTimeLimit"]();
-                ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ((boo ? ("&") : ("?")) + "start=" + _startTime) : ("")));
+                ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ("?start=" + _startTime) : ("")));
                 return;
             }// end function
             , 10000);
@@ -1590,7 +1536,7 @@
                         _loc_3.retryNum = _loc_4;
                         var _loc_3:* = ns;
                         _loc_3.ns["setP2PTimeLimit"]();
-                        ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ((boo ? ("&") : ("?")) + "start=" + _startTime) : ("")));
+                        ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ("?start=" + _startTime) : ("")));
                     }
                     break;
                 }
@@ -1640,7 +1586,7 @@
                 _video_arr[_downloadIndex_uint].iserr = false;
                 var _loc_1:* = ns;
                 _loc_1.ns["setP2PTimeLimit"]();
-                ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ((boo ? ("&") : ("?")) + "start=" + _startTime) : ("")));
+                ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ("?start=" + _startTime) : ("")));
                 return;
             }// end function
             , 10000);
@@ -1662,7 +1608,7 @@
                         _loc_3.retryNum = _loc_4;
                         var _loc_3:* = ns;
                         _loc_3.ns["setP2PTimeLimit"]();
-                        ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ((boo ? ("&") : ("?")) + "start=" + _startTime) : ("")));
+                        ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ("?start=" + _startTime) : ("")));
                     }
                     break;
                 }
@@ -1693,7 +1639,7 @@
                 _video_arr[_downloadIndex_uint].iserr = false;
                 var _loc_1:* = ns;
                 _loc_1.ns["setP2PTimeLimit"]();
-                ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ((boo ? ("&") : ("?")) + "start=" + _startTime) : ("")));
+                ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ("?start=" + _startTime) : ("")));
                 return;
             }// end function
             , 10000);
@@ -1715,7 +1661,7 @@
                         _loc_3.retryNum = _loc_4;
                         var _loc_3:* = ns;
                         _loc_3.ns["setP2PTimeLimit"]();
-                        ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ((boo ? ("&") : ("?")) + "start=" + _startTime) : ("")));
+                        ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ("?start=" + _startTime) : ("")));
                     }
                     break;
                 }
@@ -1775,7 +1721,7 @@
                 _video_arr[_downloadIndex_uint].iserr = false;
                 var _loc_1:* = ns;
                 _loc_1.ns["setP2PTimeLimit"]();
-                ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ((boo ? ("&") : ("?")) + "start=" + _startTime) : ("")));
+                ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ("?start=" + _startTime) : ("")));
                 return;
             }// end function
             , 10000);
@@ -1796,7 +1742,7 @@
                         _loc_3.retryNum = _loc_4;
                         var _loc_3:* = ns;
                         _loc_3.ns["setP2PTimeLimit"]();
-                        ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ((boo ? ("&") : ("?")) + "start=" + _startTime) : ("")));
+                        ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ("?start=" + _startTime) : ("")));
                     }
                     break;
                 }
@@ -1836,7 +1782,7 @@
                         var _loc_3:* = _video_arr[_downloadIndex_uint];
                         var _loc_4:* = _video_arr[_downloadIndex_uint].retryNum - 1;
                         _loc_3.retryNum = _loc_4;
-                        ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ((boo ? ("&") : ("?")) + "start=" + _startTime) : ("")));
+                        ns.retry(_video_arr[_downloadIndex_uint].flv + (_startTime > 0 ? ("?start=" + _startTime) : ("")));
                     }
                     break;
                 }

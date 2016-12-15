@@ -201,12 +201,12 @@
 
         public function get hasMidAd() : Boolean
         {
-            return this._hasMidAd;
+            return false;
         }// end function
 
         public function set hasMidAd(param1:Boolean) : void
         {
-            this._hasMidAd = param1;
+            this._hasMidAd = false;
             return;
         }// end function
 
@@ -229,6 +229,7 @@
 
         override protected function sendAdPlayStock(param1:uint) : void
         {
+            return;
             var _loc_2:String = null;
             try
             {
@@ -257,6 +258,7 @@
 
         override protected function sendAdStopStock(param1:uint) : void
         {
+            return;
             var _loc_2:String = null;
             try
             {
@@ -271,20 +273,6 @@
             {
             }
             return;
-        }// end function
-
-        override public function get hasAd() : Boolean
-        {
-            var _loc_1:Boolean = false;
-            if (_adList.length > 0 && TvSohuAds.getInstance().hasAds)
-            {
-                _loc_1 = true;
-            }
-            else
-            {
-                _loc_1 = false;
-            }
-            return _loc_1;
         }// end function
 
     }

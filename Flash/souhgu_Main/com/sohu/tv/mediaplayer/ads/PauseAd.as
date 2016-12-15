@@ -73,6 +73,7 @@
 
         public function pingback() : void
         {
+            return;
             if (this._adPingback != "")
             {
                 new URLLoaderUtil().multiSend(this._adPingback);
@@ -146,6 +147,7 @@
 
         public function get hasAd() : Boolean
         {
+            return false;
             if (this._adPath == "")
             {
                 return false;

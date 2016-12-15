@@ -5,14 +5,14 @@
 
     public class PlayerConfig extends Object
     {
-        public static const VERSION:String = "201610241430";
+        public static const VERSION:String = "201605051538";
         public static const DEBUG:Boolean = false;
         public static const IS_MYTV_VIDEO:Boolean = false;
-        public static var HIDESTARTAD:Boolean = false;
+        public static const HIDESTARTAD:Boolean = false;
         public static const SOHUTEST:Boolean = false;
         public static const ISTEST:Boolean = false;
         public static const DEBUG_MAIL:Array = ["flaer@vip.qq.com", "woaidbh@126.com", "octoberyueyue@163.com", "wangxiaohu111@sohu.com", "dcw1123@sohu.com", "18210115457@sohu.com"];
-        public static const DEBUG_VID:String = "3192299";
+        public static const DEBUG_VID:String = "2139376";
         public static const DEBUG_PID:String = "261789173";
         public static var liveType:String = "";
         public static var tempParam:Boolean = false;
@@ -43,8 +43,7 @@
         public static var isFee:Boolean;
         public static var p2pflag:uint;
         public static var cooperator:String = "";
-        public static const TANMU_SWF_URL:String = "http://share.vrs.sohu.com/dm.swf";
-        public static var firstReqTanmuTime:String = "";
+        public static const TANMU_SWF_URL:String = "http://www.56.com/flashApp/Tanmu.16.01.21.swf";
         public static var watermarkPath:String = "";
         public static var watermarkPos:String = "left-top";
         public static var isForbidP2P:String = "";
@@ -85,7 +84,7 @@
         public static var videoVersion:String = "";
         public static var p2pTNum:uint = 0;
         public static var isFirst:Boolean = true;
-        public static const LIMIT_TEXT:String = "视频无法正常播放了…|该视频仅授权中国大陆地区用户观看|<u><a href=\"event:limit\"><font color=\"#e73c32\">地区有误，点击此处纠正</font></u>";
+        public static const LIMIT_TEXT:String = "视频无法正常播放了…||该视频仅授权中国大陆地区用户观看";
         public static const VINFO_ERROR_TEXT:String = "视频加载失败…(CODE)|请检查网络连接后重试|向我们<u><a href=\"event:\"><font color=\"#ff0000\">留言反馈</font></a></u>";
         public static const COPYRIGHT_FALLIN:String = "亲爱的用户，该视频版权已到期(CODE)||<u><a href=\"http://tv.sohu.com\" target=\'_blank\'><font color=\"#ff0000\" size=\"10\">去搜狐视频看看其他内容</font></a></u>";
         public static const COPYRIGHT_STORE:String = "很抱歉，该视频已过付费有效期(CODE)||<u><a href=\"http://tv.sohu.com\" target=\'_blank\'><font color=\"#ff0000\" size=\"10\">去搜狐视频看看其他内容</font></a></u>";
@@ -119,7 +118,7 @@
         public static var onStartAdFinish:String = "";
         public static var onMAdFinish:String = "";
         public static var gslbIp:String = "";
-        public static var gslbIpList:Array = ["115.25.217.132", "219.238.10.34", "220.181.61.229", "221.130.27.2", "61.135.183.46", "data.vod.itc.cn", "220.181.61.213", "220.181.61.212", "61.135.183.45", "61.135.183.50", "123.125.123.80", "123.125.123.81", "123.125.123.82", "220.181.61.240", "111.13.123.146", "111.13.123.147", "112.25.62.194", "121.46.19.90", "121.46.19.91", "121.46.19.92"];
+        public static var gslbIpList:Array = ["115.25.217.132", "219.238.10.34", "220.181.61.229", "221.130.27.2", "61.135.183.46", "data.vod.itc.cn", "220.181.61.213", "220.181.61.212", "61.135.183.45", "61.135.183.50", "123.125.123.80", "123.125.123.81", "123.125.123.82", "220.181.61.240", "111.13.123.146", "111.13.123.147", "112.25.62.194"];
         public static var isBrowserFullScreen:Boolean = false;
         public static var clientIp:String = "";
         public static var cdnIp:String = "";
@@ -402,11 +401,6 @@
         public static var showUgcAd:Boolean;
         public static var MICROSOFT_YAHEI:String = "Microsoft YaHei";
         public static var selectAdMute:Boolean = false;
-        public static var vrModel:String = "";
-        public static var allTimeLogo:Boolean = false;
-        public static var isBackgorundShowing:Boolean = false;
-        public static var showV360Bar:Boolean = true;
-        public static var isInFiveMinPlayed:Boolean = false;
 
         public function PlayerConfig()
         {

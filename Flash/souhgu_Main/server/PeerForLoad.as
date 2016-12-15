@@ -176,36 +176,22 @@
 
         private function dataForRP(param1:int, param2:int, param3:int, param4:Object) : void
         {
-            var _loc_13:Object = null;
-            var _loc_14:int = 0;
+            var _loc_12:Object = null;
+            var _loc_13:int = 0;
             if (param4.peertype != undefined && param4.peertype != "flash")
             {
                 param1 = this._p2psohu.fileList.getFileidx(param4.hashid);
-                _loc_13 = this._p2psohu.fileList.fileoA[param1];
-                _loc_14 = _loc_13.first_count + param4.chunkidx;
-                if (_loc_14 > _loc_13.end_count)
+                _loc_12 = this._p2psohu.fileList.fileoA[param1];
+                _loc_13 = _loc_12.first_count + param4.chunkidx;
+                if (_loc_13 > _loc_12.end_count)
                 {
-                    param2 = _loc_13.end_count;
-                    if (this._p2psohu.config.clarity == "31")
-                    {
-                        param3 = Math.floor(param4.lowidx / 4) + ByteSize._CHUNKSIZE / ByteSize.PICESIZE * (_loc_14 - param2);
-                    }
-                    else
-                    {
-                        param3 = param4.lowidx + ByteSize._CHUNKSIZE / ByteSize.PICESIZE * (_loc_14 - param2);
-                    }
+                    param2 = _loc_12.end_count;
+                    param3 = param4.lowidx + ByteSize._CHUNKSIZE / ByteSize.PICESIZE * (_loc_13 - param2);
                 }
                 else
                 {
-                    param2 = _loc_14;
-                    if (this._p2psohu.config.clarity == "31")
-                    {
-                        param3 = Math.floor(param4.lowidx / 4);
-                    }
-                    else
-                    {
-                        param3 = param4.lowidx;
-                    }
+                    param2 = _loc_13;
+                    param3 = param4.lowidx;
                 }
             }
             var _loc_5:Boolean = false;
@@ -240,35 +226,26 @@
             _loc_9.lowidx = param4.lowidx;
             _loc_9.otstart = param4.otstart;
             var _loc_10:* = new ByteArray();
-            var _loc_11:* = 0;
             if (param4.peertype != undefined && param4.peertype != "flash")
             {
-                if (this._p2psohu.config.clarity == "31")
-                {
-                    _loc_11 = param4.lowidx % 4 * ByteSize.PICESIZE / 4 + param4.otstart;
-                }
-                else
-                {
-                    _loc_11 = param4.otstart;
-                }
-                _loc_10 = this.duplicateByte(_loc_8, _loc_11, param4.otlen);
+                _loc_10 = this.duplicateByte(_loc_8, param4.otstart, param4.otlen);
                 _loc_9.peertype = param4.peertype;
             }
             else
             {
-                _loc_10 = this.duplicateByte(_loc_8, _loc_11, _loc_8.length);
+                _loc_10 = this.duplicateByte(_loc_8, 0, _loc_8.length);
             }
             _loc_9.size = _loc_10.length;
-            var _loc_12:Object = {ba:_loc_10, fileidx:param1, chunkidx:param2, lowidx:param3, o:_loc_9};
-            this._p2psohu.showTestInfo("供体 fileidx:" + param1 + " chunkidx:" + param2 + " lowidx:" + param3 + " rpo.lowidx:" + param4.lowidx + " rpid:" + this.rpeerid.slice(0, 8) + " o.filelen:" + _loc_9.filelen + " databa:" + _loc_8.length + " otstart:start:otlen:" + param4.otstart + ":" + _loc_11 + ":" + param4.otlen);
+            var _loc_11:Object = {ba:_loc_10, fileidx:param1, chunkidx:param2, lowidx:param3, o:_loc_9};
             if (param4.peertype != undefined && param4.peertype != "flash")
             {
-                this.sendDataToRp(_loc_12);
+                this.sendDataToRp(_loc_11);
             }
             else
             {
-                this.sendDataA.push(_loc_12);
+                this.sendDataA.push(_loc_11);
             }
+            this._p2psohu.showTestInfo("供体 fileidx:" + param1 + " lowidx:" + param3 + " chunkidx:" + param2 + " rpid:" + this.rpeerid.slice(0, 8) + " o.filelen:" + _loc_9.filelen + " databa:" + _loc_8.length);
             return;
         }// end function
 

@@ -85,7 +85,6 @@
         private var _isSendRVV:Boolean = true;
         private var _oriMkey:String = "";
         private var _superVipPanel:Object;
-        private var _isCheckHttp:Boolean = false;
 
         public function Main()
         {
@@ -218,7 +217,6 @@
                 PlayerConfig.isSendPID = this.getParams("isSendPID") == "1" ? (true) : (false);
                 PlayerConfig.isNoP2P = this.getParams("isNoP2P") == "1" ? (true) : (false);
                 PlayerConfig.showUgcAd = this.getParams("showUgcAd") == "0" ? (false) : (true);
-                PlayerConfig.showV360Bar = this.getParams("showV360Bar") == "0" ? (false) : (true);
                 PlayerConfig.currentPageUrl = this.getPageURL();
                 PlayerConfig.flashVersion = Capabilities.version;
                 PlayerConfig.playerReffer = stage.loaderInfo.url;
@@ -392,11 +390,7 @@
                     ExternalInterface.addCallback("j2s_parseFlashVars2Root", this.parseFlashVars2Root);
                     ExternalInterface.addCallback("j2s_getVideoSec", function () : Number
             {
-                if (_tvSohuMpb && _tvSohuMpb.core)
-                {
-                    return _tvSohuMpb.core.filePlayedTime;
-                }
-                return 0;
+                return _tvSohuMpb.core.filePlayedTime;
             }// end function
             );
                 }
@@ -644,7 +638,7 @@
             var _loc_8:* = new ContextMenuItem("意见反馈");
             var _loc_9:* = new ContextMenuItem("查看Log");
             var _loc_10:* = new ContextMenuItem("查看面板信息");
-            var _loc_11:* = new ContextMenuItem("SohuTVPlayer:" + PlayerConfig.VERSION);
+            var _loc_11:* = new ContextMenuItem("noAdsLive" + "SohuTVPlayer:" + PlayerConfig.VERSION);
             var _loc_12:* = new ContextMenuItem("FlashPlayer:" + PlayerConfig.flashVersion);
             var _loc_13:* = new ContextMenuItem("用户ID:" + PlayerConfig.userId);
             _loc_3.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, this.showDSPanel);
@@ -965,7 +959,7 @@
                 }
                 addChild(this._tvSohuMpb);
                 this.swapChildren(this._tvSohuMpb, this._startAdContainer);
-                this._tvSohuMpb.hardInit({buffer:3, width:this._width, height:this._height, core:"", isHide:PlayerConfig.isHide, hardInitHandler:this.onMpbHardInit, skinPath:PlayerConfig.swfHost + "skins/s" + PlayerConfig.skinNum + ".swf", selectorStartAdContainer:this._selectorStartAdContainer, startAdContainer:this._startAdContainer, endAdContainer:this._endAdContainer, middleAdContainer:this._middleAdContainer, stage:this.stage});
+                this._tvSohuMpb.hardInit({buffer:3, width:this._width, height:this._height, core:"", isHide:PlayerConfig.isHide, hardInitHandler:this.onMpbHardInit, skinPath:"http://tv.sohu.com/upload/swf/20160505/" + "skins/s" + PlayerConfig.skinNum + ".swf", selectorStartAdContainer:this._selectorStartAdContainer, startAdContainer:this._startAdContainer, endAdContainer:this._endAdContainer, middleAdContainer:this._middleAdContainer, stage:this.stage});
                 this._tvSohuMpb.addEventListener("liveCoreVer", function (event:Event) : void
             {
                 var _loc_2:* = new ContextMenuItem("PLCore:" + _tvSohuMpb.liveCoreVer);
@@ -2046,7 +2040,6 @@
             {
                 this._tvSohuMpb.core.pause();
                 this.showSuperVipPanel(true);
-                this._tvSohuMpb.gotoShowTanmu();
             }
             return;
         }// end function
@@ -2128,7 +2121,7 @@
         {
             var _loc_2:String = null;
             var _loc_1:* = SharedObject.getLocal("vmsPlayer", "/");
-            _loc_1.data.ver = PlayerConfig.videoVersion;
+            _loc_1.data.ver = PlayerConfig.definition;
             var _loc_3:String = "";
             _loc_1.data.af = "";
             PlayerConfig.autoFix = _loc_3;
@@ -2195,10 +2188,6 @@
 
         public function loadAndPlay(param1:String, param2 = null, param3:String = "") : void
         {
-            if (this._tvSohuMpb)
-            {
-                this._tvSohuMpb.stopV360();
-            }
             if (param2 != null)
             {
                 PlayerConfig.isMyTvVideo = param2;
@@ -2817,8 +2806,6 @@
             var uid:String;
             var cooperator:String;
             var authorId:String;
-            var enc:String;
-            var cdnparamstr:String;
             var tt:Array;
             var tt1:String;
             var i:uint;
@@ -2878,11 +2865,9 @@
             uid = PlayerConfig.userId != "" ? ("&uid=" + PlayerConfig.userId) : ("");
             cooperator = PlayerConfig.cooperator != "" ? ("&cooperator=" + PlayerConfig.cooperator) : ("");
             authorId = PlayerConfig.authorId != "" && PlayerConfig.authorId != null ? ("&authorId=" + PlayerConfig.authorId) : ("");
-            enc;
-            cdnparamstr;
             if (PlayerConfig.tvIsFee && !PlayerConfig.is56)
             {
-                _url = (this._isCheckHttp ? ("http://") : ("https://")) + "api.store.sohu.com/film/pc/checkpermission?aid=" + PlayerConfig.plid + "&vid=" + PlayerConfig.vid + "&passport=" + PlayerConfig.passportMail + (this._isCheckHttp ? ("&scuser=1") : ("")) + "&t=" + new Date().getTime();
+                _url = "https://api.store.sohu.com/film/pc/checkpermission?aid=" + PlayerConfig.plid + "&vid=" + PlayerConfig.vid + "&passport=" + PlayerConfig.passportMail + "&t=" + new Date().getTime();
                 LogManager.msg("获取mkey接口地址：" + _url);
                 if (PlayerConfig.passportMail != "")
                 {
@@ -2896,7 +2881,7 @@
                     if (_loc_2 != null && _loc_2.data != null && _loc_2.data.mkey != null && _loc_2.data.mkey != "")
                     {
                         LogManager.msg("mkey：" + _loc_2.data.mkey + " : state : " + _loc_2.data.state);
-                        _model.fetchVideoInfo(infoPath + id + ver + af + bw + co + fkey + apikey + hasIfox + livetype + needP2pLive + plid + uid + authorId + cooperator + "&mkey=" + _loc_2.data.mkey + "&out=" + PlayerConfig.domainProperty + passwd + cdnparamstr + enc + "&g=" + Math.abs(new Date().getTimezoneOffset() / 60) + referer);
+                        _model.fetchVideoInfo(infoPath + id + ver + af + bw + co + fkey + apikey + hasIfox + livetype + needP2pLive + plid + uid + authorId + cooperator + "&mkey=" + _loc_2.data.mkey + "&out=" + PlayerConfig.domainProperty + passwd + "&g=" + Math.abs(new Date().getTimezoneOffset() / 60) + referer);
                     }
                     else
                     {
@@ -2915,19 +2900,14 @@
                         }
                         else
                         {
-                            _model.fetchVideoInfo(infoPath + id + ver + af + bw + co + fkey + apikey + hasIfox + livetype + needP2pLive + plid + uid + authorId + cooperator + "&out=" + PlayerConfig.domainProperty + passwd + cdnparamstr + enc + "&g=" + Math.abs(new Date().getTimezoneOffset() / 60) + referer);
+                            _model.fetchVideoInfo(infoPath + id + ver + af + bw + co + fkey + apikey + hasIfox + livetype + needP2pLive + plid + uid + authorId + cooperator + "&out=" + PlayerConfig.domainProperty + passwd + "&g=" + Math.abs(new Date().getTimezoneOffset() / 60) + referer);
                         }
                     }
                 }
                 else
                 {
                     LogManager.msg("接口返回状态：" + param1.info);
-                    if (!_isCheckHttp)
-                    {
-                        _isCheckHttp = true;
-                        fetchVideoInfo(PlayerConfig.vid);
-                    }
-                    else if (PlayerConfig.isSohuDomain)
+                    if (PlayerConfig.isSohuDomain)
                     {
                         if (Eif.available)
                         {
@@ -2941,7 +2921,7 @@
                     }
                     else
                     {
-                        _model.fetchVideoInfo(infoPath + id + ver + af + bw + co + fkey + apikey + hasIfox + livetype + needP2pLive + plid + uid + authorId + cooperator + "&out=" + PlayerConfig.domainProperty + passwd + cdnparamstr + enc + "&g=" + Math.abs(new Date().getTimezoneOffset() / 60) + referer);
+                        _model.fetchVideoInfo(infoPath + id + ver + af + bw + co + fkey + apikey + hasIfox + livetype + needP2pLive + plid + uid + authorId + cooperator + "&out=" + PlayerConfig.domainProperty + passwd + "&g=" + Math.abs(new Date().getTimezoneOffset() / 60) + referer);
                     }
                 }
                 return;
@@ -2965,13 +2945,13 @@
                     }
                     else
                     {
-                        this._model.fetchVideoInfo(infoPath + id + ver + af + bw + co + fkey + apikey + hasIfox + livetype + needP2pLive + plid + uid + authorId + cooperator + "&out=" + PlayerConfig.domainProperty + passwd + cdnparamstr + enc + "&g=" + Math.abs(new Date().getTimezoneOffset() / 60) + referer);
+                        this._model.fetchVideoInfo(infoPath + id + ver + af + bw + co + fkey + apikey + hasIfox + livetype + needP2pLive + plid + uid + authorId + cooperator + "&out=" + PlayerConfig.domainProperty + passwd + "&g=" + Math.abs(new Date().getTimezoneOffset() / 60) + referer);
                     }
                 }
             }
             else if (!PlayerConfig.is56)
             {
-                this._model.fetchVideoInfo(infoPath + id + ver + af + bw + co + fkey + apikey + hasIfox + livetype + needP2pLive + plid + uid + authorId + cooperator + (this._oriMkey != "" ? ("&mkey=" + this._oriMkey) : ("")) + "&out=" + PlayerConfig.domainProperty + passwd + cdnparamstr + enc + "&g=" + Math.abs(new Date().getTimezoneOffset() / 60) + referer);
+                this._model.fetchVideoInfo(infoPath + id + ver + af + bw + co + fkey + apikey + hasIfox + livetype + needP2pLive + plid + uid + authorId + cooperator + (this._oriMkey != "" ? ("&mkey=" + this._oriMkey) : ("")) + "&out=" + PlayerConfig.domainProperty + passwd + "&g=" + Math.abs(new Date().getTimezoneOffset() / 60) + referer);
             }
             else
             {
@@ -3211,7 +3191,6 @@
             var vid:String;
             var uid:String;
             var ta:String;
-            var msg:Function;
             var tvid:String;
             var oth:String;
             var ch:String;
@@ -3221,6 +3200,8 @@
             var prod:String;
             var pt:String;
             var uuid:String;
+            var url:String;
+            var msg:Function;
             var ugu:String;
             var ugcode:String;
             var cdnparamstr:String;
@@ -3323,11 +3304,7 @@
                 }
                 if (info.fee != null)
                 {
-                    PlayerConfig.isFee = info.fee == 1 || info.fee == 2 ? (true) : (false);
-                }
-                if (info.vr != null && info.vr != "")
-                {
-                    PlayerConfig.vrModel = info.vr;
+                    PlayerConfig.isFee = info.fee == 1 ? (true) : (false);
                 }
                 if (info.cmscat != null && info.cmscat != "")
                 {
@@ -3758,7 +3735,7 @@
             }
             if (!PlayerConfig.is56)
             {
-                if (!(P2PExplorer.getInstance().hasP2P || PlayerConfig.isLive || PlayerConfig.isFms) && !PlayerConfig.isUgcFeeVideo && !PlayerConfig.isNoP2P && !(PlayerConfig.vrModel == "1" || PlayerConfig.vrModel == "2"))
+                if (!(P2PExplorer.getInstance().hasP2P || PlayerConfig.isLive || PlayerConfig.isFms) && !PlayerConfig.isUgcFeeVideo && !PlayerConfig.isNoP2P)
                 {
                     P2pSohuLib.getInstance().cleanMth();
                     arr2 = new Array();
@@ -3775,7 +3752,6 @@
                     vid = PlayerConfig.currentVid;
                     uid = PlayerConfig.userId;
                     ta = escape(PlayerConfig.ta_jm);
-                    msg = P2pLog.msg;
                     tvid = PlayerConfig.tvid;
                     oth = PlayerConfig.lqd != "" ? (PlayerConfig.lqd) : ("");
                     ch = PlayerConfig.channel != "" ? (PlayerConfig.channel) : ("");
@@ -3785,6 +3761,8 @@
                     prod;
                     pt;
                     uuid = PlayerConfig.uuid;
+                    url = PlayerConfig.currentPageUrl == "" ? (escape(PlayerConfig.outReferer)) : (escape(PlayerConfig.currentPageUrl));
+                    msg = P2pLog.msg;
                     ugu = PlayerConfig.ugu;
                     ugcode = PlayerConfig.ugcode;
                     cdnparamstr = (tvid == "" ? ("") : ("&tvid=" + tvid)) + (ch == "" ? ("") : ("&ch=" + ch)) + (oth == "" ? ("") : ("&oth=" + oth)) + (cd == "" ? ("") : ("&cd=" + cd)) + (sz == "" ? ("") : ("&sz=" + sz)) + (md == "" ? ("") : ("&md=" + md)) + (prod == "" ? ("") : ("&prod=" + prod)) + (pt == "" ? ("") : ("&pt=" + pt)) + (uuid == "" ? ("") : ("&uuid=" + uuid)) + (ugu == "" ? ("") : ("&ugu=" + ugu)) + (ugcode == "" ? ("") : ("&ugcode=" + ugcode));
@@ -3874,22 +3852,74 @@
 
         private function checkLoadAds() : void
         {
-            this.loadAdsInfo();
+            PlayerConfig.isSogouAd = true;
+            LogManager.msg("搜狗浏览器用户去广告");
+            startAdLoadFailed();
+            _isPlayStartAd = true;
+            return;
+            var sogouSid:String;
+            var url:* = PlayerConfig.currentPageUrl == "" ? (PlayerConfig.outReferer) : (PlayerConfig.currentPageUrl);
+            var re1:* = /\?sid=""\?sid=/;
+            var re2:* = /\&sid=""\&sid=/;
+            if (re1.test(url) || re2.test(url))
+            {
+                sogouSid = url.split("sid=")[1].split("&")[0];
+            }
+            if (sogouSid != "")
+            {
+                LogManager.msg("地址栏里参数sid:" + sogouSid);
+                new URLLoaderUtil().load(5, function (param1:Object) : void
+            {
+                var _loc_2:Object = null;
+                if (param1.info == "success")
+                {
+                    LogManager.msg("obj.data:" + param1.data);
+                    _loc_2 = new JSON().parse(param1.data);
+                    if (_loc_2.status == 1)
+                    {
+                        PlayerConfig.isSogouAd = true;
+                        LogManager.msg("搜狗浏览器用户去广告");
+                        startAdLoadFailed();
+                        _isPlayStartAd = true;
+                    }
+                    else
+                    {
+                        LogManager.msg("非搜狗浏览器用户不能去广告");
+                        loadAdsInfo();
+                    }
+                }
+                else
+                {
+                    LogManager.msg("obj.info:" + param1.info);
+                    loadAdsInfo();
+                }
+                return;
+            }// end function
+            , "http://seo.hd.sohu.com/copyright/sogou/validate.do?sid=" + sogouSid);
+            }
+            else
+            {
+                LogManager.msg("地址栏里无sid参数");
+                this.loadAdsInfo();
+            }
             return;
         }// end function
 
         private function loadAdsInfo() : void
         {
-            var _loc_3:Number = NaN;
-            var _loc_4:String = null;
+            this.startAdLoadFailed();
+            this._isPlayStartAd = true;
+            return;
+            var _loc_2:Number = NaN;
+            var _loc_3:String = null;
             var _loc_1:Boolean = false;
             try
             {
                 if (Eif.available && ExternalInterface.available)
                 {
-                    _loc_3 = PlayerConfig.totalDuration > 180 ? (30) : (10);
-                    _loc_4 = InforSender.getInstance().heartBeat(_loc_3, "http://pb.hd.sohu.com.cn/hdpb.gif?msg=realPlayTime") + "&time=" + PlayerConfig.viewTime;
-                    ExternalInterface.call("messagebus.publish", "player.update_time", {time:PlayerConfig.viewTime, pingback:_loc_4});
+                    _loc_2 = PlayerConfig.totalDuration > 180 ? (30) : (10);
+                    _loc_3 = InforSender.getInstance().heartBeat(_loc_2, "http://pb.hd.sohu.com.cn/hdpb.gif?msg=realPlayTime") + "&time=" + PlayerConfig.viewTime;
+                    ExternalInterface.call("messagebus.publish", "player.update_time", {time:PlayerConfig.viewTime, pingback:_loc_3});
                 }
                 this._svdUserSo = SharedObject.getLocal("svdUserTip", "/");
                 if (this._svdUserSo.data.svdTag != undefined && this._svdUserSo.data.svdTag != "" && (this._svdUserSo.data.svdTag == "0" || this._svdUserSo.data.svdTag == "1"))
@@ -3905,24 +3935,8 @@
             catch (e:Error)
             {
             }
-            this._so = SharedObject.getLocal("playHistory", "/");
-            var _loc_2:* = new Date().getTime();
-            if (this._so.data.lastPlayedVid != undefined && this._so.data.lastPlayedDate != undefined && this._so.data.lastPlayedVid == PlayerConfig.vid && _loc_2 - this._so.data.lastPlayedDate <= 300000)
-            {
-                PlayerConfig.isInFiveMinPlayed = true;
-            }
-            else
-            {
-                PlayerConfig.HIDESTARTAD = false;
-                PlayerConfig.isInFiveMinPlayed = false;
-            }
             if (PlayerConfig.DEBUG_MAIL.indexOf(PlayerConfig.passportMail) == -1 && this._isPlayStartAd && !_loc_1)
             {
-                if (PlayerConfig.isInFiveMinPlayed)
-                {
-                    SendRef.getInstance().sendPQDrog("http://click.hd.sohu.com.cn/s.gif?type=PL_S_Refreshvv&=" + new Date().getTime());
-                    PlayerConfig.HIDESTARTAD = true;
-                }
                 this._ads.loadAdInfo(this.adsHandler);
             }
             else

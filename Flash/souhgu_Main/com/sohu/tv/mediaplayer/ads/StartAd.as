@@ -87,7 +87,6 @@
         private var _slaveAdPar:Object;
         protected var _DetailClass:Class;
         protected var _recordNowTime:Number;
-        private var pattern:RegExp;
         private var _skTime:int = 5;
         protected var _skCkUrl:String = "";
         private var _isSkipAd:Boolean = false;
@@ -97,7 +96,6 @@
 
         public function StartAd(param1:Object)
         {
-            this.pattern = /\[_TIME]""\[_TIME]/gi;
             this._owner = this;
             this.hardInit(param1);
             return;
@@ -131,7 +129,7 @@
             var sa:Array;
             var json:* = param1;
             var i:* = param2;
-            this._adList[i] = {adPath:"", duration:"", adClickUrl:"", adStatUrl:"", adClickStatUrl:"", adPlayOverStatUrl:"", func:null, adSfunc:null, adEfunc:null, adArrPB:null, isExcluded:false, callTime:null, adType:"", playState:"no", loadState:"no", ad:null, hitArea:new MovieClip(), detail:new Sprite(), errTip:new Sprite(), adIcon:new Sprite(), dspSource:"", adIconTxt:new TextField()};
+            this._adList[i] = {adPath:"", duration:"", adClickUrl:"", adStatUrl:"", adClickStatUrl:"", adPlayOverStatUrl:"", func:null, adSfunc:null, adEfunc:null, adArrPB:null, isExcluded:false, callTime:null, adType:"", playState:"no", loadState:"no", ad:null, hitArea:new MovieClip(), detail:new Sprite(), errTip:new Sprite()};
             this._adList[i].adPath = json[i][0];
             if (this._adList[i].adPath != "")
             {
@@ -227,25 +225,11 @@
             {
                 this._adList[i].isExcluded = true;
             }
-            if (json[i].length >= 15 && json[i][14] != null && json[i][14] != "")
-            {
-                this._adList[i].dspSource = json[i][14] + " ";
-            }
             this._adTotTime = this._adTotTime + this._adList[i].duration;
             this._adList[i].hitArea.index = i;
             Utils.drawRect(this._adList[i].hitArea, 1, 1, this._width, this._height, 16777215, 0);
             this._adList[i].hitArea.buttonMode = true;
             this._adList[i].hitArea.addEventListener(MouseEvent.CLICK, this.adClickHandler);
-            var tf:* = new TextFormat();
-            tf.color = 16777215;
-            tf.leading = -3;
-            tf.size = 12;
-            tf.font = PlayerConfig.MICROSOFT_YAHEI;
-            this._adList[i].adIconTxt.autoSize = TextFieldAutoSize.LEFT;
-            this._adList[i].adIconTxt.selectable = false;
-            this._adList[i].adIconTxt.text = this._adList[i].dspSource + "广告";
-            this._adList[i].adIconTxt.setTextFormat(tf);
-            Utils.drawRect(this._adList[i].adIcon, 1, 1, this._adList[i].adIconTxt.textWidth + 10, 19, 0, 0.6);
             if (this._adList[i].adType == "swf")
             {
                 try
@@ -340,10 +324,6 @@
             this._container.addChild(this._adList[i].hitArea);
             this._container.addChild(this._adList[i].errTip);
             this._container.addChild(this._adList[i].detail);
-            this._adList[i].adIcon.addChild(this._adList[i].adIconTxt);
-            this._adList[i].ad.addChild(this._adList[i].adIcon);
-            this._adList[i].adIconTxt.x = (this._adList[i].adIcon.width - this._adList[i].adIconTxt.textWidth) / 2 - 1;
-            this._adList[i].adIconTxt.y = (this._adList[i].adIcon.height - this._adList[i].adIconTxt.height) / 2 - 1;
             this._adList[i].detail.visible = false;
             if (this._adList[i].adPath != "")
             {
@@ -476,7 +456,7 @@
             var _loc_4:int = 5;
             this._tipTxt.x = 5;
             this._tipTxt.y = _loc_4;
-            this._tipTxt.text = "因版权原因，该剧暂时不能跳过广告，敬请谅解...";
+            this._tipTxt.text = "因版权原因，该剧暂时不能跳过广告，我们正在积极解决。";
             this._tipTxt.setTextFormat(_loc_1);
             this._tipTxt.textColor = 15132390;
             this._adTipContainer.addChild(this._tipTxt);
@@ -574,7 +554,7 @@
             {
                 Utils.openWindow(_loc_2);
             }
-            this._statSender.multiSend(this._adList[event.target["index"]].adClickStatUrl.replace(this.pattern, new Date().getTime()));
+            this._statSender.multiSend(this._adList[event.target["index"]].adClickStatUrl);
             return;
         }// end function
 
@@ -870,7 +850,7 @@
                         i = (i + 1);
                     }
                 }
-                if (this._adList[this._currentIndex].adArrPB != null && !this._adList[this._currentIndex].isConnectTimeOut && !this._adList[this._currentIndex].isLoadErr)
+                if (this._adList[this._currentIndex].adArrPB != null)
                 {
                     arr = this._adList[this._currentIndex].adArrPB;
                     k;
@@ -880,15 +860,8 @@
                         if (evt.obj.nowTime >= Number(arr[k].t))
                         {
                             AdLog.msg("第 " + this._currentIndex + " 广告：" + arr);
-                            AdLog.msg("上报地址：" + arr[k].v.replace(this.pattern, new Date().getTime()));
-                            if (this._adList[this._currentIndex].adSfunc != null && ExternalInterface.available)
-                            {
-                                ExternalInterface.call(this._adList[this._currentIndex].adSfunc, 0, arr[k].v.replace(this.pattern, new Date().getTime()));
-                            }
-                            else
-                            {
-                                this._statSender.multiSend(arr[k].v.replace(this.pattern, new Date().getTime()));
-                            }
+                            AdLog.msg("上报地址：" + arr[k].v);
+                            this._statSender.multiSend(arr[k].v);
                             arr.splice(k, 1);
                             break;
                         }
@@ -1031,14 +1004,14 @@
             this._adNowTime = this._adNowTime + this._adList[this._currentIndex].duration;
             this._adList[this._currentIndex].endPlayTime = getTimer();
             this._adList[this._currentIndex].ad.removeEventListener(MediaEvent.PLAY_PROGRESS, this.adPlayProgress);
-            if (this._adList[this._currentIndex].adArrPB != null && this._adList[this._currentIndex].adArrPB.length > 0 && !this._adList[this._currentIndex].isConnectTimeOut && !this._adList[this._currentIndex].isLoadErr)
+            if (this._adList[this._currentIndex].adArrPB != null && this._adList[this._currentIndex].adArrPB.length > 0)
             {
                 _loc_2 = this._adList[this._currentIndex].adArrPB;
                 _loc_3 = 0;
                 while (_loc_3 < _loc_2.length)
                 {
                     
-                    this._statSender.multiSend(_loc_2[_loc_3].v.replace(this.pattern, new Date().getTime()));
+                    this._statSender.multiSend(_loc_2[_loc_3].v);
                     _loc_2.splice(_loc_3, 1);
                     _loc_3++;
                 }
@@ -1055,11 +1028,11 @@
                 {
                     if (this._adList[this._currentIndex].adPlayOverStatUrl != "" && this._adList[this._currentIndex].adEfunc != null && ExternalInterface.available)
                     {
-                        ExternalInterface.call(this._adList[this._currentIndex].adEfunc, this._adList[this._currentIndex].duration, this._adList[this._currentIndex].adPlayOverStatUrl.replace(this.pattern, new Date().getTime()));
+                        ExternalInterface.call(this._adList[this._currentIndex].adEfunc, this._adList[this._currentIndex].duration, this._adList[this._currentIndex].adPlayOverStatUrl);
                     }
                     else
                     {
-                        this._statSender.multiSend(this._adList[this._currentIndex].adPlayOverStatUrl.replace(this.pattern, new Date().getTime()));
+                        this._statSender.multiSend(this._adList[this._currentIndex].adPlayOverStatUrl);
                     }
                 }
                 AdLog.msg((this._currentIndex + 1) + "：：playAd");
@@ -1071,11 +1044,11 @@
                 {
                     if (this._adList[this._currentIndex].adPlayOverStatUrl != "" && this._adList[this._currentIndex].adEfunc != null && ExternalInterface.available)
                     {
-                        ExternalInterface.call(this._adList[this._currentIndex].adEfunc, this._adList[this._currentIndex].duration, this._adList[this._currentIndex].adPlayOverStatUrl.replace(this.pattern, new Date().getTime()));
+                        ExternalInterface.call(this._adList[this._currentIndex].adEfunc, this._adList[this._currentIndex].duration, this._adList[this._currentIndex].adPlayOverStatUrl);
                     }
                     else
                     {
-                        this._statSender.multiSendAndCallBack(this._adList[this._currentIndex].adPlayOverStatUrl.replace(this.pattern, new Date().getTime()), this.vmCallBack);
+                        this._statSender.multiSendAndCallBack(this._adList[this._currentIndex].adPlayOverStatUrl, this.vmCallBack);
                     }
                     this.sendAdStopStock(this._currentIndex);
                 }
@@ -1095,6 +1068,7 @@
 
         private function sendAdPQ(param1:uint) : void
         {
+            return;
             try
             {
                 if (this._adList[param1].adPath != "" && !this._adList[param1].isSendPQ)
@@ -1176,8 +1150,6 @@
                     this._container.removeChild(this._adList[i].detail);
                     this._container.removeChild(this._adList[i].hitArea);
                     this._container.removeChild(this._adList[i].errTip);
-                    this._adList[i].adIcon.removeChild(this._adList[i].adIconTxt);
-                    this._adList[i].ad.removeChild(this._adList[i].adIcon);
                 }
                 catch (evt)
                 {
@@ -1239,6 +1211,7 @@
 
         protected function checkAdPlayTime(param1:String, param2:String) : void
         {
+            return;
             var boo:Boolean;
             var loadPath:String;
             var isHasAd:Boolean;
@@ -1398,6 +1371,8 @@
         {
             this._currentIndex = param1;
             this.initVolume();
+            this.adStop();
+            return;
             if (this._adList[param1].adPath != "")
             {
                 this._adList[param1].ad.addEventListener(MediaEvent.PLAY_PROGRESS, this.adPlayProgress);
@@ -1439,6 +1414,7 @@
 
         private function adPingback(param1:String = "0") : void
         {
+            return;
             var _loc_2:Boolean = false;
             var _loc_3:Array = null;
             var _loc_4:RegExp = null;
@@ -1457,12 +1433,12 @@
                 {
                     if (this._adList[this._currentIndex].adStatUrl != "" && this._adList[this._currentIndex].adSfunc != null && ExternalInterface.available)
                     {
-                        ExternalInterface.call(this._adList[this._currentIndex].adSfunc, 0, this._adList[this._currentIndex].adStatUrl.replace(this.pattern, new Date().getTime()));
+                        ExternalInterface.call(this._adList[this._currentIndex].adSfunc, 0, this._adList[this._currentIndex].adStatUrl);
                     }
                     else if (this._adList[this._currentIndex].adStatUrl != "")
                     {
-                        this._statSender.multiSend(this._adList[this._currentIndex].adStatUrl.replace(this.pattern, new Date().getTime()));
-                        AdLog.msg("第 " + this._currentIndex + " 广告的" + "曝光地址上报：" + this._adList[this._currentIndex].adStatUrl.replace(this.pattern, new Date().getTime()));
+                        this._statSender.multiSend(this._adList[this._currentIndex].adStatUrl);
+                        AdLog.msg("第 " + this._currentIndex + " 广告的" + "曝光地址上报：" + this._adList[this._currentIndex].adStatUrl);
                     }
                     this.sendAdPlayStock(this._currentIndex);
                     this._adList[this._currentIndex].adStatUrl = "";
@@ -1477,6 +1453,7 @@
 
         protected function sendAdPlayStock(param1:uint) : void
         {
+            return;
             var _loc_2:String = null;
             try
             {
@@ -1495,6 +1472,7 @@
 
         protected function sendAdStopStock(param1:uint) : void
         {
+            return;
             var _loc_2:String = null;
             try
             {
@@ -1513,6 +1491,7 @@
 
         protected function sendAdStock(param1:uint, param2:String, param3:String, param4:String = "") : void
         {
+            return;
             var _loc_5:* = param4 != "" ? ("&" + param4) : ("");
             var _loc_6:* = this._adList[param1].adPath != "" ? ("act") : ("na");
             var _loc_7:* = PlayerConfig.domainProperty == "3" ? ("http://ctr.hd.sohu.com/s.gif?prod=56") : ("http://wl.hd.sohu.com/s.gif?prod=flash");
@@ -1589,8 +1568,6 @@
                     ;
                 }
                 this._adList[_loc_3].detail.y = this._height - this._adList[_loc_3].detail.height - 18 - (this._container.stage.displayState == StageDisplayState.FULL_SCREEN ? (37) : (0));
-                this._adList[_loc_3].adIcon.x = 10;
-                this._adList[_loc_3].adIcon.y = this._height - this._adList[_loc_3].adIcon.height - 2 - (this._container.stage.displayState == StageDisplayState.FULL_SCREEN ? (47) : (10));
                 this._adList[_loc_3].ad.resize(this._width, this._height);
                 this._adList[_loc_3].errTip.resize(this._width, this._height);
                 _loc_3 = _loc_3 + 1;

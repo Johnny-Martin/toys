@@ -183,7 +183,7 @@
             }
             catch (e:Error)
             {
-                DebugInfo("清除FT_Hart失败!" + e);
+                DebugInfo("清除FT_Hart失败!" + "Realz_Mod" + e);
             }
             soHart_Clear;
             j;

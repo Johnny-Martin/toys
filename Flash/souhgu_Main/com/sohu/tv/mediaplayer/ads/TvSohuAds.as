@@ -19,7 +19,6 @@
         private var _adsInfo_arr:Array;
         private var _hasAds:Boolean;
         private var _selectorStartAd:SelectorStartAd;
-        private var _backgroudAd:BackgroundAd;
         private var _startAd:StartAd;
         private var _topLogoAd:TopLogoAd;
         private var _logoAd:LogoAd;
@@ -93,7 +92,6 @@
             this._bottomAd = new BottomAd();
             this._ctrlBarAd = new CtrlBarAd();
             this._sogouAd = new SogouAd();
-            this._backgroudAd = new BackgroundAd();
             try
             {
                 this._adSo = SharedObject.getLocal("AD", "/");
@@ -139,11 +137,11 @@
             var enc:* = "&ran=" + encodeURIComponent(arr[0]) + "_" + this.encNum;
             if (!PlayerConfig.is56)
             {
-                this._fetchAdsUrl = PlayerConfig.FETCH_ADS_PATCH + "?cat=" + PlayerConfig.cmscat + "&pver=" + Capabilities.version + "&type=" + type + "&al=" + (PlayerConfig.isMyTvVideo && PlayerConfig.wm_user == "20" ? (Number(PlayerConfig.plid)) : (Number(PlayerConfig.vrsPlayListId))) + "&vid=" + PlayerConfig.vid + "&tvid=" + PlayerConfig.tvid + "&uuid=" + PlayerConfig.uuid + "&c=" + PlayerConfig.channel + "&vc=" + PlayerConfig.catcode + "&act=" + PlayerConfig.act + "&st=" + PlayerConfig.mainActorId + "&ar=" + PlayerConfig.areaId + "&ye=" + PlayerConfig.year + "&fee=" + (PlayerConfig.isFee ? ("1") : ("0")) + "&isIf=" + _isIf + "&du=" + PlayerConfig.totalDuration + (PlayerConfig.xuid != "" ? ("&pgy=" + PlayerConfig.xuid) : ("")) + "&out=" + PlayerConfig.domainProperty + "&uid=" + PlayerConfig.userId + pub_catecode + qd + (PlayerConfig.adReview != "" ? ("&review=" + PlayerConfig.adReview) : ("")) + (PlayerConfig.apiKey != "" ? ("&ak=" + PlayerConfig.apiKey) : ("")) + (PlayerConfig.liveType != "" ? ("&lid=" + PlayerConfig.vid) : ("")) + "&autoPlay=" + (PlayerConfig.autoPlay ? ("1") : ("0")) + (PlayerConfig.txid != "" ? ("&txid=" + PlayerConfig.txid) : ("")) + "&crid=" + PlayerConfig.crid + vu + enc + newInfoStr + (PlayerConfig.myTvUserId != "" ? ("&myTvUid=" + PlayerConfig.myTvUserId) : ("")) + (PlayerConfig.tag != "" ? ("&tag=" + encodeURIComponent(PlayerConfig.tag)) : ("")) + "&pageUrl=" + escape(PlayerConfig.currentPageUrl == "" ? (escape(PlayerConfig.outReferer)) : (escape(PlayerConfig.currentPageUrl))) + "&lrd=" + escape(PlayerConfig.landingrefer) + "&pagerefer=" + escape(escape(refer)) + "&ag=" + escape(PlayerConfig.age) + "&ti=" + encodeURIComponent(PlayerConfig.videoTitle) + "&w=" + this._stage.stageWidth + "&h=" + this._stage.stageHeight + "&ooab=" + (PlayerConfig.isInFiveMinPlayed ? ("1") : ("0"));
+                this._fetchAdsUrl = PlayerConfig.FETCH_ADS_PATCH + "?cat=" + PlayerConfig.cmscat + "&pver=" + Capabilities.version + "&type=" + type + "&al=" + (PlayerConfig.isMyTvVideo && PlayerConfig.wm_user == "20" ? (Number(PlayerConfig.plid)) : (Number(PlayerConfig.vrsPlayListId))) + "&vid=" + PlayerConfig.vid + "&tvid=" + PlayerConfig.tvid + "&uuid=" + PlayerConfig.uuid + "&c=" + PlayerConfig.channel + "&vc=" + PlayerConfig.catcode + "&act=" + PlayerConfig.act + "&st=" + PlayerConfig.mainActorId + "&ar=" + PlayerConfig.areaId + "&ye=" + PlayerConfig.year + "&fee=" + (PlayerConfig.isFee ? ("1") : ("0")) + "&isIf=" + _isIf + "&du=" + PlayerConfig.totalDuration + (PlayerConfig.xuid != "" ? ("&pgy=" + PlayerConfig.xuid) : ("")) + "&out=" + PlayerConfig.domainProperty + "&uid=" + PlayerConfig.userId + pub_catecode + qd + (PlayerConfig.adReview != "" ? ("&review=" + PlayerConfig.adReview) : ("")) + (PlayerConfig.apiKey != "" ? ("&ak=" + PlayerConfig.apiKey) : ("")) + (PlayerConfig.liveType != "" ? ("&lid=" + PlayerConfig.vid) : ("")) + "&autoPlay=" + (PlayerConfig.autoPlay ? ("1") : ("0")) + (PlayerConfig.txid != "" ? ("&txid=" + PlayerConfig.txid) : ("")) + "&crid=" + PlayerConfig.crid + vu + enc + newInfoStr + (PlayerConfig.myTvUserId != "" ? ("&myTvUid=" + PlayerConfig.myTvUserId) : ("")) + (PlayerConfig.tag != "" ? ("&tag=" + encodeURIComponent(PlayerConfig.tag)) : ("")) + "&pageUrl=" + escape(PlayerConfig.currentPageUrl == "" ? (escape(PlayerConfig.outReferer)) : (escape(PlayerConfig.currentPageUrl))) + "&lrd=" + escape(PlayerConfig.landingrefer) + "&pagerefer=" + escape(escape(refer)) + "&ag=" + escape(PlayerConfig.age) + "&ti=" + encodeURIComponent(PlayerConfig.videoTitle) + "&w=" + this._stage.stageWidth + "&h=" + this._stage.stageHeight;
             }
             else
             {
-                this._fetchAdsUrl = "http://v.aty.sohu.com/v" + "?" + "c=56com" + "&cat=" + PlayerConfig.cidFor56 + "&vc=" + PlayerConfig.cidFor56 + "&review=" + "" + "&pver=" + PlayerConfig.flashVersion + "&type=56flash" + "&al=" + PlayerConfig.acidFor56 + "&act=" + "&st=" + "&ar=" + "&ye=" + "&du=" + PlayerConfig.totalDuration + "&vid=" + PlayerConfig.vid + "&out=" + 0 + "&tuv=" + PlayerConfig.userId + "&uid=" + PlayerConfig.userId + "&uuid=" + PlayerConfig.uuid + "&autoPlay=" + 1 + "&ag=" + "&fee=" + "&lid=" + "&ak=" + PlayerConfig.apiKey + "&vu=" + "&isIf=" + _isIf + "&qd=" + PlayerConfig.ch_key + "&mal=" + PlayerConfig.opera_id + "&Inx=" + "&tot=" + "&adtime=" + 60 + "&pageUrl=" + escape(PlayerConfig.currentPageUrl == "" ? (escape(PlayerConfig.outReferer)) : (escape(PlayerConfig.currentPageUrl))) + "&ti=" + encodeURIComponent(PlayerConfig.videoTitle) + "&ptime=" + "&ooab=" + (PlayerConfig.isInFiveMinPlayed ? ("1") : ("0"));
+                this._fetchAdsUrl = "http://v.aty.sohu.com/v" + "?" + "c=56com" + "&cat=" + PlayerConfig.cidFor56 + "&vc=" + PlayerConfig.cidFor56 + "&review=" + "" + "&pver=" + PlayerConfig.flashVersion + "&type=56flash" + "&al=" + PlayerConfig.acidFor56 + "&act=" + "&st=" + "&ar=" + "&ye=" + "&du=" + PlayerConfig.totalDuration + "&vid=" + PlayerConfig.vid + "&out=" + 0 + "&tuv=" + PlayerConfig.userId + "&uid=" + PlayerConfig.userId + "&uuid=" + PlayerConfig.uuid + "&autoPlay=" + 1 + "&ag=" + "&fee=" + "&lid=" + "&ak=" + PlayerConfig.apiKey + "&vu=" + "&isIf=" + _isIf + "&qd=" + PlayerConfig.ch_key + "&mal=" + PlayerConfig.opera_id + "&Inx=" + "&tot=" + "&adtime=" + 60 + "&pageUrl=" + escape(PlayerConfig.currentPageUrl == "" ? (escape(PlayerConfig.outReferer)) : (escape(PlayerConfig.currentPageUrl))) + "&ti=" + encodeURIComponent(PlayerConfig.videoTitle) + "&ptime=";
             }
             if (!this._selectorStartAd.hasAd)
             {
@@ -427,7 +425,6 @@
                     clicklayerfbar = this.getPar(json.data.clicklayerfbar);
                     ctrlBarAdClickStat = this.getPar(json.data.fbaradclickmonitor);
                     ctrlHardAdFlag = this.getPar(json.data.fbarhardflag);
-                    PlayerConfig.firstReqTanmuTime = this.getPar(json.data.firstreqbarragetime);
                 }
                 else
                 {
@@ -515,7 +512,7 @@
                     }
                     AdLog.msg("==========前贴广告部分结束==========");
                 }
-                this._logoAd.softInit({adPar:logoAdPar, adClick:logoAdClickPar, adClickStat:logoAdClickStat, adDelayPar:logoAdDelayPar, adIntervalPar:logoAdIntervalPar, adPingback:logoAdPingback, adClicklayerflogo:clicklayerflogo, adFirsttimePar:logoAdFirsttimePar, hardFlag:logoHardAdFlag, flogodspsource:json.data.flogodspsource});
+                this._logoAd.softInit({adPar:logoAdPar, adClick:logoAdClickPar, adClickStat:logoAdClickStat, adDelayPar:logoAdDelayPar, adIntervalPar:logoAdIntervalPar, adPingback:logoAdPingback, adClicklayerflogo:clicklayerflogo, adFirsttimePar:logoAdFirsttimePar, hardFlag:logoHardAdFlag});
                 this._topLogoAd.softInit({adPar:topLogoAdPar, adClick:topLogoAdClickPar, adDelayPar:topLogoAdDelayPar, adPingback:topLogoAdPingback});
                 this._pauseAd.softInit({adPar:pauseAdPar, adPingback:pauseAdPingback});
                 AdLog.msg("==========后贴广告部分开始==========");
@@ -524,7 +521,7 @@
                 this._topAd.softInit({adPar:topAdPar, adClick:topAdClickPar, adDelayPar:topAdDelayPar, adPingback:topAdPingback});
                 this._bottomAd.softInit({adPar:bottomAdPar, adClick:bottomAdClickPar, adDelayPar:bottomAdDelayPar, adPingback:bottomAdPingback});
                 this._sogouAd.softInit({adPar:sogouAdPar});
-                this._ctrlBarAd.softInit({adPar:ctrlBarAdPar, adClick:ctrlBarAdClickPar, adClickStat:ctrlBarAdClickStat, adPingback:ctrlBarAdPingback, adClicklayerfbar:clicklayerfbar, hardFlag:ctrlHardAdFlag, fbardspsource:json.data.fbardspsource});
+                this._ctrlBarAd.softInit({adPar:ctrlBarAdPar, adClick:ctrlBarAdClickPar, adClickStat:ctrlBarAdClickStat, adPingback:ctrlBarAdPingback, adClicklayerfbar:clicklayerfbar, hardFlag:ctrlHardAdFlag});
                 this.hasAds = true;
             }
             else
@@ -682,10 +679,6 @@
             {
                 this.middleAd.destroy();
             }
-            if (this.backgroudAd != null)
-            {
-                this.backgroudAd.destroy();
-            }
             return;
         }// end function
 
@@ -763,11 +756,6 @@
         public function get middleAd() : MiddleAd
         {
             return this._middleAd;
-        }// end function
-
-        public function get backgroudAd() : BackgroundAd
-        {
-            return this._backgroudAd;
         }// end function
 
         public function set stage(param1:Stage) : void

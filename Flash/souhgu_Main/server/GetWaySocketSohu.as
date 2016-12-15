@@ -2,7 +2,6 @@
 {
     import com.*;
     import flash.events.*;
-    import flash.system.*;
     import flash.utils.*;
 
     public class GetWaySocketSohu extends BaseSocketSohu
@@ -86,14 +85,7 @@
                         break;
                     }
                 }
-                if ((Capabilities.os as String).indexOf("Mac") != -1)
-                {
-                    this.suc_socketport = 988;
-                }
-                else
-                {
-                    this.suc_socketport = param2 % 2 == 0 ? (this._p2psohu.config.getWayPort) : (988);
-                }
+                this.suc_socketport = param2 % 2 == 0 ? (this._p2psohu.config.getWayPort) : (988);
             }
             this._p2psohu.showTestInfo("Getway  socketInit:" + this.suc_socketip + ":" + this.suc_socketport + " count:" + param1 + " portcount:" + param2, true);
             socket.connect(this.suc_socketip, this.suc_socketport);

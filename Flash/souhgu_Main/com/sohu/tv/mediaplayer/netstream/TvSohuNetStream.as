@@ -357,9 +357,8 @@
         override protected function loadLocationAndPlay() : void
         {
             var re:* = /\?start=""\?start=/;
-            var re1:* = /\&start=""\&start=/;
             var reData:* = /http\:\/\/(.+?)\/\|([0-9]{1,4})\|(.+?)\|([^|]*)\|?([01]?)\|?([01]?)\|([0-9]{1,6})\|([0-9]{1,6})\|([0-9]{1,6})""http\:\/\/(.+?)\/\|([0-9]{1,4})\|(.+?)\|([^|]*)\|?([01]?)\|?([01]?)\|([0-9]{1,6})\|([0-9]{1,6})\|([0-9]{1,6})/;
-            var boo:* = re.test(_gslbUrl) || re1.test(_gslbUrl);
+            var boo:* = re.test(_gslbUrl);
             var ips:String;
             var synUrl:String;
             if (this._errCdnIds.length > 0)

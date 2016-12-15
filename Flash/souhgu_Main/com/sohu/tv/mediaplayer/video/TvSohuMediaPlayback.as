@@ -39,7 +39,6 @@
         private var _endAdContainer:Sprite;
         private var _middleAdContainer:Sprite;
         private var _adContainer:Sprite;
-        private var _adContainerBg:Sprite;
         private var _sogouAdContainer:Sprite;
         protected var _titleText:TextField;
         protected var _topSideBar:Sprite;
@@ -176,14 +175,6 @@
         private var _isSvdUserTip:Boolean = false;
         private var _licenseText:TextField;
         private var _isLoadingDanmu:Boolean = false;
-        private var _v360:Object;
-        private var _v360Loading:Boolean = false;
-        private var _danmuTimer:Timer;
-        private var _v360Tnum:Number;
-        private var _v360Id:Number = 0;
-        private var _dummyPlayedTime:Number;
-        private var _dummyTotTime:Number;
-        private var _backGroudClearTime:int = 0;
         private var isCuting:Boolean = false;
         private static var singleton:TvSohuMediaPlayback;
         public static const HD_BUTTON_MOUSEUP:String = "hd_button_mouseup";
@@ -195,7 +186,6 @@
         public function TvSohuMediaPlayback()
         {
             this._dropFramesArr = new Array();
-            this._danmuTimer = new Timer(50);
             this._owner = this;
             return;
         }// end function
@@ -243,7 +233,6 @@
 
         override protected function coreHandler(param1:Object) : void
         {
-            var index:int;
             var obj:* = param1;
             this._ctrlAdContainer = new Sprite();
             this._topAdContainer = new Sprite();
@@ -252,14 +241,12 @@
             this._topLogoAdContainer = new Sprite();
             this._pauseAdContainer = new Sprite();
             this._adContainer = new Sprite();
-            this._adContainerBg = new Sprite();
             this._sogouAdContainer = new Sprite();
             super.coreHandler(obj);
             if (obj.info == "success")
             {
                 addChild(this._adContainer);
-                index = this.getChildIndex(core) > 0 ? ((this.getChildIndex(core) - 1)) : (0);
-                addChildAt(this._adContainerBg, index);
+                this._adContainer.addChild(this._logoAdContainer);
                 this._adContainer.addChild(this._topLogoAdContainer);
                 this._adContainer.addChild(this._topAdContainer);
                 this._adContainer.addChild(this._endAdContainer);
@@ -274,7 +261,6 @@
                 TvSohuAds.getInstance().pauseAd.container = this._pauseAdContainer;
                 TvSohuAds.getInstance().topAd.container = this._topAdContainer;
                 TvSohuAds.getInstance().bottomAd.container = this._bottomAdContainer;
-                TvSohuAds.getInstance().backgroudAd.container = this._adContainerBg;
                 TvSohuAds.getInstance().endAd.container = this._endAdContainer;
                 TvSohuAds.getInstance().middleAd.container = this._middleAdContainer;
                 TvSohuAds.getInstance().pauseAd.addEventListener(TvSohuAdsEvent.PAUSESHOWN, this.pauseAdShown);
@@ -403,11 +389,6 @@
                 {
                     TvSohuAds.getInstance().logoAd.container.y = stage.stageHeight - _ctrlBarBg_spr.height - TvSohuAds.getInstance().logoAd.height - _progress_sld["sliderDiffHeight"];
                 }
-            }
-            if (PlayerConfig.vrModel == "1" || PlayerConfig.vrModel == "2")
-            {
-                TvSohuAds.getInstance().logoAd.container.x = _loc_3 - TvSohuAds.getInstance().logoAd.width - 5;
-                TvSohuAds.getInstance().logoAd.container.y = _loc_4 - TvSohuAds.getInstance().logoAd.height - 13;
             }
             Utils.debug("vx:" + _core.videoContainer.x + " coreMetaWidth:" + _loc_5 + " logoAd.width:" + TvSohuAds.getInstance().logoAd.width);
             TvSohuAds.getInstance().logoAd.changeAd();
@@ -847,27 +828,9 @@
             if (this._danmu != null)
             {
                 LogManager.msg("已经存在弹幕组件");
-                if (PlayerConfig.vrModel == "1" || PlayerConfig.vrModel == "2")
-                {
-                    this._owner.setChildIndex(this._danmu, this._owner.getChildIndex(_hitArea_spr) + 2);
-                    this._owner.setChildIndex(this._rightSideBar, this._owner.getChildIndex(_hitArea_spr) + 3);
-                }
-                else
-                {
-                    this._owner.setChildIndex(this._danmu, (this._owner.getChildIndex(_hitArea_spr) + 1));
-                    this._owner.setChildIndex(this._rightSideBar, this._owner.getChildIndex(_hitArea_spr) + 2);
-                }
-                if (PlayerConfig.allTimeLogo)
-                {
-                    this._owner.setChildIndex(this._logoAdContainer, this._owner.getChildIndex(this._danmu));
-                }
-                else
-                {
-                    this._owner.setChildIndex(this._logoAdContainer, this._owner.getChildIndex(this._rightSideBar));
-                }
                 return;
             }
-            else if (!this._isLoadingDanmu)
+            if (!this._isLoadingDanmu)
             {
                 this._isLoadingDanmu = true;
                 LogManager.msg("加载弹幕组件");
@@ -881,31 +844,12 @@
                 if (param1.info == "success")
                 {
                     _danmu = param1.data.content;
-                    if (_hitArea_spr != null)
-                    {
-                        if (PlayerConfig.vrModel == "1" || PlayerConfig.vrModel == "2")
-                        {
-                            _owner.addChildAt(_danmu, _owner.getChildIndex(_hitArea_spr) + 2);
-                        }
-                        else
-                        {
-                            _owner.addChildAt(_danmu, (_owner.getChildIndex(_hitArea_spr) + 1));
-                        }
-                        if (PlayerConfig.allTimeLogo)
-                        {
-                            _owner.setChildIndex(_logoAdContainer, _owner.getChildIndex(_danmu));
-                        }
-                    }
-                    else
-                    {
-                        _owner.addChildAt(_danmu, (_owner.getChildIndex(_core) + 1));
-                    }
-                    _danmu.init(_core.width, _core.height, vid, PlayerConfig.isMyTvVideo ? ("sohu_ugc_player") : ("sohu_vrs_player"), 3, PlayerConfig.danmuDefaultStatus == "2" ? (true) : (false), PlayerConfig.vrsPlayListId != "" ? (PlayerConfig.vrsPlayListId) : (PlayerConfig.pid), PlayerConfig.passportUID, PlayerConfig.isMyTvVideo ? (PlayerConfig.myTvUserId) : (""), PlayerConfig.totalDuration, "m", 170, PlayerConfig.otherInforSender == "change" || PlayerConfig.otherInforSender == "restart" ? (true) : (false), PlayerConfig.uuid, Number(PlayerConfig.firstReqTanmuTime), TvSohuAds.getInstance().fetchAdsUrl, PlayerConfig.isSohuDomain, PlayerConfig.topBarNor);
+                    _owner.addChildAt(_danmu, (_owner.getChildIndex(_core) + 1));
+                    _danmu.init(_core.width, _core.height, vid, PlayerConfig.isMyTvVideo ? ("sohu_ugc_player") : ("sohu_vrs_player"), 3, PlayerConfig.danmuDefaultStatus == "2" ? (true) : (false), PlayerConfig.vrsPlayListId != "" ? (PlayerConfig.vrsPlayListId) : (PlayerConfig.pid), PlayerConfig.passportUID, PlayerConfig.isMyTvVideo ? (PlayerConfig.myTvUserId) : (""), PlayerConfig.totalDuration, "m", 170, PlayerConfig.otherInforSender == "change" || PlayerConfig.otherInforSender == "restart" ? (true) : (false));
                     _danmu.addEventListener("__onTmDataGet", onTmDataComplete);
                     _danmu.addEventListener("__onTmDataErr", onTmDataFailHandler);
                     _danmu.addEventListener("__onTmNoData", onTmDataFailHandler);
                     _danmu.addEventListener("__onTmDataFailed", onTmDataFailHandler);
-                    _danmu.addEventListener("__onTmAdClick", onTmAdClickHandler);
                     setSkinState();
                     _danmu.play();
                     ;
@@ -921,15 +865,6 @@
         private function onTmDataComplete(param1) : void
         {
             LogManager.msg("TTTTTTYYYYYYYUUUUUUUUUUUUUUUUUUUU:" + param1["data"]);
-            return;
-        }// end function
-
-        private function onTmAdClickHandler(param1) : void
-        {
-            if (_skin != null && stage.displayState == "fullScreen")
-            {
-                _normalScreen_btn.dispatchEvent(new MouseEventUtil(MouseEventUtil.CLICK));
-            }
             return;
         }// end function
 
@@ -1360,19 +1295,11 @@
                         {
                             evt.target.clicked = false;
                             _danmu.showTanmu(false);
-                            if (ExternalInterface.available && PlayerConfig.isSohuDomain && stage.displayState == "fullScreen")
-                            {
-                                ExternalInterface.call("s2j_dmSwitch", 2);
-                            }
                         }
                         else
                         {
                             evt.target.clicked = true;
                             _danmu.showTanmu(true);
-                            if (ExternalInterface.available && PlayerConfig.isSohuDomain && stage.displayState == "fullScreen")
-                            {
-                                ExternalInterface.call("s2j_dmSwitch", 1);
-                            }
                         }
                     }
                     catch (evt)
@@ -1731,7 +1658,6 @@
                     if (PlayerConfig.hdVid != "" && PlayerConfig.hdVid != PlayerConfig.currentVid)
                     {
                         this.stopDanmu();
-                        this.stopV360();
                         this._isPreLoadPanel = false;
                         dispatchEvent(new Event(HD_BUTTON_MOUSEUP));
                         this.tipText("切换到高清...");
@@ -1743,7 +1669,6 @@
                     if (PlayerConfig.norVid != "" && PlayerConfig.norVid != PlayerConfig.currentVid)
                     {
                         this.stopDanmu();
-                        this.stopV360();
                         this._isPreLoadPanel = false;
                         dispatchEvent(new Event(COMMON_BUTTON_MOUSEUP));
                         this.tipText("切换到标清...");
@@ -1755,7 +1680,6 @@
                     if (PlayerConfig.superVid != "" && PlayerConfig.superVid != PlayerConfig.currentVid)
                     {
                         this.stopDanmu();
-                        this.stopV360();
                         this._isPreLoadPanel = false;
                         dispatchEvent(new Event(SUPER_BUTTON_MOUSEUP));
                         this.tipText("切换到超清...");
@@ -2513,22 +2437,16 @@
 
         private function displayZoomSet(event:PanelEvent) : void
         {
-            if (!PlayerConfig.isBackgorundShowing)
-            {
-                this._displayRate = event.scaleRate;
-                _core.displayZoom(this._displayRate);
-                this.setAdsState();
-            }
+            this._displayRate = event.scaleRate;
+            _core.displayZoom(this._displayRate);
+            this.setAdsState();
             return;
         }// end function
 
         private function displayRotateSet(event:PanelEvent) : void
         {
-            if (!PlayerConfig.isBackgorundShowing)
-            {
-                _core.setR(event.rotateVal);
-                this.setAdsState();
-            }
+            _core.setR(event.rotateVal);
+            this.setAdsState();
             return;
         }// end function
 
@@ -2646,10 +2564,6 @@
 
         private function changeVideoRate(param1:MouseEventUtil) : void
         {
-            if (PlayerConfig.isBackgorundShowing)
-            {
-                return;
-            }
             param1.target.enabled = false;
             switch(param1.target)
             {
@@ -3551,17 +3465,11 @@
             var _loc_3:Boolean = false;
             this._rightSideBar.visible = false;
             var _loc_3:* = _loc_3;
-            this._logoAdContainer.visible = _loc_3;
-            var _loc_3:* = _loc_3;
             this._adContainer.visible = _loc_3;
             _ctrlBar_c.visible = _loc_3;
             if (this._danmu != null)
             {
                 this._danmu.visible = false;
-            }
-            if (this._v360)
-            {
-                this._v360.hideCtrlBar();
             }
             var _loc_3:Boolean = true;
             _isHide = true;
@@ -3581,17 +3489,9 @@
                 var _loc_3:* = _loc_3;
                 this._adContainer.visible = _loc_3;
                 _ctrlBar_c.visible = _loc_3;
-                if (!PlayerConfig.isBackgorundShowing)
-                {
-                    this._logoAdContainer.visible = true;
-                }
                 if (this._danmu != null)
                 {
                     this._danmu.visible = true;
-                }
-                if (this._v360 && PlayerConfig.showV360Bar)
-                {
-                    this._v360.showCtrlBar();
                 }
             }
             else
@@ -3916,28 +3816,12 @@
 
         override public function resize(param1:Number, param2:Number) : void
         {
-            var _loc_5:Number = NaN;
             param1 = param1 < 0 ? (1) : (param1);
             param2 = param2 < 0 ? (1) : (param2);
             var _loc_3:* = param1;
             var _loc_4:* = param2;
             _width = param1;
             _height = param2;
-            if (_core.streamState == "pause" && PlayerConfig.isSohuDomain && !PlayerConfig.isBackgorundShowing && TvSohuAds.getInstance().backgroudAd.prepared && this._displayRate == 1 && _core.rotateType == 0 && stage.stageWidth >= 540 && stage.stageHeight >= 300)
-            {
-                _loc_5 = PlayerConfig.etTime > 0 ? (PlayerConfig.etTime) : (this._dummyTotTime);
-                if (_loc_5 - this._dummyPlayedTime < TvSohuAds.getInstance().backgroudAd.bgAdTime)
-                {
-                    this.showBackGroudAd();
-                    LogManager.msg("打开背景_尺寸缩放触发");
-                }
-            }
-            else if (_core.streamState == "pause" && PlayerConfig.isSohuDomain && PlayerConfig.isBackgorundShowing && (this._stage.stageWidth < 540 || stage.stageHeight < 300))
-            {
-                this.hideBackGroudAd();
-                this.setAdsState();
-                LogManager.msg("关闭背景_尺寸缩放触发");
-            }
             if (stage.displayState == "fullScreen")
             {
                 if (_skin != null)
@@ -3972,15 +3856,7 @@
             {
                 this._danmu.updateTmLayerSize(_core.width, _core.height - (stage.displayState == "fullScreen" ? (_ctrlBarBg_spr.height) : (0)));
             }
-            if (this._v360)
-            {
-                this._v360.resize(param1, param2);
-            }
             this.setTitle();
-            if (PlayerConfig.isBackgorundShowing && _ctrlBarBg_spr)
-            {
-                TvSohuAds.getInstance().backgroudAd.resize(param1, param2 - _ctrlBarBg_spr.height, _core.videoContainer.width, _core.videoContainer.height);
-            }
             return;
         }// end function
 
@@ -4161,6 +4037,7 @@
                 {
                     _volume_sld.x = this._langSetBar.x - _volume_sld.width;
                 }
+                obj = _skinMap.getValue("barrageBtn");
                 if (!_volume_sld.visible)
                 {
                     this._barrageBtn.x = _volume_sld.x + _volume_sld.width - this._barrageBtn.width;
@@ -4169,6 +4046,9 @@
                 {
                     this._barrageBtn.x = _volume_sld.x - this._barrageBtn.width;
                 }
+                this._barrageBtn.visible = obj.v && bgw > obj.w;
+                this._barrageBtn.y = obj.y;
+                this._barrageBtn.enabled = obj.e;
                 obj = _skinMap.getValue("replayBtn");
                 var _loc_2:* = obj.x + (obj.r ? (diff) : (0));
                 obj.x = obj.x + (obj.r ? (diff) : (0));
@@ -4424,7 +4304,7 @@
                 }
                 else if (PlayerConfig.topBarFull && PlayerConfig.topBarNor)
                 {
-                    if (stage.displayState == "fullScreen" && (PlayerConfig.vrModel == "" && PlayerConfig.vrModel == "0"))
+                    if (stage.displayState == "fullScreen")
                     {
                         this._topPerSp.visible = true;
                     }
@@ -4445,8 +4325,9 @@
                 {
                     if (stage.displayState == "fullScreen")
                     {
-                        this._titleText.visible = true;
-                        this._topPerSp.visible = PlayerConfig.vrModel == "" && PlayerConfig.vrModel == "0" ? (true) : (false);
+                        var _loc_2:Boolean = true;
+                        this._topPerSp.visible = true;
+                        this._titleText.visible = _loc_2;
                         if (this._displayRate != 0.5 && this._displayRate != 0.75 && this._displayRate != 1)
                         {
                             var _loc_2:Boolean = true;
@@ -4523,23 +4404,19 @@
                 var _loc_2:int = 0;
                 this._danmu.y = 0;
                 this._danmu.x = _loc_2;
-            }
-            if (PlayerConfig.isSohuDomain && stage.displayState != StageDisplayState.FULL_SCREEN)
-            {
-                var _loc_2:Boolean = false;
-                _skinMap.getValue("barrageBtn").v = false;
-                _skinMap.getValue("barrageBtn").e = _loc_2;
-            }
-            if (PlayerConfig.isShowTanmu && PlayerConfig.isSohuDomain && stage.displayState == StageDisplayState.FULL_SCREEN)
-            {
-                _skinMap.getValue("barrageBtn").v = true;
-            }
-            obj = _skinMap.getValue("barrageBtn");
-            if (obj && this._barrageBtn)
-            {
-                this._barrageBtn.visible = obj.v && bgw > obj.w;
-                this._barrageBtn.y = obj.y;
-                this._barrageBtn.enabled = obj.e;
+                if (PlayerConfig.isShowTanmu && !PlayerConfig.isSohuDomain)
+                {
+                    var _loc_2:Boolean = true;
+                    _skinMap.getValue("barrageBtn").v = true;
+                    _skinMap.getValue("barrageBtn").e = _loc_2;
+                    try
+                    {
+                        this._barrageBtn.clicked = this._danmu.getTmShow();
+                    }
+                    catch (evt)
+                    {
+                    }
+                }
             }
             if (_skin != null && (TvSohuAds.getInstance().startAd.state == "playing" || TvSohuAds.getInstance().endAd.state == "playing" || TvSohuAds.getInstance().middleAd.state == "playing" || TvSohuAds.getInstance().selectorStartAd.state == "playing"))
             {
@@ -4641,8 +4518,7 @@
             register("definitionBar", {e:false, v:true});
             register("langSetBar", {e:false, v:PlayerConfig.showLangSetBtn});
             register("albumBtn", {e:false, v:false});
-            var _loc_1:* = PlayerConfig.isShowTanmu && (!PlayerConfig.isSohuDomain || PlayerConfig.isSohuDomain && stage.displayState == StageDisplayState.FULL_SCREEN);
-            register("barrageBtn", {e:false, v:_loc_1});
+            register("barrageBtn", {e:false, v:PlayerConfig.isShowTanmu && !PlayerConfig.isSohuDomain});
             _skinMap.getValue("volumeBar").e = true;
             _skinMap.getValue("volumeBar").v = true;
             return;
@@ -4655,7 +4531,6 @@
             var vSkins_obj:Object;
             var multiBtnSkinArr:Array;
             var t:ButtonUtil;
-            var t_show:Boolean;
             var j:*;
             var cap:Array;
             var sc:String;
@@ -4735,7 +4610,11 @@
             this._barrageBtn = new TvSohuButton({skin:_skin["barrage_btn"], showTip:false});
             _ctrlBar_c = new Sprite();
             this._ctrlBtn_sp = new Sprite();
-            TvSohuAds.getInstance().backgroudAd.adIconClass = _skinLoaderInfo.applicationDomain.getDefinition("adIcon") as Class;
+            var _loc_2:* = _skinLoaderInfo.applicationDomain.getDefinition("adIcon") as Class;
+            TvSohuAds.getInstance().ctrlBarAd.adIconClass = _skinLoaderInfo.applicationDomain.getDefinition("adIcon") as Class;
+            var _loc_2:* = _loc_2;
+            TvSohuAds.getInstance().logoAd.adIconClass = _loc_2;
+            TvSohuAds.getInstance().pauseAd.adIconClass = _loc_2;
             if (PlayerConfig.cap != null && PlayerConfig.cap.length > 0)
             {
                 cap = PlayerConfig.cap;
@@ -4773,9 +4652,6 @@
             }
             this.setLicense();
             addChild(_hitArea_spr);
-            addChild(this._logoAdContainer);
-            this._danmuTimer.addEventListener(TimerEvent.TIMER, this.danmTimerHandler);
-            this._danmuTimer.start();
             if (this._captionBar != null)
             {
                 addChild(this._captionBar);
@@ -5029,8 +4905,7 @@
             {
                 _skinMap.getValue("tvSohuLogoBtn").v = false;
             }
-            t_show = PlayerConfig.isShowTanmu && (!PlayerConfig.isSohuDomain || PlayerConfig.isSohuDomain && stage.displayState == StageDisplayState.FULL_SCREEN);
-            if (!t_show)
+            if (!(PlayerConfig.isShowTanmu && !PlayerConfig.isSohuDomain))
             {
                 _skinMap.getValue("albumBtn").w = _skinMap.getValue("albumBtn").w - this._barrageBtn.width;
             }
@@ -5038,35 +4913,6 @@
             if (PlayerConfig.isUgcPreview)
             {
                 this.showMiniProgress();
-            }
-            return;
-        }// end function
-
-        private function danmTimerHandler(event:TimerEvent) : void
-        {
-            if (this._danmu != null)
-            {
-                if (PlayerConfig.vrModel == "1" || PlayerConfig.vrModel == "2")
-                {
-                    this._owner.setChildIndex(this._danmu, this._owner.getChildIndex(_hitArea_spr) + 2);
-                    this._owner.setChildIndex(this._rightSideBar, this._owner.getChildIndex(_hitArea_spr) + 3);
-                }
-                else
-                {
-                    this._owner.setChildIndex(this._danmu, (this._owner.getChildIndex(_hitArea_spr) + 1));
-                    this._owner.setChildIndex(this._rightSideBar, this._owner.getChildIndex(_hitArea_spr) + 2);
-                }
-                if (PlayerConfig.allTimeLogo)
-                {
-                    this._owner.setChildIndex(this._logoAdContainer, this._owner.getChildIndex(this._danmu));
-                }
-                else
-                {
-                    this._owner.setChildIndex(this._logoAdContainer, this._owner.getChildIndex(this._rightSideBar));
-                }
-                this._danmuTimer.stop();
-                this._danmuTimer.removeEventListener(TimerEvent.TIMER, this.danmTimerHandler);
-                this._danmuTimer = null;
             }
             return;
         }// end function
@@ -5104,16 +4950,6 @@
         public function get saturationRate() : Number
         {
             return this._saturationRate;
-        }// end function
-
-        public function get topSideBar()
-        {
-            return this._topSideBar;
-        }// end function
-
-        public function get topPerSp()
-        {
-            return this._topPerSp;
         }// end function
 
         override protected function loadSkin(param1:String = "") : void
@@ -5198,103 +5034,40 @@
 
         override protected function onStart(event:Event = null) : void
         {
-            var _loc_3:Boolean = false;
-            var _loc_4:String = null;
+            var _loc_3:String = null;
             if (Eif.available && PlayerConfig.hasApi && !this._isFbChecked)
             {
                 this._isFbChecked = true;
-                _loc_4 = ExternalInterface.call("playStart");
-                PlayerConfig.isBrowserFullScreen = _loc_4 == "1" ? (true) : (false);
+                _loc_3 = ExternalInterface.call("playStart");
+                PlayerConfig.isBrowserFullScreen = _loc_3 == "1" ? (true) : (false);
             }
             var _loc_2:* = PlayerConfig.isBrowserFullScreen;
-            var _loc_5:* = PlayerConfig.showMiniWinBtn;
+            var _loc_4:* = PlayerConfig.showMiniWinBtn;
             _skinMap.getValue("miniWinBtn").v = PlayerConfig.showMiniWinBtn;
-            _skinMap.getValue("miniWinBtn").e = _loc_5;
-            var _loc_5:Boolean = true;
+            _skinMap.getValue("miniWinBtn").e = _loc_4;
+            var _loc_4:Boolean = true;
             _skinMap.getValue("lightBar").v = true;
-            _skinMap.getValue("lightBar").e = _loc_5;
-            var _loc_5:Boolean = true;
+            _skinMap.getValue("lightBar").e = _loc_4;
+            var _loc_4:Boolean = true;
             _skinMap.getValue("definitionBar").v = true;
-            _skinMap.getValue("definitionBar").e = _loc_5;
-            var _loc_5:* = PlayerConfig.showLangSetBtn;
+            _skinMap.getValue("definitionBar").e = _loc_4;
+            var _loc_4:* = PlayerConfig.showLangSetBtn;
             _skinMap.getValue("langSetBar").v = PlayerConfig.showLangSetBtn;
-            _skinMap.getValue("langSetBar").e = _loc_5;
-            var _loc_5:Boolean = false;
+            _skinMap.getValue("langSetBar").e = _loc_4;
+            var _loc_4:Boolean = false;
             _skinMap.getValue("albumBtn").v = false;
-            _skinMap.getValue("albumBtn").e = _loc_5;
-            _loc_3 = PlayerConfig.isShowTanmu && (!PlayerConfig.isSohuDomain || PlayerConfig.isSohuDomain && stage.displayState == StageDisplayState.FULL_SCREEN);
-            var _loc_5:* = _loc_3;
-            _skinMap.getValue("barrageBtn").v = _loc_3;
-            _skinMap.getValue("barrageBtn").e = _loc_5;
-            var _loc_5:* = stage.displayState == "fullScreen" ? (false) : (true);
+            _skinMap.getValue("albumBtn").e = _loc_4;
+            var _loc_4:* = PlayerConfig.isShowTanmu && !PlayerConfig.isSohuDomain;
+            _skinMap.getValue("barrageBtn").v = PlayerConfig.isShowTanmu && !PlayerConfig.isSohuDomain;
+            _skinMap.getValue("barrageBtn").e = _loc_4;
+            var _loc_4:* = stage.displayState == "fullScreen" ? (false) : (true);
             _skinMap.getValue("fullScreenBtn").e = stage.displayState == "fullScreen" ? (false) : (true);
-            _skinMap.getValue("fullScreenBtn").v = _loc_5;
-            var _loc_5:* = stage.displayState == "fullScreen" ? (true) : (false);
+            _skinMap.getValue("fullScreenBtn").v = _loc_4;
+            var _loc_4:* = stage.displayState == "fullScreen" ? (true) : (false);
             _skinMap.getValue("normalScreenBtn").e = stage.displayState == "fullScreen" ? (true) : (false);
-            _skinMap.getValue("normalScreenBtn").v = _loc_5;
+            _skinMap.getValue("normalScreenBtn").v = _loc_4;
             super.onStart();
             _skinMap.getValue("replayBtn").e = true;
-            if (PlayerConfig.vrModel == "1" || PlayerConfig.vrModel == "2")
-            {
-                this.showV360();
-            }
-            return;
-        }// end function
-
-        private function showV360() : void
-        {
-            if (this._v360)
-            {
-                this._v360.visible = true;
-            }
-            else if (!this._v360Loading)
-            {
-                _core.videoContainer.visible = false;
-                this._v360Loading = true;
-                new LoaderUtil().load(20, function (param1:Object) : void
-            {
-                var obj:* = param1;
-                if (obj.info == "success")
-                {
-                    _v360 = obj.data.content;
-                    var _loc_3:int = 0;
-                    _v360.y = 0;
-                    _v360.x = _loc_3;
-                    addChildAt(_v360, (_owner.getChildIndex(_hitArea_spr) + 1));
-                    _v360Tnum = setInterval(function () : void
-                {
-                    if (_core.metaWidth != 0 && _core.metaHeight != 0)
-                    {
-                        clearInterval(_v360Tnum);
-                        _v360.init({width:_core.width, height:_core.height, core:_core, vr:PlayerConfig.vrModel});
-                        if (!PlayerConfig.showV360Bar)
-                        {
-                            _v360.hideSwitchBar();
-                        }
-                        _core.videoContainer.visible = true;
-                    }
-                    return;
-                }// end function
-                , 50);
-                    if (_danmu != null)
-                    {
-                        _owner.setChildIndex(_danmu, _owner.getChildIndex(_hitArea_spr) + 2);
-                        _owner.setChildIndex(_rightSideBar, _owner.getChildIndex(_hitArea_spr) + 3);
-                        if (PlayerConfig.allTimeLogo)
-                        {
-                            _owner.setChildIndex(_logoAdContainer, _owner.getChildIndex(_danmu));
-                        }
-                        else
-                        {
-                            _owner.setChildIndex(_logoAdContainer, _owner.getChildIndex(_rightSideBar));
-                        }
-                    }
-                    LogManager.msg("v360_metaW_H:" + _core.metaWidth + "," + _core.metaHeight);
-                }
-                return;
-            }// end function
-            , null, PlayerConfig.swfHost + "panel/V360.swf");
-            }
             return;
         }// end function
 
@@ -5365,6 +5138,14 @@
         {
             var _loc_2:Object = null;
             super.onStop(param1);
+            _skinMap.getValue("playBtn").e = false;
+            var _loc_3:Boolean = false;
+            _skinMap.getValue("langSetBar").e = false;
+            _skinMap.getValue("barrageBtn").e = _loc_3;
+            var _loc_3:Boolean = false;
+            _skinMap.getValue("lightBar").e = false;
+            _skinMap.getValue("definitionBar").e = _loc_3;
+            _skinMap.getValue("startPlayBtn").v = false;
             if (_skin != null)
             {
                 this._tipHistory.close();
@@ -5381,28 +5162,6 @@
             this.stopDanmu();
             this.stopWmTip();
             this.stopUgcAd();
-            this.stopV360();
-            this.stopBackgroudAd();
-            _skinMap.getValue("playBtn").e = false;
-            var _loc_3:Boolean = false;
-            _skinMap.getValue("langSetBar").e = false;
-            _skinMap.getValue("barrageBtn").e = _loc_3;
-            var _loc_3:Boolean = false;
-            _skinMap.getValue("lightBar").e = false;
-            _skinMap.getValue("definitionBar").e = _loc_3;
-            _skinMap.getValue("startPlayBtn").v = false;
-            return;
-        }// end function
-
-        public function stopV360() : void
-        {
-            if (this._v360 != null)
-            {
-                this._v360Loading = false;
-                this._v360.destroy();
-                removeChild(this._v360);
-                this._v360 = null;
-            }
             return;
         }// end function
 
@@ -5680,7 +5439,8 @@
         {
             var playedTime:Number;
             var totTime:Number;
-            var t_allTime:Number;
+            var dummyPlayedTime:Number;
+            var dummyTotTime:Number;
             var time:String;
             var xuid:String;
             var isCurrentVid:Boolean;
@@ -5711,35 +5471,35 @@
             PlayerConfig.playedTime = evt.obj.nowTime;
             playedTime = _loc_3;
             totTime = evt.obj.totTime;
-            this._dummyPlayedTime = playedTime;
-            this._dummyTotTime = totTime;
+            dummyPlayedTime = playedTime;
+            dummyTotTime = totTime;
             if (PlayerConfig.startTime != "" && PlayerConfig.endTime != "")
             {
-                if (!this._firstPlay && this._dummyPlayedTime > 0)
+                if (!this._firstPlay && dummyPlayedTime > 0)
                 {
-                    PlayerConfig.startTime = String(this._dummyPlayedTime);
+                    PlayerConfig.startTime = String(dummyPlayedTime);
                     this._firstPlay = true;
                 }
-                this._dummyPlayedTime = playedTime - uint(PlayerConfig.startTime);
-                this._dummyPlayedTime = this._dummyPlayedTime < 0 ? (0) : (this._dummyPlayedTime);
-                this._dummyTotTime = uint(PlayerConfig.endTime) - uint(PlayerConfig.startTime);
-                if (this._dummyPlayedTime >= this._dummyTotTime && !evt.obj.isSeek)
+                dummyPlayedTime = playedTime - uint(PlayerConfig.startTime);
+                dummyPlayedTime = dummyPlayedTime < 0 ? (0) : (dummyPlayedTime);
+                dummyTotTime = uint(PlayerConfig.endTime) - uint(PlayerConfig.startTime);
+                if (dummyPlayedTime >= dummyTotTime && !evt.obj.isSeek)
                 {
-                    this._dummyPlayedTime = this._dummyTotTime;
+                    dummyPlayedTime = dummyTotTime;
                     _core.stop();
                 }
             }
-            _skinMap.getValue("progressBar").totTime = this._dummyTotTime;
+            _skinMap.getValue("progressBar").totTime = dummyTotTime;
             if (_skin != null)
             {
                 if (!evt.obj.isSeek)
                 {
-                    _progress_sld.topRate = this._dummyPlayedTime / this._dummyTotTime;
+                    _progress_sld.topRate = dummyPlayedTime / dummyTotTime;
                 }
                 time;
                 if (!PlayerConfig.isLive)
                 {
-                    time = Utils.fomatTime(Math.round(this._dummyPlayedTime)) + "<font color=\"#" + _skinMap.getValue("timeDisplay").ttColor + "\"> / " + Utils.fomatTime(Math.floor(this._dummyTotTime)) + "</font>";
+                    time = Utils.fomatTime(Math.round(dummyPlayedTime)) + "<font color=\"#" + _skinMap.getValue("timeDisplay").ttColor + "\"> / " + Utils.fomatTime(Math.floor(dummyTotTime)) + "</font>";
                 }
                 else
                 {
@@ -6081,7 +5841,7 @@
             this.setCaptionBarState(evt);
             if (PlayerConfig.previewTime > 0)
             {
-                if (this._dummyPlayedTime >= PlayerConfig.previewTime || Math.abs(this._dummyPlayedTime - PlayerConfig.previewTime) < 2)
+                if (dummyPlayedTime >= PlayerConfig.previewTime || Math.abs(dummyPlayedTime - PlayerConfig.previewTime) < 2)
                 {
                     setTimeout(function () : void
             {
@@ -6090,7 +5850,7 @@
             }// end function
             , 1000);
                 }
-                if (this._dummyPlayedTime >= 1 && !this._tipHistory.isShowPayTip)
+                if (dummyPlayedTime >= 1 && !this._tipHistory.isShowPayTip)
                 {
                     if (PlayerConfig.cooperator == "imovie")
                     {
@@ -6102,15 +5862,15 @@
                     }
                 }
             }
-            if (!PlayerConfig.isSogouAd && !PlayerConfig.isBackgorundShowing)
+            if (!PlayerConfig.isSogouAd)
             {
                 k;
                 while (k < PlayerConfig.midAdTimeArr.length)
                 {
                     
-                    if (this._dummyTotTime > PlayerConfig.midAdTimeArr[k])
+                    if (dummyTotTime > PlayerConfig.midAdTimeArr[k])
                     {
-                        if (Math.round(this._dummyPlayedTime) == PlayerConfig.midAdTimeArr[k] - 5 && TvSohuAds.getInstance().middleAd.state == "no" && !evt.obj.isSeek)
+                        if (Math.round(dummyPlayedTime) == PlayerConfig.midAdTimeArr[k] - 5 && TvSohuAds.getInstance().middleAd.state == "no" && !evt.obj.isSeek)
                         {
                             this._tipHistory.isMidAdTip = false;
                             TvSohuAds.getInstance().middleAd.midAdInx = k;
@@ -6125,7 +5885,7 @@
                                     this._tipHistory.showMidAdTip();
                                     TvSohuAds.getInstance().middleAd.isMidAdTip = true;
                                 }
-                                if (Math.round(this._dummyPlayedTime) == PlayerConfig.midAdTimeArr[k])
+                                if (Math.round(dummyPlayedTime) == PlayerConfig.midAdTimeArr[k])
                                 {
                                     if (this._tipHistory != null && this._tipHistory.isOpen)
                                     {
@@ -6134,7 +5894,7 @@
                                     TvSohuAds.getInstance().middleAd.goToPlayMidAd();
                                 }
                             }
-                            else if (Math.round(this._dummyPlayedTime) == PlayerConfig.midAdTimeArr[k])
+                            else if (Math.round(dummyPlayedTime) == PlayerConfig.midAdTimeArr[k])
                             {
                                 TvSohuAds.getInstance().middleAd.goToPlayMidAd();
                             }
@@ -6147,7 +5907,7 @@
             {
                 if (Utils.getBrowserCookie("fee_ifox") && P2PExplorer.getInstance().hasP2P)
                 {
-                    if (this._dummyPlayedTime >= 1 && !this._tipHistory.isIfoxVipTip)
+                    if (dummyPlayedTime >= 1 && !this._tipHistory.isIfoxVipTip)
                     {
                         this.tipVipCookie();
                     }
@@ -6158,7 +5918,7 @@
             }
             if (this._licenseText != null)
             {
-                if (Math.round(this._dummyPlayedTime) >= 3 && Math.round(this._dummyPlayedTime) <= 6)
+                if (Math.round(dummyPlayedTime) >= 3 && Math.round(dummyPlayedTime) <= 6)
                 {
                     this._licenseText.visible = true;
                 }
@@ -6207,57 +5967,7 @@
             _loc_3._num = _loc_4;
             if (this._danmu != null)
             {
-                this._danmu.updatePlayTime(this._dummyPlayedTime);
-            }
-            t_allTime = PlayerConfig.etTime > 0 ? (PlayerConfig.etTime) : (this._dummyTotTime);
-            if (PlayerConfig.isSohuDomain && !TvSohuAds.getInstance().backgroudAd.prepared && t_allTime - this._dummyPlayedTime < 120 && t_allTime - this._dummyPlayedTime > 40 && PlayerConfig.vrModel != "1" && PlayerConfig.vrModel != "2")
-            {
-                TvSohuAds.getInstance().backgroudAd.beginPrepare();
-            }
-            if (PlayerConfig.isSohuDomain && !PlayerConfig.isBackgorundShowing && TvSohuAds.getInstance().backgroudAd.prepared && this._displayRate == 1 && _core.rotateType == 0 && t_allTime - this._dummyPlayedTime < TvSohuAds.getInstance().backgroudAd.bgAdTime && stage.stageWidth >= 540 && stage.stageHeight >= 300)
-            {
-                if (this._dummyPlayedTime == 0 || t_allTime == 0)
-                {
-                    return;
-                }
-                if (this._backGroudClearTime != 0)
-                {
-                    return;
-                }
-                LogManager.msg("背景广告开始延迟100mss" + "__dummyPlayedTime: " + this._dummyPlayedTime + "  time:" + (t_allTime - this._dummyPlayedTime));
-                this._backGroudClearTime = setTimeout(function () : void
-            {
-                if (_backGroudClearTime != 0)
-                {
-                    clearTimeout(_backGroudClearTime);
-                    _backGroudClearTime = 0;
-                }
-                if (t_allTime - _dummyPlayedTime < TvSohuAds.getInstance().backgroudAd.bgAdTime)
-                {
-                    showBackGroudAd();
-                    resize(_width, _height);
-                    LogManager.msg("显示背景_dummyPlayedTime: " + _dummyPlayedTime + "  time:" + (t_allTime - _dummyPlayedTime));
-                }
-                return;
-            }// end function
-            , 100);
-            }
-            else if (PlayerConfig.isSohuDomain && PlayerConfig.isBackgorundShowing && (t_allTime - this._dummyPlayedTime >= TvSohuAds.getInstance().backgroudAd.bgAdTime || this._stage.stageWidth < 540 || stage.stageHeight < 300))
-            {
-                if (this._backGroudClearTime != 0)
-                {
-                    clearTimeout(this._backGroudClearTime);
-                    this._backGroudClearTime = 0;
-                    return;
-                }
-                if (this._dummyPlayedTime == 0 || t_allTime == 0)
-                {
-                    return;
-                }
-                this.hideBackGroudAd();
-                this.resize(_width, _height);
-                this.setAdsState();
-                LogManager.msg("关闭背景_dummyPlayedTime: " + this._dummyPlayedTime + "  time:" + (t_allTime - this._dummyPlayedTime));
+                this._danmu.updatePlayTime(dummyPlayedTime);
             }
             return;
         }// end function
@@ -6604,11 +6314,6 @@
             return;
         }// end function
 
-        public function get v360()
-        {
-            return this._v360;
-        }// end function
-
         public function get parentClass() : Class
         {
             return MediaPlayback;
@@ -6796,18 +6501,6 @@
                 this._ugcAd.destroyAd();
                 removeChild(this._ugcAd);
                 this._ugcAd = null;
-            }
-            return;
-        }// end function
-
-        private function stopBackgroudAd() : void
-        {
-            if (PlayerConfig.isBackgorundShowing)
-            {
-                TvSohuAds.getInstance().backgroudAd.destroy();
-                PlayerConfig.isBackgorundShowing = false;
-                TvSohuAds.getInstance().pauseAd.loadDataAndShow = true;
-                LogManager.msg("播放器销毁背景广告");
             }
             return;
         }// end function
@@ -7102,34 +6795,6 @@
             }// end function
             , null, PlayerConfig.swfHost + "panel/MofunEnglish.swf", new LoaderContext(true));
             }
-            return;
-        }// end function
-
-        private function showBackGroudAd() : void
-        {
-            PlayerConfig.isBackgorundShowing = true;
-            TvSohuAds.getInstance().backgroudAd.resize(_width, _height - _ctrlBarBg_spr.height, _core.videoContainer.width, _core.videoContainer.height);
-            TvSohuAds.getInstance().backgroudAd.play();
-            TvSohuAds.getInstance().pauseAd.loadDataAndShow = false;
-            this._logoAdContainer.visible = false;
-            _hitArea_spr.mouseEnabled = false;
-            return;
-        }// end function
-
-        private function hideBackGroudAd() : void
-        {
-            PlayerConfig.isBackgorundShowing = false;
-            TvSohuAds.getInstance().backgroudAd.hideAd();
-            _hitArea_spr.mouseEnabled = true;
-            if (stage.stageWidth > 360 && stage.stageHeight > 200)
-            {
-                this._logoAdContainer.visible = true;
-            }
-            else
-            {
-                this._logoAdContainer.visible = false;
-            }
-            TvSohuAds.getInstance().pauseAd.loadDataAndShow = true;
             return;
         }// end function
 

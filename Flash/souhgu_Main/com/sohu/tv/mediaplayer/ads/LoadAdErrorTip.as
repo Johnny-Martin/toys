@@ -36,7 +36,7 @@
             this._tipTimeLimit = param1.time;
             this._width = param1.width;
             this._height = param1.height;
-            this._tipTimer = new Timer(1000, this._tipTimeLimit);
+            this._tipTimer = new Timer(1000, 0);
             this._tipTimer.addEventListener(TimerEvent.TIMER, this.tipTimerHandler);
             this._tipTimer.addEventListener(TimerEvent.TIMER_COMPLETE, this.stop);
             this.newFunc();
@@ -61,6 +61,7 @@
                 this.dispatch(MediaEvent.START);
                 this._isErrTipShown = true;
             }
+            this.stop();
             return;
         }// end function
 
