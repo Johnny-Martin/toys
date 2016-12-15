@@ -7,7 +7,6 @@
         private var _data:Object;
         public static const Evt_Ready:String = "ready";
         public static const Evt_Meta_Ready:String = "metaReady";
-        public static const Evt_License_Ready:String = "licenseReady";
         public static const Evt_Failed:String = "failed";
         public static const Evt_MovieInfoReady:String = "movieInfoReady";
         public static const Evt_Success:String = "success";

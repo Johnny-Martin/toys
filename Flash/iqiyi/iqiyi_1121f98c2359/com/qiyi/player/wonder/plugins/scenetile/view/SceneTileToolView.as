@@ -3,7 +3,6 @@
     import com.iqiyi.components.global.*;
     import com.iqiyi.components.panelSystem.impls.*;
     import com.qiyi.player.wonder.common.config.*;
-    import com.qiyi.player.wonder.common.pingback.*;
     import com.qiyi.player.wonder.common.status.*;
     import com.qiyi.player.wonder.common.vo.*;
     import com.qiyi.player.wonder.plugins.scenetile.*;
@@ -17,12 +16,11 @@
     {
         private var _status:Status;
         private var _userInfoVO:UserInfoVO;
-        private var _playBtn:Object;
+        private var _playBtn:PlayBtn;
         private var _loader:Loader;
         private var _imageContainer:Sprite;
         private var _starHeadContainer:Sprite;
         private var _panoramicTool:ToolPanoramicTool;
-        private var _vrcodeExtension:ToolVRCodeExtension;
         private var _border:Shape;
         public static const NAME:String = "com.qiyi.player.wonder.plugins.scenetile.view.SceneTileToolView";
 
@@ -36,7 +34,7 @@
             return;
         }// end function
 
-        public function get playBtn()
+        public function get playBtn() : PlayBtn
         {
             return this._playBtn;
         }// end function
@@ -66,7 +64,6 @@
                 {
                     addChild(this._panoramicTool);
                     this._panoramicTool.addEventListener(ToolPanoramicTool.POSE_TRIGGER, this.onPanoramicPoseTrigger);
-                    addChild(this._vrcodeExtension);
                     break;
                 }
                 case SceneTileDef.STATUS_BARRAGE_STAR_HEAD_SHOW:
@@ -108,11 +105,6 @@
                         removeChild(this._panoramicTool);
                         this._panoramicTool.removeEventListener(ToolPanoramicTool.POSE_TRIGGER, this.onPanoramicPoseTrigger);
                     }
-                    if (this._vrcodeExtension.parent)
-                    {
-                        removeChild(this._vrcodeExtension);
-                        this._vrcodeExtension.removeEventListener(ToolPanoramicTool.POSE_TRIGGER, this.onPanoramicPoseTrigger);
-                    }
                     break;
                 }
                 case SceneTileDef.STATUS_BARRAGE_STAR_HEAD_SHOW:
@@ -141,6 +133,18 @@
             {
                 this._starHeadContainer.x = param1 - this._starHeadContainer.numChildren * 55 - 120;
                 this._starHeadContainer.y = param2 - 120;
+            }
+            if (GlobalStage.isFullScreen())
+            {
+                var _loc_3:Number = 1.5;
+                this._panoramicTool.scaleY = 1.5;
+                this._panoramicTool.scaleX = _loc_3;
+            }
+            else
+            {
+                var _loc_3:int = 1;
+                this._panoramicTool.scaleY = 1;
+                this._panoramicTool.scaleX = _loc_3;
             }
             return;
         }// end function
@@ -241,7 +245,7 @@
                 this._imageContainer.mouseChildren = false;
                 this._imageContainer.mouseEnabled = _loc_2;
             }
-            this._playBtn = FlashVarConfig.isMMs ? (new MMSPlayBtn()) : (new PlayBtn());
+            this._playBtn = new PlayBtn();
             var _loc_2:Boolean = true;
             this._playBtn.useHandCursor = true;
             this._playBtn.buttonMode = _loc_2;
@@ -262,18 +266,11 @@
                 addChild(this._playBtn);
             }
             this._panoramicTool = new ToolPanoramicTool();
-            this._panoramicTool.y = 85;
+            this._panoramicTool.y = 40;
             this._panoramicTool.x = 20;
             if (this._status.hasStatus(SceneTileDef.STATUS_PANORAMIC_TOOL_SHOW))
             {
                 addChild(this._panoramicTool);
-            }
-            this._vrcodeExtension = new ToolVRCodeExtension();
-            this._vrcodeExtension.y = 40;
-            this._vrcodeExtension.x = 35;
-            if (this._status.hasStatus(SceneTileDef.STATUS_PANORAMIC_TOOL_SHOW))
-            {
-                addChild(this._vrcodeExtension);
             }
             this._starHeadContainer = new Sprite();
             var _loc_2:Boolean = false;
@@ -337,19 +334,9 @@
             return;
         }// end function
 
-        public function showVRCode() : void
-        {
-            if (this._vrcodeExtension)
-            {
-                this._vrcodeExtension.showVRCode();
-            }
-            return;
-        }// end function
-
         private function onPanoramicPoseTrigger(event:Event) : void
         {
             dispatchEvent(new SceneTileEvent(SceneTileEvent.Evt_PanoramicToolClick, this._panoramicTool.movePoint));
-            PingBack.getInstance().userActionPing_4_0(PingBackDef.VR_PANORAMICTOOL_CLICK);
             return;
         }// end function
 

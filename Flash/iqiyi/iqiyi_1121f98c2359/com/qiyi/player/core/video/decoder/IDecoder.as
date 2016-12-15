@@ -32,7 +32,5 @@
 
         function resume() : void;
 
-        function setLicense(param1:String) : int;
-
     }
 }

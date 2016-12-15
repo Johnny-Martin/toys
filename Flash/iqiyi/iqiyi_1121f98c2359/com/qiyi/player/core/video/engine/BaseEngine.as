@@ -183,31 +183,15 @@
             return;
         }// end function
 
-        public function startLoadLicense() : void
-        {
-            if (this._movie.curDefinition)
-            {
-                if (!this._movie.curDefinition.ready)
-                {
-                    this._movie.startLoadLicense();
-                }
-                else
-                {
-                    this.onMovieReady(null);
-                }
-            }
-            return;
-        }// end function
-
         public function startLoadHistory() : void
         {
             if (this._holder.hasStatus(StatusEnum.HISTORY_START_LOAD_CALLED) || this._holder.history == null)
             {
                 return;
             }
+            this._holder.addStatus(StatusEnum.HISTORY_START_LOAD_CALLED, false);
             if (this._movie.curDefinition)
             {
-                this._holder.addStatus(StatusEnum.HISTORY_START_LOAD_CALLED, false);
                 if (this._holder.history.getReady() == false)
                 {
                     this._holder.history.loadRecord(this._movie.tvid);
@@ -897,10 +881,6 @@
             this._log.debug("Engine.onMovieReady, has status waiting startLoad or play : " + (this._holder.hasStatus(StatusEnum.WAITING_START_LOAD) || this._holder.hasStatus(StatusEnum.WAITING_PLAY)));
             this.checkNeedStartLoad();
             this.checkNeedPlay();
-            if (this.movie.curDefinition.isDrm)
-            {
-                this._decoder.setLicense(this.movie.curDefinition.license);
-            }
             return;
         }// end function
 
@@ -935,7 +915,7 @@
             return;
         }// end function
 
-        public function checkEngineIsReady() : Boolean
+        protected function checkEngineIsReady() : Boolean
         {
             var _loc_1:* = this._movie && this._movie.curDefinition && this._movie.curDefinition.ready;
             var _loc_2:* = this._holder.history && this._holder.history.getReady() || this._holder.runtimeData.playerUseType != PlayerUseTypeEnum.MAIN;

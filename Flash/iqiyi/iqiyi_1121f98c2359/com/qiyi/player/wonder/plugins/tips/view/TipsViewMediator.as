@@ -22,7 +22,6 @@
     import com.qiyi.player.wonder.plugins.continueplay.model.*;
     import com.qiyi.player.wonder.plugins.controllbar.*;
     import com.qiyi.player.wonder.plugins.controllbar.model.*;
-    import com.qiyi.player.wonder.plugins.hint.*;
     import com.qiyi.player.wonder.plugins.tips.*;
     import com.qiyi.player.wonder.plugins.tips.model.*;
     import com.qiyi.player.wonder.plugins.tips.view.parts.*;
@@ -65,7 +64,7 @@
 
         override public function listNotificationInterests() : Array
         {
-            return [TipsDef.NOTIFIC_ADD_STATUS, TipsDef.NOTIFIC_REMOVE_STATUS, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_JS_CALL_SUBSCRIBE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_PLAYER_RUNNING, BodyDef.NOTIFIC_PLAYER_SKIP_TITLE, BodyDef.NOTIFIC_PLAYER_PREPARE_PLAY_END, BodyDef.NOTIFIC_PLAYER_DEFINITION_SWITCHED, BodyDef.NOTIFIC_PLAYER_AUDIOTRACK_SWITCHED, BodyDef.NOTIFIC_PLAYER_STUCK, BodyDef.NOTIFIC_PLAYER_START_FROM_HISTORY, BodyDef.NOTIFIC_PLAYER_REPLAYED, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, ADDef.NOTIFIC_ADD_STATUS, ADDef.NOTIFIC_AD_UNLOADED, ContinuePlayDef.NOTIFIC_SWITCH_VIDEO_TYPE_CHANGED, TipsDef.NOTIFIC_REQUEST_SHOW_TIP, TipsDef.NOTIFIC_REQUEST_HIDE_TIP, TipsDef.NOTIFIC_UPDATE_TIP_ATTR, ControllBarDef.NOTIFIC_ADD_STATUS, ControllBarDef.NOTIFIC_REMOVE_STATUS, HintDef.NOTIFIC_ADD_STATUS];
+            return [TipsDef.NOTIFIC_ADD_STATUS, TipsDef.NOTIFIC_REMOVE_STATUS, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_JS_CALL_SUBSCRIBE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_PLAYER_RUNNING, BodyDef.NOTIFIC_PLAYER_SKIP_TITLE, BodyDef.NOTIFIC_PLAYER_PREPARE_PLAY_END, BodyDef.NOTIFIC_PLAYER_DEFINITION_SWITCHED, BodyDef.NOTIFIC_PLAYER_AUDIOTRACK_SWITCHED, BodyDef.NOTIFIC_PLAYER_STUCK, BodyDef.NOTIFIC_PLAYER_START_FROM_HISTORY, BodyDef.NOTIFIC_PLAYER_REPLAYED, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, ADDef.NOTIFIC_ADD_STATUS, ADDef.NOTIFIC_AD_UNLOADED, ContinuePlayDef.NOTIFIC_SWITCH_VIDEO_TYPE_CHANGED, TipsDef.NOTIFIC_REQUEST_SHOW_TIP, TipsDef.NOTIFIC_REQUEST_HIDE_TIP, TipsDef.NOTIFIC_UPDATE_TIP_ATTR, ControllBarDef.NOTIFIC_ADD_STATUS, ControllBarDef.NOTIFIC_REMOVE_STATUS];
         }// end function
 
         override public function handleNotification(param1:INotification) : void
@@ -227,23 +226,6 @@
                 case ControllBarDef.NOTIFIC_REMOVE_STATUS:
                 {
                     this.onControllBarStatusChanged(int(_loc_2), false);
-                    break;
-                }
-                case HintDef.NOTIFIC_ADD_STATUS:
-                {
-                    if (int(_loc_2) == HintDef.STATUS_OPEN)
-                    {
-                        if (TipManager.isShow(TipsDef.TIP_ID_TRY_WATCH) || TipManager.isShow(TipsDef.TIP_ID_TRY_WATCH_HAVE_TICKET) || TipManager.isShow(TipsDef.TIP_ID_TRY_WATCH_NOT_HAVE_TICKET))
-                        {
-                            this.hideTip(TipsDef.TIP_ID_TRY_WATCH);
-                            this.hideTip(TipsDef.TIP_ID_TRY_WATCH_HAVE_TICKET);
-                            this.hideTip(TipsDef.TIP_ID_TRY_WATCH_NOT_HAVE_TICKET);
-                        }
-                        else if (TipManager.isShow(TipsDef.TIP_ID_TRY_WATCH_TOTAL))
-                        {
-                            this.hideTip(TipsDef.TIP_ID_TRY_WATCH_TOTAL);
-                        }
-                    }
                     break;
                 }
                 default:
@@ -807,7 +789,6 @@
         {
             var _loc_5:String = null;
             var _loc_6:String = null;
-            var _loc_7:String = null;
             var _loc_2:* = facade.retrieveProxy(ADProxy.NAME) as ADProxy;
             if (_loc_2.hasStatus(ADDef.STATUS_LOADING) || _loc_2.hasStatus(ADDef.STATUS_PLAYING) || _loc_2.hasStatus(ADDef.STATUS_PAUSED))
             {
@@ -825,7 +806,7 @@
                 }
                 case TipsDef.AS_EVENT_NAME_WATCH_START:
                 {
-                    sendNotification(HintDef.NOTIFIC_HINT_CHECK, true);
+                    sendNotification(BodyDef.NOTIFIC_PLAYER_REPLAY);
                     break;
                 }
                 case TipsDef.AS_EVENT_NAME_SWAPTOQD:
@@ -851,14 +832,12 @@
                     GlobalStage.setNormalScreen();
                     _loc_5 = "";
                     _loc_6 = "";
-                    _loc_7 = "";
                     if (_loc_4.curActor.loadMovieParams)
                     {
                         _loc_5 = _loc_4.curActor.loadMovieParams.tvid;
                         _loc_6 = _loc_4.curActor.loadMovieParams.vid;
-                        _loc_7 = _loc_4.curActor.movieModel ? (_loc_4.curActor.movieModel.albumId) : ("");
                     }
-                    _loc_3.callJsRecharge(_loc_5, _loc_6, _loc_7, "Q00304", 1);
+                    _loc_3.callJsRecharge(_loc_5, _loc_6, "Q00304", 1);
                     sendNotification(BodyDef.NOTIFIC_PLAYER_PAUSE);
                     break;
                 }

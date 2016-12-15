@@ -101,8 +101,6 @@
         public static const NOTIFIC_JS_CALL_SET_SUBSCRIBE_INFO:String = "bodyJsCallSetSubscribeInfo";
         public static const NOTIFIC_JS_CALL_SET_SUBSCRIBE_STATE_CHANGE:String = "bodyJsCallSetSubscribeStateChange";
         public static const NOTIFIC_JS_CALL_GET_COMMENT_CONFIG:String = "bodyJsCallGetCommentInfo";
-        public static const NOTIFIC_PLAYER_AREA_CHANGED:String = "bodyPlayerAreaChanged";
-        public static const NOTIFIC_PLAYER_HistoryReady:String = "bodyPlayerHistoryReady";
         public static const PLAYER_ACTOR_NOTIFIC_TYPE_CUR:String = "cur";
         public static const PLAYER_ACTOR_NOTIFIC_TYPE_PRE:String = "pre";
         public static const LOAD_MOVIE_TYPE_ORIGINAL:String = "original";

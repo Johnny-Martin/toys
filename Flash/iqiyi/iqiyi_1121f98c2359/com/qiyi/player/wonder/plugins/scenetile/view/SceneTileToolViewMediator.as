@@ -18,7 +18,6 @@
     import com.qiyi.player.wonder.plugins.controllbar.model.*;
     import com.qiyi.player.wonder.plugins.dock.*;
     import com.qiyi.player.wonder.plugins.dock.model.*;
-    import com.qiyi.player.wonder.plugins.hint.*;
     import com.qiyi.player.wonder.plugins.scenetile.*;
     import com.qiyi.player.wonder.plugins.scenetile.model.*;
     import com.qiyi.player.wonder.plugins.setting.*;
@@ -69,7 +68,7 @@
 
         override public function listNotificationInterests() : Array
         {
-            return [SceneTileDef.NOTIFIC_ADD_STATUS, SceneTileDef.NOTIFIC_REMOVE_STATUS, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_REMOVE_STATUS, BodyDef.NOTIFIC_FULL_SCREEN, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_JS_LIGHT_CHANGED, BodyDef.NOTIFIC_PLAYER_REPLAYED, BodyDef.NOTIFIC_VIDEO_REQUEST_IMAGE, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, BodyDef.NOTIFIC_JS_CALL_SET_ZOOM_QIYI_VIDEO, BodyDef.NOTIFIC_LEAVE_STAGE, ControllBarDef.NOTIFIC_ADD_STATUS, ControllBarDef.NOTIFIC_REMOVE_STATUS, ADDef.NOTIFIC_ADD_STATUS, TopBarDef.NOTIFIC_ADD_STATUS, TopBarDef.NOTIFIC_REMOVE_STATUS, ContinuePlayDef.NOTIFIC_ADD_STATUS, ContinuePlayDef.NOTIFIC_REMOVE_STATUS, SettingDef.NOTIFIC_ADD_STATUS, SettingDef.NOTIFIC_REMOVE_STATUS, VideoLinkDef.NOTIFIC_ADD_STATUS, VideoLinkDef.NOTIFIC_REMOVE_STATUS, HintDef.NOTIFIC_ADD_STATUS];
+            return [SceneTileDef.NOTIFIC_ADD_STATUS, SceneTileDef.NOTIFIC_REMOVE_STATUS, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_REMOVE_STATUS, BodyDef.NOTIFIC_FULL_SCREEN, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_JS_LIGHT_CHANGED, BodyDef.NOTIFIC_PLAYER_REPLAYED, BodyDef.NOTIFIC_VIDEO_REQUEST_IMAGE, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, BodyDef.NOTIFIC_JS_CALL_SET_ZOOM_QIYI_VIDEO, BodyDef.NOTIFIC_LEAVE_STAGE, ControllBarDef.NOTIFIC_ADD_STATUS, ControllBarDef.NOTIFIC_REMOVE_STATUS, ADDef.NOTIFIC_ADD_STATUS, TopBarDef.NOTIFIC_ADD_STATUS, TopBarDef.NOTIFIC_REMOVE_STATUS, ContinuePlayDef.NOTIFIC_ADD_STATUS, ContinuePlayDef.NOTIFIC_REMOVE_STATUS, VideoLinkDef.NOTIFIC_ADD_STATUS, VideoLinkDef.NOTIFIC_REMOVE_STATUS];
         }// end function
 
         override public function handleNotification(param1:INotification) : void
@@ -253,27 +252,6 @@
                     }
                     break;
                 }
-                case SettingDef.NOTIFIC_ADD_STATUS:
-                {
-                    if (int(_loc_2) == SettingDef.STATUS_FILTER_SHOW_BMD)
-                    {
-                        this._sceneTileProxy.removeStatus(SceneTileDef.STATUS_PLAY_BTN_SHOW);
-                    }
-                    break;
-                }
-                case SettingDef.NOTIFIC_REMOVE_STATUS:
-                {
-                    if (int(_loc_2) == SettingDef.STATUS_FILTER_SHOW_BMD && this.checkPlayBtnShowStatus())
-                    {
-                        this._sceneTileProxy.addStatus(SceneTileDef.STATUS_PLAY_BTN_SHOW);
-                    }
-                    break;
-                }
-                case HintDef.NOTIFIC_ADD_STATUS:
-                {
-                    this.onHintStatusChanged(int(_loc_2), true);
-                    break;
-                }
                 default:
                 {
                     break;
@@ -362,7 +340,6 @@
             _loc_2.curActor.panVideo(event.data.x);
             _loc_2.preActor.tiltVideo(event.data.y);
             _loc_2.preActor.panVideo(event.data.x);
-            this._sceneTileView.showVRCode();
             return;
         }// end function
 
@@ -514,26 +491,6 @@
             return;
         }// end function
 
-        private function onHintStatusChanged(param1:int, param2:Boolean) : void
-        {
-            switch(param1)
-            {
-                case HintDef.STATUS_OPEN:
-                {
-                    if (param2)
-                    {
-                        this._sceneTileProxy.removeStatus(SceneTileDef.STATUS_PLAY_BTN_SHOW);
-                    }
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-            return;
-        }// end function
-
         private function onTopBarStatusChanged(param1:int, param2:Boolean) : void
         {
             var _loc_3:PlayerProxy = null;
@@ -595,8 +552,7 @@
             var _loc_3:* = facade.retrieveProxy(ContinuePlayProxy.NAME) as ContinuePlayProxy;
             var _loc_4:* = facade.retrieveProxy(VideoLinkProxy.NAME) as VideoLinkProxy;
             var _loc_5:* = facade.retrieveProxy(ControllBarProxy.NAME) as ControllBarProxy;
-            var _loc_6:* = facade.retrieveProxy(SettingProxy.NAME) as SettingProxy;
-            if (_loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_PAUSED) && !_loc_1.hasStatus(ADDef.STATUS_PLAYING) && !_loc_1.hasStatus(ADDef.STATUS_PAUSED) && !_loc_3.hasStatus(ContinuePlayDef.STATUS_OPEN) && !_loc_5.hasStatus(ControllBarDef.STATUS_IMAGE_PREVIEW_SHOW) && !_loc_4.hasStatus(VideoLinkDef.STATUS_OPEN) && !this._sceneTileProxy.hasStatus(SceneTileDef.STATUS_SCORE_OPEN) && !_loc_6.hasStatus(SettingDef.STATUS_FILTER_SHOW_BMD))
+            if (_loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_PAUSED) && !_loc_1.hasStatus(ADDef.STATUS_PLAYING) && !_loc_1.hasStatus(ADDef.STATUS_PAUSED) && !_loc_3.hasStatus(ContinuePlayDef.STATUS_OPEN) && !_loc_5.hasStatus(ControllBarDef.STATUS_IMAGE_PREVIEW_SHOW) && !_loc_4.hasStatus(VideoLinkDef.STATUS_OPEN) && !this._sceneTileProxy.hasStatus(SceneTileDef.STATUS_SCORE_OPEN))
             {
                 if (FlashVarConfig.owner == FlashVarConfig.OWNER_PAGE || FlashVarConfig.owner == FlashVarConfig.OWNER_CLIENT && FlashVarConfig.os != FlashVarConfig.OS_XP)
                 {
@@ -624,6 +580,30 @@
             if (!_loc_1.curActor.hasStatus(BodyDef.PLAYER_STATUS_STOPED) && !_loc_1.curActor.hasStatus(BodyDef.PLAYER_STATUS_FAILED))
             {
                 Mouse.hide();
+            }
+            return;
+        }// end function
+
+        private function showSceneTileToolTip() : void
+        {
+            if (this.checkFullHdTipShowEnable())
+            {
+                this._sceneTileTipShown = true;
+                LSO.getInstance().sttDate = new Date();
+                PingBack.getInstance().userActionPing(PingBackDef.SCENE_TILE_TIP_SHOW);
+                var _loc_1:* = LSO.getInstance();
+                var _loc_2:* = LSO.getInstance().sttMaxCount + 1;
+                _loc_1.sttMaxCount = _loc_2;
+                if (LSO.getInstance().sttShowCountOneDay >= 2)
+                {
+                    LSO.getInstance().sttShowCountOneDay = 1;
+                }
+                else
+                {
+                    var _loc_1:* = LSO.getInstance();
+                    var _loc_2:* = LSO.getInstance().sttShowCountOneDay + 1;
+                    _loc_1.sttShowCountOneDay = _loc_2;
+                }
             }
             return;
         }// end function
@@ -726,17 +706,12 @@
                 _loc_2.preActor.panVideo((-(this._moveMousePoint.x - GlobalStage.stage.mouseX)) / 4);
                 this._moveMousePoint.x = GlobalStage.stage.mouseX;
                 this._moveMousePoint.y = GlobalStage.stage.mouseY;
-                this._sceneTileView.showVRCode();
             }
             return;
         }// end function
 
         private function onMouseUp(event:MouseEvent = null) : void
         {
-            if (this._isMouseMoving)
-            {
-                PingBack.getInstance().userActionPing_4_0(PingBackDef.VR_DRAG_COMPLETE);
-            }
             this._isMouseMoving = false;
             GlobalStage.stage.removeEventListener(MouseEvent.MOUSE_MOVE, this.onMouseMove);
             GlobalStage.stage.removeEventListener(Event.ENTER_FRAME, this.onEnterFrame);

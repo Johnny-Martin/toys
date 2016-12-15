@@ -40,8 +40,6 @@
 
         function startLoadMeta() : void;
 
-        function startLoadLicense() : void;
-
         function get renderType() : int;
 
     }

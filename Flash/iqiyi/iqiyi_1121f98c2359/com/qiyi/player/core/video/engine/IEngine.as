@@ -50,13 +50,9 @@
 
         function startLoadMeta() : void;
 
-        function startLoadLicense() : void;
-
         function startLoadHistory() : void;
 
         function startLoadP2PCore() : void;
-
-        function checkEngineIsReady() : Boolean;
 
     }
 }

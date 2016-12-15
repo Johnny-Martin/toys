@@ -20,7 +20,6 @@
         private var _skipPointTypeArr:Array;
         private var _skipPointMap:Dictionary;
         private var _skipPointInfoDurationMap:Dictionary;
-        private var _skipPointAnalysisData:Object;
         private var _tvid:String;
         private var _log:ILogger;
 
@@ -36,11 +35,6 @@
             this._skipPointMap = new Dictionary();
             this._skipPointInfoDurationMap = new Dictionary();
             return;
-        }// end function
-
-        public function get skipPointAnalysisData() : Object
-        {
-            return this._skipPointAnalysisData;
         }// end function
 
         public function get skipPointTypeArr() : Array
@@ -69,7 +63,7 @@
 
         override protected function getRequest() : URLRequest
         {
-            var _loc_1:* = Config.ENJOYABLE_SKIP_POINT_URL + this._tvid + "/?src=" + (LocalizaEnum.isTWLocalize(this._holder.runtimeData.localize) ? ("01010021010010000000") : ("1702633101b340d8917a69cf8a4b8c7c"));
+            var _loc_1:* = Config.ENJOYABLE_SKIP_POINT_URL + this._tvid + "/";
             return new URLRequest(_loc_1);
         }// end function
 
@@ -123,10 +117,6 @@
                                         this._skipPointMap[gender] = timeMap;
                                         timeArr.sort(Array.NUMERIC);
                                         this._skipPointInfoDurationMap[gender] = timeArr;
-                                    }
-                                    if (json.data[0].screenshot)
-                                    {
-                                        this._skipPointAnalysisData = json.data[0].screenshot[0];
                                     }
                                 }
                                 j = (j + 1);

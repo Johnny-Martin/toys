@@ -124,10 +124,6 @@
         {
             if (UserManager.getInstance().user)
             {
-                if (UserManager.getInstance().user.vipFalseReason == "timeout")
-                {
-                    return FlashVarConfig.vipuser ? (UserDef.USER_LEVEL_PRIMARY) : (UserDef.USER_LEVEL_NORMAL);
-                }
                 return UserManager.getInstance().user.level;
             }
             return UserDef.USER_LEVEL_NORMAL;
@@ -174,7 +170,7 @@
                 {
                     _loc_1 = "01010021010000000000";
                 }
-                UserManager.getInstance().login(this._passportID, this._P00001, this._profileID, this._profileCookie, _loc_1, FlashVarConfig.vipuser);
+                UserManager.getInstance().login(this._passportID, this._P00001, this._profileID, this._profileCookie, _loc_1);
             }
             else
             {

@@ -109,16 +109,14 @@
             {
                 this.tryAppendBytesAction(RESET_BEGIN);
                 _log.debug("appendByteAction:" + RESET_BEGIN);
-                param1.headers.position = 0;
-                this.tryAppendBytes(param1.headers, param1.encode);
+                this.tryAppendBytes(param1.headers);
                 _log.debug("append headers");
                 this.tryAppendBytesAction(RESET_SEEK);
                 _log.debug("appendByteAction:" + RESET_SEEK);
             }
             if (param1.bytes && param1.bytes.length)
             {
-                param1.bytes.position = 0;
-                this.tryAppendBytes(param1.bytes, param1.encode);
+                this.tryAppendBytes(param1.bytes);
                 _log.debug("append bytes: " + param1.bytes.length);
             }
             return;
@@ -142,14 +140,12 @@
             return;
         }// end function
 
-        private function tryAppendBytes(param1:ByteArray, param2:Boolean) : void
+        private function tryAppendBytes(param1:ByteArray) : void
         {
-            if (this.hasOwnProperty("appendBytes2"))
+            if (this.hasOwnProperty("appendBytes"))
             {
-                _log.debug("append encode bytes:" + param2 + ", bufferLength:" + this.bufferLength);
-                var _loc_3:String = this;
-                _loc_3.this["appendBytes2"](param1, param2);
-                _log.debug("append encode bytes:" + param2 + ", bufferLength:" + this.bufferLength);
+                var _loc_2:String = this;
+                _loc_2.this["appendBytes"](param1);
             }
             return;
         }// end function

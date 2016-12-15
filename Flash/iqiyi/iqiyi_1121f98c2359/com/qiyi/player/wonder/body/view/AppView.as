@@ -10,9 +10,7 @@
     {
         private var _curVideoLayer:Sprite;
         private var _preVideoLayer:Sprite;
-        private var _hintVideoLayer:Sprite;
         private var _mouseClickLayer:Sprite;
-        private var _filterLayer:Sprite;
         private var _barrageLayer:Sprite;
         private var _ADLayer:Sprite;
         private var _fixLayer:Sprite;
@@ -38,16 +36,6 @@
         public function get preVideoLayer() : Sprite
         {
             return this._preVideoLayer;
-        }// end function
-
-        public function get hintVideoLayer() : Sprite
-        {
-            return this._hintVideoLayer;
-        }// end function
-
-        public function get filterLayer() : Sprite
-        {
-            return this._filterLayer;
         }// end function
 
         public function get barrageLayer() : Sprite
@@ -100,8 +88,6 @@
             this._curVideoLayer = new Sprite();
             addChildAt(this._curVideoLayer, 0);
             this._preVideoLayer = new Sprite();
-            this._hintVideoLayer = new Sprite();
-            addChild(this._hintVideoLayer);
             this._mouseClickLayer = new Sprite();
             this._mouseClickLayer.graphics.beginFill(0, 0);
             this._mouseClickLayer.graphics.drawRect(0, 0, 1, 1);
@@ -119,11 +105,6 @@
             }
             this._mouseClickLayer.addEventListener(MouseEvent.DOUBLE_CLICK, this.onMouseLayerDoubleClick);
             addChild(this._mouseClickLayer);
-            this._filterLayer = new Sprite();
-            var _loc_1:Boolean = false;
-            this._filterLayer.mouseChildren = false;
-            this._filterLayer.mouseEnabled = _loc_1;
-            addChild(this._filterLayer);
             this._barrageLayer = new Sprite();
             addChild(this._barrageLayer);
             this._rewardLayer = new Sprite();

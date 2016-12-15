@@ -32,7 +32,6 @@
 
         public function VideoInfo(param1:IPlayer, param2:DisplayObjectContainer)
         {
-            var bg:Sprite;
             var md:MediaDota;
             var $player:* = param1;
             var $parent:* = param2;
@@ -52,7 +51,7 @@
             this._rate[DefinitionEnum.SUPER_HIGH] = "P1";
             this._rate[DefinitionEnum.FULL_HD] = "P2";
             this._rate[DefinitionEnum.FOUR_K] = "K1";
-            bg = new MovieInfoBg();
+            var bg:* = new MovieInfoBg();
             bg.addEventListener(MouseEvent.CLICK, function (event:MouseEvent) : void
             {
                 hide();

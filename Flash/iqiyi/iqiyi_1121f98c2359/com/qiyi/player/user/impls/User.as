@@ -29,10 +29,9 @@
         private var _heartBeatTimer:Timer;
         private var _tvid:String = "";
         private var _isActivation:Boolean = false;
-        private var _vipuser:Boolean = true;
         private var _log:ILogger;
 
-        public function User(param1:String, param2:String, param3:String, param4:String, param5:String = "", param6:Boolean = true)
+        public function User(param1:String, param2:String, param3:String, param4:String, param5:String = "")
         {
             this._type = UserDef.USER_TYPE_QIYI;
             this._level = UserDef.USER_LEVEL_NORMAL;
@@ -43,7 +42,6 @@
             this._profileID = param3;
             this._profileCookie = param4;
             this._ptid = param5;
-            this._vipuser = param6;
             return;
         }// end function
 
@@ -94,10 +92,6 @@
 
         public function get level() : int
         {
-            if (this.vipFalseReason == "timeout")
-            {
-                return this._vipuser ? (UserDef.USER_LEVEL_PRIMARY) : (UserDef.USER_LEVEL_NORMAL);
-            }
             return this._level;
         }// end function
 

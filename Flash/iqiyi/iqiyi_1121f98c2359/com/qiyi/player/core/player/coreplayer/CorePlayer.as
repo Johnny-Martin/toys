@@ -5,7 +5,6 @@
     import com.qiyi.player.base.utils.*;
     import com.qiyi.player.base.uuid.*;
     import com.qiyi.player.core.history.*;
-    import com.qiyi.player.core.history.events.*;
     import com.qiyi.player.core.model.*;
     import com.qiyi.player.core.model.def.*;
     import com.qiyi.player.core.model.events.*;
@@ -88,11 +87,6 @@
             {
                 this._history = new History(this);
                 this._history.initialize();
-                this._history.addEventListener(HistoryEvent.Evt_Ready, this.onHistoryReady);
-            }
-            else
-            {
-                dispatchEvent(new PlayerEvent(PlayerEvent.Evt_HistoryReady));
             }
             this._pingBack.initHolder(this);
             this._movieChecker.addEventListener(MovieEvent.Evt_Success, this.onCheckMovieSuccess);
@@ -725,7 +719,7 @@
             if (this._engine)
             {
                 _loc_2 = this._engine as DMEngine;
-                if (_loc_2 && _loc_2.provider && this._movie.curDefinition.licenseReady)
+                if (_loc_2 && _loc_2.provider)
                 {
                     return _loc_2.provider.sequenceReadDataFrom(param1);
                 }
@@ -867,15 +861,6 @@
             return;
         }// end function
 
-        public function startLoadLicense() : void
-        {
-            if (this._engine)
-            {
-                this._engine.startLoadLicense();
-            }
-            return;
-        }// end function
-
         public function startLoadHistory() : void
         {
             if (this._engine)
@@ -974,16 +959,6 @@
                 this._runtimeData.areaPlatform = param1;
             }
             return;
-        }// end function
-
-        public function get historyStartTime() : int
-        {
-            return this._strategy.getStartTime();
-        }// end function
-
-        public function get checkEngineIsReady() : Boolean
-        {
-            return this._engine.checkEngineIsReady();
         }// end function
 
         private function createEngine() : void
@@ -1238,12 +1213,6 @@
         private function onSkipTitle(event:EngineEvent) : void
         {
             dispatchEvent(new PlayerEvent(PlayerEvent.Evt_SkipTitle));
-            return;
-        }// end function
-
-        private function onHistoryReady(event:HistoryEvent) : void
-        {
-            dispatchEvent(new PlayerEvent(PlayerEvent.Evt_HistoryReady));
             return;
         }// end function
 

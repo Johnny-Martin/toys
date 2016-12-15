@@ -12,8 +12,6 @@
         public static const STATUS_OPEN:int = statusBegin + 1;
         public static const STATUS_DEFINITION_OPEN:int = statusBegin + 1;
         public static const STATUS_FILTER_OPEN:int = statusBegin + 1;
-        public static const STATUS_FILTER_SHOW_UI:int = statusBegin + 1;
-        public static const STATUS_FILTER_SHOW_BMD:int = statusBegin + 1;
         public static const STATUS_END:int = statusBegin + 1;
         public static const STATUS_COUNT:int = STATUS_END - STATUS_BEGIN;
         public static const NOTIFIC_ADD_STATUS:String = "settingAddStatus";
@@ -22,7 +20,7 @@
         public static const NOTIFIC_OPEN_CLOSE:String = "settingOpenClose";
         public static const NOTIFIC_DEFINITION_OPEN_CLOSE:String = "settingDefinitionOpenClose";
         public static const NOTIFIC_FILTER_OPEN_CLOSE:String = "settingFilterOpenClose";
-        public static const NOTIFIC_FILTER_SHOW_BMD:String = "settingFilterShowBmd";
+        public static const NOTIFIC_FILTER_SKIP_MOVIECLIP:String = "settingFilterPlaySkipMC";
         public static const DEFAULT_SUBTITLE_POS:int = 17;
         public static const FONT_COLOR_LIST:Array = [16777215, 16776960];
         public static const FONT_COLOR_SHOW_LIST:Array = [LocalizationManager.instance.getLanguageStringByName(LocalizationDef.SETTING_VIEW_DES4), LocalizationManager.instance.getLanguageStringByName(LocalizationDef.SETTING_VIEW_DES5)];

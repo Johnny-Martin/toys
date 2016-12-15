@@ -49,13 +49,12 @@
             return 0;
         }// end function
 
-        public function initAudioTrack(param1:Object, param2:String, param3:String, param4:String, param5:Boolean) : void
+        public function initAudioTrack(param1:Object, param2:String, param3:String, param4:Boolean) : void
         {
-            var _loc_6:Array = null;
-            var _loc_7:int = 0;
-            var _loc_8:Definition = null;
-            var _loc_9:int = 0;
-            var _loc_10:Array = null;
+            var _loc_6:int = 0;
+            var _loc_7:Definition = null;
+            var _loc_8:int = 0;
+            var _loc_9:Array = null;
             if (this._source != null)
             {
                 return;
@@ -64,39 +63,32 @@
             this._ID = param1.id.toString();
             this._type = Utility.getItemById(AudioTrackEnum.ITEMS, int(param1.lid));
             this._isDefault = int(param1.ispre) == 1;
-            if (param1.vs)
+            var _loc_5:* = param1.vs as Array;
+            if (_loc_5)
             {
-                _loc_6 = param1.vs as Array;
-            }
-            else if (param1.bit && param1.bit.drmc)
-            {
-                _loc_6 = param1.bit.drmc;
-            }
-            if (_loc_6)
-            {
-                _loc_7 = _loc_6.length;
-                _loc_8 = null;
+                _loc_6 = _loc_5.length;
+                _loc_7 = null;
                 this._definitionVec = new Vector.<Definition>;
-                _loc_9 = 0;
-                while (_loc_9 < _loc_7)
+                _loc_8 = 0;
+                while (_loc_8 < _loc_6)
                 {
                     
-                    _loc_10 = null;
-                    if (param5)
+                    _loc_9 = null;
+                    if (param4)
                     {
-                        _loc_10 = _loc_6[_loc_9].flvs as Array;
+                        _loc_9 = _loc_5[_loc_8].flvs as Array;
                     }
                     else
                     {
-                        _loc_10 = _loc_6[_loc_9].fs as Array;
+                        _loc_9 = _loc_5[_loc_8].fs as Array;
                     }
-                    if (_loc_10 && _loc_10.length > 0)
+                    if (_loc_9 && _loc_9.length > 0)
                     {
-                        _loc_8 = new Definition(this._holder, this, this._movie);
-                        _loc_8.initDefinition(_loc_6[_loc_9], param2, param3, param4, param5);
-                        this._definitionVec.push(_loc_8);
+                        _loc_7 = new Definition(this._holder, this, this._movie);
+                        _loc_7.initDefinition(_loc_5[_loc_8], param2, param3, param4);
+                        this._definitionVec.push(_loc_7);
                     }
-                    _loc_9++;
+                    _loc_8++;
                 }
             }
             return;

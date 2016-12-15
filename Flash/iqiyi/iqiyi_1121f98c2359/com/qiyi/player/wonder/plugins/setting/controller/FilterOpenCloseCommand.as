@@ -23,12 +23,10 @@
             {
                 PanelManager.getInstance().closeByType(BodyDef.VIEW_TYPE_POPUP);
                 _loc_2.addStatus(SettingDef.STATUS_FILTER_OPEN);
-                _loc_2.addStatus(SettingDef.STATUS_FILTER_SHOW_UI);
             }
             else
             {
                 _loc_2.removeStatus(SettingDef.STATUS_FILTER_OPEN);
-                _loc_2.removeStatus(SettingDef.STATUS_FILTER_SHOW_UI);
             }
             return;
         }// end function

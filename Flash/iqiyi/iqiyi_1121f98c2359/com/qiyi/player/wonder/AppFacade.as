@@ -12,7 +12,6 @@
     import com.qiyi.player.wonder.plugins.controllbar.*;
     import com.qiyi.player.wonder.plugins.dock.*;
     import com.qiyi.player.wonder.plugins.feedback.*;
-    import com.qiyi.player.wonder.plugins.hint.*;
     import com.qiyi.player.wonder.plugins.loading.*;
     import com.qiyi.player.wonder.plugins.offlinewatch.*;
     import com.qiyi.player.wonder.plugins.recommend.*;
@@ -81,7 +80,6 @@
             TopBarPlugins.getInstance().initController();
             VideoLinkPlugins.getInstance().initController();
             SubscribePlugins.getInstance().initController();
-            HintPlugins.getInstance().initController();
             return;
         }// end function
 
@@ -108,7 +106,6 @@
             TopBarPlugins.getInstance().init(this);
             VideoLinkPlugins.getInstance().init(this);
             SubscribePlugins.getInstance().init(this);
-            HintPlugins.getInstance().init(this);
             return;
         }// end function
 

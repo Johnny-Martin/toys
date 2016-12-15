@@ -193,7 +193,7 @@
             {
                 return IDENTITY_MATRIX;
             }
-            if (param1 is )
+            if (param1 is ColorMatrix)
             {
                 param1 = param1.slice(0);
             }

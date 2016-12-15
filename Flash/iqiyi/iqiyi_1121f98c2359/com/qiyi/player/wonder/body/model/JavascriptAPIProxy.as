@@ -263,20 +263,19 @@
             return;
         }// end function
 
-        public function callJsRecharge(param1:String, param2:String, param3:String, param4:String, param5:int = 0) : void
+        public function callJsRecharge(param1:String, param2:String, param3:String, param4:int = 0) : void
         {
-            this._log.debug("call js callJsRecharge,code:" + param4 + ",from:" + param5 + ",tvid:" + param1 + ",vid:" + param2);
+            this._log.debug("call js callJsRecharge,code:" + param3 + ",from:" + param4 + ",tvid:" + param1 + ",vid:" + param2);
+            var _loc_5:* = new Object();
+            _loc_5.type = "recharge";
             var _loc_6:* = new Object();
-            _loc_6.type = "recharge";
-            var _loc_7:* = new Object();
-            _loc_7.code = param4;
-            _loc_7.tvid = param1;
-            _loc_7.vid = param2;
-            _loc_7.aid = param3;
-            _loc_7.from = param5;
-            _loc_7.origin = FlashVarConfig.origin;
-            _loc_6.data = _loc_7;
-            this.externalInterfaceCall(JS_CALLBACK_V1, _loc_6);
+            _loc_6.code = param3;
+            _loc_6.tvid = param1;
+            _loc_6.vid = param2;
+            _loc_6.from = param4;
+            _loc_6.origin = FlashVarConfig.origin;
+            _loc_5.data = _loc_6;
+            this.externalInterfaceCall(JS_CALLBACK_V1, _loc_5);
             return;
         }// end function
 

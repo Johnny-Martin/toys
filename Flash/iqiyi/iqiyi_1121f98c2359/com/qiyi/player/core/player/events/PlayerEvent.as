@@ -28,7 +28,6 @@
         public static const Evt_OutPrepareLeaveSkipPoint:String = "corePlayerOutPrepareLeaveSkipPoint";
         public static const Evt_EnjoyableSubTypeChanged:String = "corePlayerEnjoyableSubTypeChanged";
         public static const Evt_EnjoyableSubTypeInited:String = "corePlayerEnjoyableSubTypeInited";
-        public static const Evt_HistoryReady:String = "corePlayerHistoryReady";
 
         public function PlayerEvent(param1:String, param2:Object = null, param3:Boolean = false, param4:Boolean = false)
         {

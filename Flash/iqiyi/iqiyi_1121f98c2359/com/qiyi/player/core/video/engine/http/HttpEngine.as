@@ -94,7 +94,6 @@
                 _holder.addStatus(StatusEnum.WAITING_START_LOAD, false);
                 startLoadHistory();
                 startLoadMeta();
-                startLoadLicense();
             }
             setStatus(StatusEnum.ALREADY_START_LOAD);
             return;
@@ -113,7 +112,6 @@
                 _holder.addStatus(StatusEnum.WAITING_PLAY, false);
                 startLoadHistory();
                 startLoadMeta();
-                startLoadLicense();
             }
             return;
         }// end function
@@ -480,7 +478,6 @@
                 else
                 {
                     _movie.startLoadMeta();
-                    _movie.startLoadLicense();
                     if (_movie.curDefinition.ready)
                     {
                         this.onMovieReady(null);

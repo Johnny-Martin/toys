@@ -47,7 +47,6 @@
         private var _skipPointVec:Vector.<SkipPointInfo>;
         private var _enjoyableMap:Dictionary;
         private var _enjoyableDurationMap:Dictionary;
-        private var _skipPointAnalysisData:Object;
         private var _curEnjoyableSubType:EnumItem;
         private var _curEnjoyableSubDurationIndex:int = -1;
         private var _requestEnjoyableSkipPointsRemote:RequestEnjoyableSkipPointsRemote;
@@ -57,7 +56,6 @@
         private var _defaultSubtitle:Language;
         private var _curSubtitlesType:EnumItem;
         private var _hasSubtitle:Boolean = false;
-        private var _hintUrl:String = "";
         private var _holder:ICorePlayer;
         private var _seekTime:Number = 0;
         private var _defControlList:Array;
@@ -99,11 +97,6 @@
         public function get hasSubtitle() : Boolean
         {
             return this._hasSubtitle;
-        }// end function
-
-        public function get hintUrl() : String
-        {
-            return this._hintUrl;
         }// end function
 
         public function get nextVid() : String
@@ -573,11 +566,6 @@
             return null;
         }// end function
 
-        public function getSkipPointAnalysisData() : Object
-        {
-            return this._skipPointAnalysisData;
-        }// end function
-
         public function setEnjoyableSubType(param1:EnumItem, param2:int = -1) : void
         {
             var _loc_4:int = 0;
@@ -653,15 +641,6 @@
             return;
         }// end function
 
-        public function startLoadLicense() : void
-        {
-            if (this._curDefinition)
-            {
-                this._curDefinition.startLoadLicense();
-            }
-            return;
-        }// end function
-
         private function onDefinitionReady(event:Event) : void
         {
             dispatchEvent(new MovieEvent(MovieEvent.Evt_Ready));
@@ -716,13 +695,11 @@
 
         private function parse() : void
         {
-            var _loc_9:ScreenInfo = null;
-            var _loc_10:SkipPointInfo = null;
-            var _loc_11:String = null;
-            var _loc_12:Object = null;
-            var _loc_13:Language = null;
-            var _loc_14:Object = null;
-            var _loc_15:String = null;
+            var _loc_8:ScreenInfo = null;
+            var _loc_9:SkipPointInfo = null;
+            var _loc_10:String = null;
+            var _loc_11:Object = null;
+            var _loc_12:Language = null;
             var _loc_1:Boolean = false;
             if (this._source.ver != undefined)
             {
@@ -783,61 +760,60 @@
             }
             var _loc_2:* = String(this._source.dm);
             var _loc_3:* = _loc_1 ? (String(this._source.du)) : (String(this._source.dd));
-            var _loc_4:* = String(this._source.drm);
-            var _loc_5:* = this._source.tkl as Array;
-            var _loc_6:AudioTrack = null;
-            var _loc_7:* = _loc_5.length;
-            var _loc_8:int = 0;
-            this._audioTrackVec = new Vector.<AudioTrack>(_loc_7);
-            _loc_8 = 0;
-            while (_loc_8 < _loc_7)
+            var _loc_4:* = this._source.tkl as Array;
+            var _loc_5:AudioTrack = null;
+            var _loc_6:* = _loc_4.length;
+            var _loc_7:int = 0;
+            this._audioTrackVec = new Vector.<AudioTrack>(_loc_6);
+            _loc_7 = 0;
+            while (_loc_7 < _loc_6)
             {
                 
-                _loc_6 = new AudioTrack(this._holder, this);
-                _loc_6.initAudioTrack(_loc_5[_loc_8], _loc_2, _loc_3, _loc_4, _loc_1);
-                this._audioTrackVec[_loc_8] = _loc_6;
-                _loc_8++;
+                _loc_5 = new AudioTrack(this._holder, this);
+                _loc_5.initAudioTrack(_loc_4[_loc_7], _loc_2, _loc_3, _loc_1);
+                this._audioTrackVec[_loc_7] = _loc_5;
+                _loc_7++;
             }
             this._screenInfoVec = new Vector.<ScreenInfo>;
-            _loc_5 = this._source.t3d as Array;
-            if (_loc_5)
+            _loc_4 = this._source.t3d as Array;
+            if (_loc_4)
             {
-                _loc_7 = _loc_5.length;
-                _loc_9 = null;
-                _loc_8 = 0;
-                while (_loc_8 < _loc_7)
+                _loc_6 = _loc_4.length;
+                _loc_8 = null;
+                _loc_7 = 0;
+                while (_loc_7 < _loc_6)
                 {
                     
-                    if (_loc_5[_loc_8].tid != 0 && _loc_5[_loc_8].vtp != 0 && _loc_5[_loc_8].vid != "")
+                    if (_loc_4[_loc_7].tid != 0 && _loc_4[_loc_7].vtp != 0 && _loc_4[_loc_7].vid != "")
                     {
-                        _loc_9 = new ScreenInfo();
-                        _loc_9.screenType = Utility.getItemById(ScreenEnum.ITEMS, int(_loc_5[_loc_8].vtp));
-                        _loc_9.tvid = _loc_5[_loc_8].tid;
-                        _loc_9.vid = _loc_5[_loc_8].vid;
-                        this._screenInfoVec.push(_loc_9);
+                        _loc_8 = new ScreenInfo();
+                        _loc_8.screenType = Utility.getItemById(ScreenEnum.ITEMS, int(_loc_4[_loc_7].vtp));
+                        _loc_8.tvid = _loc_4[_loc_7].tid;
+                        _loc_8.vid = _loc_4[_loc_7].vid;
+                        this._screenInfoVec.push(_loc_8);
                     }
-                    _loc_8++;
+                    _loc_7++;
                 }
             }
             this._skipPointVec = new Vector.<SkipPointInfo>;
-            _loc_5 = this._source.tsl as Array;
-            if (_loc_5)
+            _loc_4 = this._source.tsl as Array;
+            if (_loc_4)
             {
-                _loc_7 = _loc_5.length;
-                _loc_10 = null;
-                _loc_8 = 0;
-                while (_loc_8 < _loc_7)
+                _loc_6 = _loc_4.length;
+                _loc_9 = null;
+                _loc_7 = 0;
+                while (_loc_7 < _loc_6)
                 {
                     
-                    _loc_10 = new SkipPointInfo();
-                    _loc_10.skipPointType = Utility.getItemById(SkipPointEnum.ITEMS, int(_loc_5[_loc_8].stp));
-                    _loc_10.startTime = Number(_loc_5[_loc_8].stm) * 1000;
-                    _loc_10.endTime = Number(_loc_5[_loc_8].etm) * 1000;
-                    if (_loc_10.skipPointType == SkipPointEnum.TITLE)
+                    _loc_9 = new SkipPointInfo();
+                    _loc_9.skipPointType = Utility.getItemById(SkipPointEnum.ITEMS, int(_loc_4[_loc_7].stp));
+                    _loc_9.startTime = Number(_loc_4[_loc_7].stm) * 1000;
+                    _loc_9.endTime = Number(_loc_4[_loc_7].etm) * 1000;
+                    if (_loc_9.skipPointType == SkipPointEnum.TITLE)
                     {
-                        if (_loc_10.startTime == 0)
+                        if (_loc_9.startTime == 0)
                         {
-                            this._titleTime = _loc_10.endTime;
+                            this._titleTime = _loc_9.endTime;
                             ;
                         }
                         else
@@ -845,11 +821,11 @@
                             this._titleTime = 0;
                         }
                     }
-                    else if (_loc_10.skipPointType == SkipPointEnum.TRAILER)
+                    else if (_loc_9.skipPointType == SkipPointEnum.TRAILER)
                     {
-                        if (_loc_10.endTime == -1)
+                        if (_loc_9.endTime == -1)
                         {
-                            this._trailerTime = _loc_10.startTime;
+                            this._trailerTime = _loc_9.startTime;
                             ;
                         }
                         else
@@ -857,48 +833,31 @@
                             this._trailerTime = 0;
                         }
                     }
-                    this._skipPointVec.push(_loc_10);
-                    _loc_8++;
+                    this._skipPointVec.push(_loc_9);
+                    _loc_7++;
                 }
             }
             this._subtitles = new Vector.<Language>;
             if (this._source.stl && this._hasSubtitle)
             {
-                _loc_5 = this._source.stl.stl_xml as Array;
-                if (_loc_5 && _loc_5.length > 0)
+                _loc_4 = this._source.stl.stl_xml as Array;
+                if (_loc_4 && _loc_4.length > 0)
                 {
-                    _loc_11 = String(this._source.stl.d);
-                    _loc_12 = null;
-                    for each (_loc_12 in _loc_5)
+                    _loc_10 = String(this._source.stl.d);
+                    _loc_11 = null;
+                    for each (_loc_11 in _loc_4)
                     {
                         
-                        _loc_13 = new Language();
-                        _loc_13.isDefault = int(_loc_12.pre) == 1;
-                        _loc_13.url = _loc_11 + String(_loc_12.l);
-                        _loc_13.lang = Utility.getItemById(LanguageEnum.ITEMS, int(_loc_12.lid));
-                        this._subtitles.push(_loc_13);
-                        if (_loc_13.isDefault)
+                        _loc_12 = new Language();
+                        _loc_12.isDefault = int(_loc_11.pre) == 1;
+                        _loc_12.url = _loc_10 + String(_loc_11.l);
+                        _loc_12.lang = Utility.getItemById(LanguageEnum.ITEMS, int(_loc_11.lid));
+                        this._subtitles.push(_loc_12);
+                        if (_loc_12.isDefault)
                         {
-                            this._defaultSubtitle = _loc_13;
+                            this._defaultSubtitle = _loc_12;
                         }
                     }
-                }
-            }
-            if (this._source.hasOwnProperty("parts") && this._source["parts"].length > 0)
-            {
-                try
-                {
-                    _loc_14 = this._source["parts"][0];
-                    _loc_15 = _loc_14["dfs"];
-                    _loc_14 = _loc_14["vs"][0];
-                    _loc_14 = _loc_14["fs"][0];
-                    if (_loc_14.l != "")
-                    {
-                        this._hintUrl = _loc_15 + _loc_14.l;
-                    }
-                }
-                catch (e:Error)
-                {
                 }
             }
             return;
@@ -1014,7 +973,6 @@
                 {
                     this._enjoyableMap = this._requestEnjoyableSkipPointsRemote.skipPointMap;
                     this._enjoyableDurationMap = this._requestEnjoyableSkipPointsRemote.skipPointInfoDurationMap;
-                    this._skipPointAnalysisData = this._requestEnjoyableSkipPointsRemote.skipPointAnalysisData;
                     _loc_3 = UserManager.getInstance().userLocalSex;
                     if (_loc_3.state == UserDef.USER_LOCAL_SEX_STATE_NONE || _loc_3.state == UserDef.USER_LOCAL_SEX_STATE_COMPLETE)
                     {

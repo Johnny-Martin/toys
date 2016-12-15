@@ -21,7 +21,6 @@
     import com.qiyi.player.wonder.plugins.controllbar.*;
     import com.qiyi.player.wonder.plugins.controllbar.model.*;
     import com.qiyi.player.wonder.plugins.controllbar.view.preview.image.*;
-    import com.qiyi.player.wonder.plugins.hint.*;
     import com.qiyi.player.wonder.plugins.loading.*;
     import com.qiyi.player.wonder.plugins.loading.model.*;
     import com.qiyi.player.wonder.plugins.scenetile.model.*;
@@ -31,7 +30,6 @@
     import flash.events.*;
     import flash.geom.*;
     import flash.ui.*;
-    import flash.utils.*;
     import gs.*;
     import org.puremvc.as3.interfaces.*;
     import org.puremvc.as3.patterns.mediator.*;
@@ -41,17 +39,13 @@
         private var _controllBarProxy:ControllBarProxy;
         private var _controllBarView:ControllBarView;
         private var _frameCount:uint;
-        private var _filterTimer:Timer;
-        private var _isTimerRunning:Boolean = false;
-        private var _bmdNullTimes:int = 0;
+        private var _isUserSeek:Boolean = false;
         public static const NAME:String = "com.qiyi.player.wonder.plugins.controllbar.view.ControllBarViewMediator";
 
         public function ControllBarViewMediator(param1:ControllBarView)
         {
             super(NAME, param1);
             this._controllBarView = param1;
-            this._filterTimer = new Timer(800);
-            this._filterTimer.addEventListener(TimerEvent.TIMER, this.onFilterTimer);
             return;
         }// end function
 
@@ -97,18 +91,20 @@
 
         override public function listNotificationInterests() : Array
         {
-            return [ControllBarDef.NOTIFIC_ADD_STATUS, ControllBarDef.NOTIFIC_REMOVE_STATUS, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_REMOVE_STATUS, BodyDef.NOTIFIC_PLAYER_REPLAYED, BodyDef.NOTIFIC_FULL_SCREEN, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_JS_LIGHT_CHANGED, BodyDef.NOTIFIC_JS_CALL_SET_NEXT_VIDEO_INFO, BodyDef.NOTIFIC_JS_CALL_SET_CONTINUE_PLAY_STATE, BodyDef.NOTIFIC_JS_EXPAND_CHANGED, BodyDef.NOTIFIC_PLAYER_DEFINITION_SWITCHED, BodyDef.NOTIFIC_JS_CALL_SEEK, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, BodyDef.NOTIFIC_JS_CALL_SET_BARRAGE_STATUS, BodyDef.NOTIFIC_PLAYER_OUT_SKIP_POINT, BodyDef.NOTIFIC_PLAYER_ENTER_SKIP_POINT, BodyDef.NOTIFIC_PLAYER_ENTER_LEAVE_SKIP_POINT, BodyDef.NOTIFIC_PLAYER_ENJOY_TYPE_INITED, BodyDef.NOTIFIC_LEAVE_STAGE, BodyDef.NOTIFIC_MOUSE_LAYER_CLICK, BodyDef.NOTIFIC_PLAYER_RUNNING, ContinuePlayDef.NOTIFIC_ADD_STATUS, ContinuePlayDef.NOTIFIC_INFO_LIST_CHANGED, ContinuePlayDef.NOTIFIC_CYCLE_PLAY_CHANGED, ADDef.NOTIFIC_ADD_STATUS, ADDef.NOTIFIC_REMOVE_STATUS, ADDef.NOTIFIC_AD_RECEIVE_VIEW_POINTS, LoadingDef.NOTIFIC_ADD_STATUS, LoadingDef.NOTIFIC_REMOVE_STATUS, HintDef.NOTIFIC_ADD_STATUS, HintDef.NOTIFIC_REMOVE_STATUS];
+            return [ControllBarDef.NOTIFIC_ADD_STATUS, ControllBarDef.NOTIFIC_REMOVE_STATUS, ControllBarDef.NOTIFIC_FILTER_OPEN, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_REMOVE_STATUS, BodyDef.NOTIFIC_PLAYER_REPLAYED, BodyDef.NOTIFIC_FULL_SCREEN, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_JS_LIGHT_CHANGED, BodyDef.NOTIFIC_JS_CALL_SET_NEXT_VIDEO_INFO, BodyDef.NOTIFIC_JS_CALL_SET_CONTINUE_PLAY_STATE, BodyDef.NOTIFIC_JS_EXPAND_CHANGED, BodyDef.NOTIFIC_PLAYER_DEFINITION_SWITCHED, BodyDef.NOTIFIC_JS_CALL_SEEK, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, BodyDef.NOTIFIC_JS_CALL_SET_BARRAGE_STATUS, BodyDef.NOTIFIC_PLAYER_OUT_SKIP_POINT, BodyDef.NOTIFIC_PLAYER_ENTER_SKIP_POINT, BodyDef.NOTIFIC_PLAYER_ENTER_LEAVE_SKIP_POINT, BodyDef.NOTIFIC_PLAYER_FRESHED_SKIP_POINT, BodyDef.NOTIFIC_PLAYER_ENJOY_TYPE_INITED, BodyDef.NOTIFIC_LEAVE_STAGE, ContinuePlayDef.NOTIFIC_ADD_STATUS, ContinuePlayDef.NOTIFIC_INFO_LIST_CHANGED, ContinuePlayDef.NOTIFIC_CYCLE_PLAY_CHANGED, ADDef.NOTIFIC_ADD_STATUS, ADDef.NOTIFIC_REMOVE_STATUS, ADDef.NOTIFIC_AD_RECEIVE_VIEW_POINTS, LoadingDef.NOTIFIC_ADD_STATUS, LoadingDef.NOTIFIC_REMOVE_STATUS];
         }// end function
 
         override public function handleNotification(param1:INotification) : void
         {
+            var _loc_6:SettingProxy = null;
             var _loc_7:ADProxy = null;
+            var _loc_8:ISkipPointInfo = null;
+            var _loc_9:ISkipPointInfo = null;
             super.handleNotification(param1);
             var _loc_2:* = param1.getBody();
             var _loc_3:* = param1.getName();
             var _loc_4:* = param1.getType();
             var _loc_5:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
-            var _loc_6:* = facade.retrieveProxy(SettingProxy.NAME) as SettingProxy;
             switch(_loc_3)
             {
                 case ControllBarDef.NOTIFIC_ADD_STATUS:
@@ -119,6 +115,46 @@
                 case ControllBarDef.NOTIFIC_REMOVE_STATUS:
                 {
                     this._controllBarView.onRemoveStatus(int(_loc_2));
+                    break;
+                }
+                case ControllBarDef.NOTIFIC_FILTER_OPEN:
+                {
+                    if (Boolean(_loc_2))
+                    {
+                        this.onFilterBtnClick();
+                    }
+                    else
+                    {
+                        this.onFilterSeletedBtnClick();
+                    }
+                    break;
+                }
+                case BodyDef.NOTIFIC_PLAYER_FRESHED_SKIP_POINT:
+                {
+                    if (_loc_4 == BodyDef.PLAYER_ACTOR_NOTIFIC_TYPE_CUR && this.checkFilterBtnState() && this._controllBarProxy.hasStatus(ControllBarDef.STATUS_BTNS_INIT_ENABLE))
+                    {
+                        if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
+                        {
+                            this._controllBarView.updateFilterBtnType(true);
+                            this._controllBarView.seekBarView.setSkipPoints(this.getAllEnjoyableInfo());
+                            if (!this.checkInEnjoyableSkipType())
+                            {
+                                _loc_8 = this.checkHasNestEnjoableSkip();
+                                if (_loc_8 != null)
+                                {
+                                    this.onPlayerSeeking(_loc_8.startTime, SeekTypeEnum.SKIP_ENJOYABLE_POINT);
+                                }
+                                else
+                                {
+                                    this.firstEnjoyableSkipPointPlay();
+                                }
+                            }
+                            else
+                            {
+                                this.onPlayerSeeking(_loc_5.curActor.currentTime);
+                            }
+                        }
+                    }
                     break;
                 }
                 case BodyDef.NOTIFIC_PLAYER_ENJOY_TYPE_INITED:
@@ -137,17 +173,23 @@
                 }
                 case BodyDef.NOTIFIC_PLAYER_REPLAYED:
                 {
+                    if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
+                    {
+                        this.firstEnjoyableSkipPointPlay();
+                        if (this.checkFilterBtnState())
+                        {
+                            this.showOpenFilterTip();
+                        }
+                        PingBack.getInstance().filterPing(PingBackDef.FILTER_CONTINUE_PLAY);
+                    }
                     this.onUpdateContinuePlayBtns();
-                    this._filterTimer.stop();
-                    this._isTimerRunning = false;
-                    sendNotification(SettingDef.NOTIFIC_FILTER_SHOW_BMD, false);
                     break;
                 }
                 case BodyDef.NOTIFIC_PLAYER_ENTER_SKIP_POINT:
                 {
                     if (_loc_4 == BodyDef.PLAYER_ACTOR_NOTIFIC_TYPE_CUR)
                     {
-                        this._controllBarProxy.filterBitmapData.loaderImage(false);
+                        this._isUserSeek = false;
                     }
                     break;
                 }
@@ -155,20 +197,42 @@
                 {
                     if (_loc_4 == BodyDef.PLAYER_ACTOR_NOTIFIC_TYPE_CUR && this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
                     {
-                        if (!this.checkInEnjoyableSkipType(_loc_5.curActor.currentTime))
+                        _loc_9 = this.checkHasNestEnjoableSkip();
+                        if (!this.checkInEnjoyableSkipType())
                         {
-                            this._controllBarProxy.filterBitmapData.loaderImage(true, _loc_5.curActor.currentTime, _loc_5.curActor.movieModel.duration);
-                            this.onFilterTimerStart(_loc_5.curActor.currentTime);
+                            if (_loc_9 != null)
+                            {
+                                if (!this._isUserSeek)
+                                {
+                                    this.onPlayerSeeking(_loc_9.startTime, SeekTypeEnum.SKIP_ENJOYABLE_POINT);
+                                    sendNotification(SettingDef.NOTIFIC_FILTER_SKIP_MOVIECLIP);
+                                }
+                                else
+                                {
+                                    this._isUserSeek = false;
+                                }
+                            }
+                            else if (!this._isUserSeek)
+                            {
+                                sendNotification(ContinuePlayDef.NOTIFIC_REQUEST_NEXT_VIDEO);
+                            }
+                            else
+                            {
+                                this._isUserSeek = false;
+                            }
                         }
                     }
                     break;
                 }
                 case BodyDef.NOTIFIC_PLAYER_ENTER_LEAVE_SKIP_POINT:
                 {
+                    _loc_6 = facade.retrieveProxy(SettingProxy.NAME) as SettingProxy;
                     if (_loc_4 == BodyDef.PLAYER_ACTOR_NOTIFIC_TYPE_CUR && this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
                     {
-                        this._controllBarProxy.filterBitmapData.loaderImage(true, _loc_5.curActor.currentTime, _loc_5.curActor.movieModel.duration);
-                        sendNotification(TipsDef.NOTIFIC_REQUEST_SHOW_TIP, TipsDef.TIP_ID_FILTER_NEST_ENJOYABLE_TIP);
+                        if (this.checkHasNestEnjoableSkip() != null)
+                        {
+                            sendNotification(TipsDef.NOTIFIC_REQUEST_SHOW_TIP, TipsDef.TIP_ID_FILTER_NEST_ENJOYABLE_TIP);
+                        }
                     }
                     break;
                 }
@@ -190,6 +254,11 @@
                 case BodyDef.NOTIFIC_PLAYER_REMOVE_STATUS:
                 {
                     this.onPlayerStatusChanged(int(_loc_2), false, _loc_4);
+                    break;
+                }
+                case BodyDef.NOTIFIC_PLAYER_REPLAYED:
+                {
+                    this.onUpdateContinuePlayBtns();
                     break;
                 }
                 case BodyDef.NOTIFIC_FULL_SCREEN:
@@ -243,25 +312,6 @@
                 {
                     TweenLite.killTweensOf(this.hideSeekBar);
                     this.hideSeekBar();
-                    break;
-                }
-                case BodyDef.NOTIFIC_MOUSE_LAYER_CLICK:
-                {
-                    if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN) && _loc_6.hasStatus(SettingDef.STATUS_FILTER_SHOW_BMD))
-                    {
-                        if (this._isTimerRunning)
-                        {
-                            this._filterTimer.stop();
-                            this._isTimerRunning = false;
-                            this._controllBarProxy.addStatus(ControllBarDef.STATUS_TRIGGER_BTN_PAUSE);
-                        }
-                        else
-                        {
-                            this._filterTimer.start();
-                            this._isTimerRunning = true;
-                            this._controllBarProxy.addStatus(ControllBarDef.STATUS_TRIGGER_BTN_SHOW);
-                        }
-                    }
                     break;
                 }
                 case ContinuePlayDef.NOTIFIC_ADD_STATUS:
@@ -335,18 +385,6 @@
                     }
                     break;
                 }
-                case BodyDef.NOTIFIC_PLAYER_RUNNING:
-                {
-                    if (!_loc_5.curActor.hasStatus(BodyDef.PLAYER_STATUS_PAUSED) && this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN) && !this._isTimerRunning)
-                    {
-                        if (!this.checkInEnjoyableSkipType(_loc_2.currentTime))
-                        {
-                            this._controllBarProxy.filterBitmapData.loaderImage(true, _loc_2.currentTime, _loc_5.curActor.movieModel.duration);
-                            this.onFilterTimerStart(_loc_2.currentTime);
-                        }
-                    }
-                    break;
-                }
                 case ADDef.NOTIFIC_ADD_STATUS:
                 {
                     this.onADPlayerStatusChanged(int(_loc_2), true);
@@ -394,16 +432,6 @@
                     {
                         this._controllBarProxy.removeStatus(ControllBarDef.STATUS_BARRAGE_BTN_OPEN);
                     }
-                    break;
-                }
-                case HintDef.NOTIFIC_ADD_STATUS:
-                {
-                    this.onHintStatusChanged(int(_loc_2), true);
-                    break;
-                }
-                case HintDef.NOTIFIC_REMOVE_STATUS:
-                {
-                    this.onHintStatusChanged(int(_loc_2), false);
                     break;
                 }
                 default:
@@ -589,20 +617,13 @@
 
         private function onControllBarViewSeek(event:ControllBarEvent) : void
         {
-            var _loc_2:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
-            this.onPlayerSeeking(int(event.data.time));
+            this.onPlayerSeeking(int(event.data));
             (this._controllBarProxy.seekCount + 1);
-            if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN) && int(event.data.type) != 1)
+            if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
             {
-                if (!this.checkInEnjoyableSkipType(int(event.data.time)))
-                {
-                    PingBack.getInstance().userActionPing_4_0(PingBackDef.FILTER_SEEK_NOT_ENJOYABLE_SEGMENT);
-                }
-                else
-                {
-                    PingBack.getInstance().userActionPing_4_0(PingBackDef.FILTER_SEEK_ENJOYABLE_SEGMENT);
-                }
+                this._isUserSeek = this.checkInEnjoyableSkipType() ? (false) : (true);
             }
+            var _loc_2:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
             if (_loc_2.curActor.movieModel && _loc_2.curActor.movieInfo)
             {
                 _loc_2.curActor.uploadHistory();
@@ -641,18 +662,6 @@
                 return;
             }
             var _loc_4:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
-            if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
-            {
-                if (!this.checkInEnjoyableSkipType(param1))
-                {
-                    this._controllBarProxy.filterBitmapData.loaderImage(true, param1, _loc_4.curActor.movieModel.duration);
-                    this.onFilterTimerStart(param1);
-                    return;
-                }
-                this._filterTimer.stop();
-                this._isTimerRunning = false;
-                sendNotification(SettingDef.NOTIFIC_FILTER_SHOW_BMD, false);
-            }
             if (_loc_4.curActor.hasStatus(BodyDef.PLAYER_STATUS_PAUSED) || _loc_4.curActor.hasStatus(BodyDef.PLAYER_STATUS_PLAYING) || _loc_4.curActor.hasStatus(BodyDef.PLAYER_STATUS_SEEKING) || _loc_4.curActor.hasStatus(BodyDef.PLAYER_STATUS_WAITING))
             {
                 if (param1 < 0)
@@ -745,13 +754,10 @@
                 this._controllBarView.seekBarView.setImagePrePicUrlArr(this.getImageUrlList());
                 this._controllBarView.seekBarView.setCurrentTime(0);
                 this._controllBarView.seekBarView.setHeadTailPoint(_loc_1.curActor.movieModel.titlesTime, _loc_1.curActor.movieModel.trailerTime);
-                this._isTimerRunning = false;
-                sendNotification(SettingDef.NOTIFIC_FILTER_SHOW_BMD, false);
-                this._controllBarProxy.removeStatus(ControllBarDef.STATUS_FILTER_OPEN);
-                this._controllBarProxy.removeStatus(ControllBarDef.STATUS_FILTER_BTN_SHOW);
-                this._controllBarView.seekBarView.setSkipPoints(null);
-                this._controllBarProxy.filterBitmapData.destroy();
-                this._filterTimer.stop();
+                if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
+                {
+                    this._controllBarView.seekBarView.setSkipPoints(this.getAllEnjoyableInfo());
+                }
                 this._controllBarView.currentDefinitionInfo = _loc_1.curActor.movieModel.curDefinitionInfo.type;
                 this.onUpdateContinuePlayBtns();
                 if (!Settings.instance.mute)
@@ -787,67 +793,36 @@
         private function onPlayBtnClick(event:MouseEvent) : void
         {
             var _loc_2:* = facade.retrieveProxy(ADProxy.NAME) as ADProxy;
-            var _loc_3:* = facade.retrieveProxy(SettingProxy.NAME) as SettingProxy;
             if (!_loc_2.hasStatus(ADDef.STATUS_PLAYING) && !_loc_2.hasStatus(ADDef.STATUS_PAUSED))
             {
-                if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN) && _loc_3.hasStatus(SettingDef.STATUS_FILTER_SHOW_BMD))
-                {
-                    this._filterTimer.start();
-                    this._isTimerRunning = true;
-                    this._controllBarProxy.addStatus(ControllBarDef.STATUS_TRIGGER_BTN_SHOW);
-                }
-                else
-                {
-                    sendNotification(BodyDef.NOTIFIC_PLAYER_RESUME);
-                    GlobalStage.stage.dispatchEvent(new Event("tmp_dis_resume_to_p2p"));
-                }
+                sendNotification(BodyDef.NOTIFIC_PLAYER_RESUME);
+                GlobalStage.stage.dispatchEvent(new Event("tmp_dis_resume_to_p2p"));
             }
             sendNotification(ADDef.NOTIFIC_RESUME);
-            sendNotification(HintDef.NOTIFIC_HINT_RESUME);
             return;
         }// end function
 
         private function onPauseBtnClick(event:MouseEvent) : void
         {
             var _loc_2:* = facade.retrieveProxy(ADProxy.NAME) as ADProxy;
-            var _loc_3:* = facade.retrieveProxy(SettingProxy.NAME) as SettingProxy;
             if (!_loc_2.hasStatus(ADDef.STATUS_PLAYING) && !_loc_2.hasStatus(ADDef.STATUS_PAUSED))
             {
-                if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN) && _loc_3.hasStatus(SettingDef.STATUS_FILTER_SHOW_BMD))
-                {
-                    this._filterTimer.stop();
-                    this._isTimerRunning = false;
-                    this._controllBarProxy.addStatus(ControllBarDef.STATUS_TRIGGER_BTN_PAUSE);
-                }
-                else
-                {
-                    sendNotification(BodyDef.NOTIFIC_PLAYER_PAUSE, PauseTypeEnum.USER);
-                    GlobalStage.stage.dispatchEvent(new Event("tmp_dis_pause_to_p2p"));
-                }
+                sendNotification(BodyDef.NOTIFIC_PLAYER_PAUSE, PauseTypeEnum.USER);
+                GlobalStage.stage.dispatchEvent(new Event("tmp_dis_pause_to_p2p"));
             }
             sendNotification(ADDef.NOTIFIC_PAUSE);
-            sendNotification(HintDef.NOTIFIC_HINT_PAUSE);
             return;
         }// end function
 
         private function onLoadingBtnClick(event:MouseEvent) : void
         {
             var _loc_2:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
-            var _loc_3:* = facade.retrieveProxy(SettingProxy.NAME) as SettingProxy;
-            if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN) && _loc_3.hasStatus(SettingDef.STATUS_FILTER_SHOW_BMD))
-            {
-                this._filterTimer.stop();
-                this._isTimerRunning = false;
-                this._controllBarProxy.addStatus(ControllBarDef.STATUS_TRIGGER_BTN_PAUSE);
-                return;
-            }
             if (!_loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_PAUSED) && _loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_ALREADY_PLAY))
             {
                 if (_loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_SEEKING) || _loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_WAITING))
                 {
                     sendNotification(BodyDef.NOTIFIC_PLAYER_PAUSE, PauseTypeEnum.USER);
                     sendNotification(ADDef.NOTIFIC_PAUSE);
-                    sendNotification(HintDef.NOTIFIC_HINT_PAUSE);
                     GlobalStage.stage.dispatchEvent(new Event("tmp_dis_pause_to_p2p"));
                 }
             }
@@ -972,10 +947,6 @@
         private function onDefinitionBtnClick(event:ControllBarEvent) : void
         {
             var _loc_2:* = facade.retrieveProxy(SettingProxy.NAME) as SettingProxy;
-            if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN) && _loc_2.hasStatus(SettingDef.STATUS_FILTER_SHOW_BMD))
-            {
-                return;
-            }
             if (_loc_2.hasStatus(SettingDef.STATUS_DEFINITION_OPEN))
             {
                 sendNotification(SettingDef.NOTIFIC_DEFINITION_OPEN_CLOSE, false);
@@ -1003,19 +974,27 @@
 
         private function onFilterBtnClick(event:ControllBarEvent = null) : void
         {
+            var _loc_3:ISkipPointInfo = null;
             var _loc_2:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
-            var _loc_3:Boolean = true;
+            var _loc_4:Boolean = true;
             _loc_2.curActor.openSelectPlay = true;
-            _loc_2.preActor.openSelectPlay = _loc_3;
+            _loc_2.preActor.openSelectPlay = _loc_4;
             this._controllBarProxy.addStatus(ControllBarDef.STATUS_FILTER_OPEN);
             this._controllBarView.seekBarView.setSkipPoints(this.getAllEnjoyableInfo());
+            this.showOpenFilterTip();
             sendNotification(SettingDef.NOTIFIC_FILTER_OPEN_CLOSE, true);
             PingBack.getInstance().filterPing(PingBackDef.FILTER_OPEN);
-            this._controllBarProxy.filterBitmapData.setFilterAnalysisData(_loc_2.curActor.movieModel.getSkipPointAnalysisData());
-            if (!this.checkInEnjoyableSkipType(_loc_2.curActor.currentTime))
+            if (!this.checkInEnjoyableSkipType())
             {
-                this._controllBarProxy.filterBitmapData.loaderImage(true, _loc_2.curActor.currentTime, _loc_2.curActor.movieModel.duration);
-                this.onFilterTimerStart(_loc_2.curActor.currentTime);
+                _loc_3 = this.checkHasNestEnjoableSkip();
+                if (_loc_3 != null)
+                {
+                    this.onPlayerSeeking(_loc_3.startTime, SeekTypeEnum.SKIP_ENJOYABLE_POINT);
+                }
+                else
+                {
+                    this.firstEnjoyableSkipPointPlay();
+                }
             }
             else
             {
@@ -1028,19 +1007,15 @@
         {
             var _loc_2:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
             var _loc_3:* = facade.retrieveProxy(SettingProxy.NAME) as SettingProxy;
-            var _loc_4:* = _loc_3.hasStatus(SettingDef.STATUS_FILTER_SHOW_BMD) ? (this._controllBarProxy.filterBitmapData.interval * this._controllBarProxy.filterBitmapData.showBmdIndex * 1000) : (_loc_2.curActor.currentTime);
-            var _loc_5:Boolean = false;
+            var _loc_4:Boolean = false;
             _loc_2.curActor.openSelectPlay = false;
-            _loc_2.preActor.openSelectPlay = _loc_5;
+            _loc_2.preActor.openSelectPlay = _loc_4;
             this._controllBarProxy.removeStatus(ControllBarDef.STATUS_FILTER_OPEN);
             this._controllBarView.seekBarView.setSkipPoints(null);
-            sendNotification(SettingDef.NOTIFIC_FILTER_OPEN_CLOSE, false);
             sendNotification(TipsDef.NOTIFIC_REQUEST_SHOW_TIP, TipsDef.TIP_ID_FILTER_CLOSE_TIP);
+            sendNotification(SettingDef.NOTIFIC_FILTER_OPEN_CLOSE, false);
             PingBack.getInstance().filterPing(PingBackDef.FILTER_CLOSE);
-            this._controllBarProxy.filterBitmapData.loaderImage(false);
-            this._filterTimer.stop();
-            this._isTimerRunning = false;
-            this.onPlayerSeeking(_loc_4);
+            this.onPlayerSeeking(_loc_2.curActor.currentTime);
             return;
         }// end function
 
@@ -1053,25 +1028,16 @@
         private function onEnterFrame(event:Event) : void
         {
             var _loc_2:PlayerProxy = null;
-            var _loc_3:SettingProxy = null;
-            var _loc_4:String = this;
-            var _loc_5:* = this._frameCount + 1;
-            _loc_4._frameCount = _loc_5;
+            var _loc_3:String = this;
+            var _loc_4:* = this._frameCount + 1;
+            _loc_3._frameCount = _loc_4;
             if (this._frameCount % 2 == 0)
             {
                 this._frameCount = 0;
                 _loc_2 = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
-                _loc_3 = facade.retrieveProxy(SettingProxy.NAME) as SettingProxy;
                 if (_loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_PLAYING) || _loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_SEEKING) || _loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_WAITING) || _loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_PAUSED))
                 {
-                    if (this._isTimerRunning || _loc_3.hasStatus(SettingDef.STATUS_FILTER_SHOW_BMD))
-                    {
-                        this._controllBarView.onPlayerRunning(this._controllBarProxy.filterBitmapData.interval * this._controllBarProxy.filterBitmapData.showBmdIndex * 1000, _loc_2.curActor.bufferTime, _loc_2.curActor.movieModel.duration, this._controllBarProxy.keyDownSeeking);
-                    }
-                    else
-                    {
-                        this._controllBarView.onPlayerRunning(_loc_2.curActor.currentTime, _loc_2.curActor.bufferTime, _loc_2.curActor.movieModel.duration, this._controllBarProxy.keyDownSeeking);
-                    }
+                    this._controllBarView.onPlayerRunning(_loc_2.curActor.currentTime, _loc_2.curActor.bufferTime, _loc_2.curActor.movieModel.duration, this._controllBarProxy.keyDownSeeking);
                 }
             }
             return;
@@ -1090,17 +1056,6 @@
             var _loc_7:LoadingProxy = null;
             switch(param1)
             {
-                case BodyDef.PLAYER_STATUS_ALREADY_LOAD_MOVIE:
-                {
-                    this._isTimerRunning = false;
-                    sendNotification(SettingDef.NOTIFIC_FILTER_SHOW_BMD, false);
-                    this._controllBarProxy.removeStatus(ControllBarDef.STATUS_FILTER_OPEN);
-                    this._controllBarProxy.removeStatus(ControllBarDef.STATUS_FILTER_BTN_SHOW);
-                    this._controllBarView.seekBarView.setSkipPoints(null);
-                    this._controllBarProxy.filterBitmapData.destroy();
-                    this._filterTimer.stop();
-                    break;
-                }
                 case BodyDef.PLAYER_STATUS_ALREADY_READY:
                 {
                     if (param2)
@@ -1110,9 +1065,10 @@
                         this._controllBarView.seekBarView.setImagePrePicUrlArr(this.getImageUrlList());
                         this._controllBarView.seekBarView.setCurrentTime(0);
                         this._controllBarView.seekBarView.setHeadTailPoint(_loc_4.curActor.movieModel.titlesTime, _loc_4.curActor.movieModel.trailerTime);
-                        this._controllBarProxy.removeStatus(ControllBarDef.STATUS_FILTER_OPEN);
-                        this._controllBarProxy.removeStatus(ControllBarDef.STATUS_FILTER_BTN_SHOW);
-                        this._controllBarView.seekBarView.setSkipPoints(null);
+                        if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
+                        {
+                            this._controllBarView.seekBarView.setSkipPoints(this.getAllEnjoyableInfo());
+                        }
                         TweenLite.killTweensOf(this.onPlayerDefinitionSwitchComplete);
                         this._controllBarView.currentDefinitionInfo = _loc_4.curActor.movieModel.curDefinitionInfo.type;
                         this.onUpdateContinuePlayBtns();
@@ -1134,6 +1090,13 @@
                     }
                     break;
                 }
+                case BodyDef.PLAYER_STATUS_ALREADY_PLAY:
+                {
+                    if (param2)
+                    {
+                    }
+                    break;
+                }
                 case BodyDef.PLAYER_STATUS_PLAYING:
                 {
                     if (param2)
@@ -1147,6 +1110,7 @@
                             }
                         }
                         this.initBtns();
+                        this.skipPointInFirstPlay();
                     }
                     break;
                 }
@@ -1336,46 +1300,6 @@
             return;
         }// end function
 
-        private function onHintStatusChanged(param1:int, param2:Boolean) : void
-        {
-            switch(param1)
-            {
-                case HintDef.STATUS_OPEN:
-                {
-                    if (param2)
-                    {
-                        if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_BTNS_INIT_ENABLE))
-                        {
-                            this.deinitBtns();
-                        }
-                        this._controllBarProxy.removeStatus(ControllBarDef.STATUS_TIME_SHOW);
-                    }
-                    break;
-                }
-                case HintDef.STATUS_PLAYING:
-                {
-                    if (param2)
-                    {
-                        this._controllBarProxy.addStatus(ControllBarDef.STATUS_TRIGGER_BTN_SHOW);
-                    }
-                    break;
-                }
-                case HintDef.STATUS_PAUSED:
-                {
-                    if (param2)
-                    {
-                        this._controllBarProxy.addStatus(ControllBarDef.STATUS_TRIGGER_BTN_PAUSE);
-                    }
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-            return;
-        }// end function
-
         private function onPlayerDefinitionSwitched(param1:int) : void
         {
             if (param1 >= 0)
@@ -1490,6 +1414,27 @@
             }
             this._controllBarProxy.addStatus(ControllBarDef.STATUS_BTNS_INIT_ENABLE, false);
             this._controllBarView.onResize(GlobalStage.stage.stageWidth, GlobalStage.stage.stageHeight);
+            return;
+        }// end function
+
+        private function skipPointInFirstPlay() : void
+        {
+            if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_BTNS_INIT_ENABLE) && !this._controllBarProxy.isFirstPlay)
+            {
+                return;
+            }
+            this._controllBarProxy.isFirstPlay = false;
+            if (this.checkFilterBtnState())
+            {
+                if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
+                {
+                    this._controllBarView.updateFilterBtnType(true);
+                    this._controllBarView.seekBarView.setSkipPoints(this.getAllEnjoyableInfo());
+                    this.firstEnjoyableSkipPointPlay();
+                    this.showOpenFilterTip();
+                    PingBack.getInstance().filterPing(PingBackDef.FILTER_CONTINUE_PLAY);
+                }
+            }
             return;
         }// end function
 
@@ -1619,8 +1564,7 @@
         private function checkPauseBtnStatus() : Boolean
         {
             var _loc_1:* = facade.retrieveProxy(ADProxy.NAME) as ADProxy;
-            var _loc_2:* = facade.retrieveProxy(SettingProxy.NAME) as SettingProxy;
-            if (_loc_1.hasStatus(ADDef.STATUS_PLAYING) || this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN) && _loc_2.hasStatus(SettingDef.STATUS_FILTER_SHOW_BMD))
+            if (_loc_1.hasStatus(ADDef.STATUS_PLAYING))
             {
                 return false;
             }
@@ -1738,7 +1682,7 @@
             {
                 case 37:
                 {
-                    if (!this.isAllowKeyAction() || this._isTimerRunning)
+                    if (!this.isAllowKeyAction())
                     {
                         return;
                     }
@@ -1762,7 +1706,7 @@
                 }
                 case 39:
                 {
-                    if (!this.isAllowKeyAction() || this._isTimerRunning)
+                    if (!this.isAllowKeyAction())
                     {
                         return;
                     }
@@ -1795,8 +1739,6 @@
 
         private function onKeyUp(event:KeyboardEvent) : void
         {
-            var _loc_3:int = 0;
-            var _loc_4:int = 0;
             var _loc_2:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
             if (_loc_2.curActor.smallWindowMode && event.keyLocation != int.MAX_VALUE)
             {
@@ -1825,15 +1767,14 @@
                     if (this._controllBarProxy.keyDownSeeking)
                     {
                         this._controllBarProxy.keyDownSeeking = false;
-                        _loc_3 = this._isTimerRunning ? (this._controllBarProxy.filterBitmapData.interval * this._controllBarProxy.filterBitmapData.showBmdIndex * 1000) : (this._controllBarView.seekBarView.seekTime);
-                        this.onPlayerSeeking(_loc_3);
+                        this.onPlayerSeeking(this._controllBarView.seekBarView.seekTime);
                         _loc_2.curActor.uploadHistory();
                         (this._controllBarProxy.seekCount + 1);
-                        this._controllBarView.seekBarView.hideImagePreview();
                         if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
                         {
-                            PingBack.getInstance().userActionPing_4_0(PingBackDef.FILTER_FAST_REWIND);
+                            this._isUserSeek = this.checkInEnjoyableSkipType() ? (false) : (true);
                         }
+                        this._controllBarView.seekBarView.hideImagePreview();
                     }
                     break;
                 }
@@ -1847,15 +1788,14 @@
                     if (this._controllBarProxy.keyDownSeeking)
                     {
                         this._controllBarProxy.keyDownSeeking = false;
-                        _loc_4 = this._isTimerRunning ? (this._controllBarProxy.filterBitmapData.interval * this._controllBarProxy.filterBitmapData.showBmdIndex * 1000) : (this._controllBarView.seekBarView.seekTime);
-                        this.onPlayerSeeking(_loc_4);
+                        this.onPlayerSeeking(this._controllBarView.seekBarView.seekTime);
                         _loc_2.curActor.uploadHistory();
                         (this._controllBarProxy.seekCount + 1);
-                        this._controllBarView.seekBarView.hideImagePreview();
                         if (this._controllBarProxy.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
                         {
-                            PingBack.getInstance().userActionPing_4_0(PingBackDef.FILTER_FAST_FORWARD);
+                            this._isUserSeek = this.checkInEnjoyableSkipType() ? (false) : (true);
                         }
+                        this._controllBarView.seekBarView.hideImagePreview();
                     }
                     break;
                 }
@@ -1958,6 +1898,34 @@
             return false;
         }// end function
 
+        private function showOpenFilterTip() : void
+        {
+            var _loc_1:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
+            var _loc_2:* = _loc_1.curActor.movieModel.hasEnjoyableSubType(SkipPointEnum.ENJOYABLE_SUB_MALE);
+            var _loc_3:* = _loc_1.curActor.movieModel.hasEnjoyableSubType(SkipPointEnum.ENJOYABLE_SUB_FEMALE);
+            switch(_loc_1.curActor.movieModel.curEnjoyableSubType)
+            {
+                case SkipPointEnum.ENJOYABLE_SUB_MALE:
+                {
+                    sendNotification(TipsDef.NOTIFIC_UPDATE_TIP_ATTR, {attr:TipsDef.TIP_ATTR_NAME_FILTER_TYPE, value:_loc_2 || _loc_3 ? (TipsDef.CONSTANT_FILTER_MALE) : ("")});
+                    break;
+                }
+                case SkipPointEnum.ENJOYABLE_SUB_FEMALE:
+                {
+                    sendNotification(TipsDef.NOTIFIC_UPDATE_TIP_ATTR, {attr:TipsDef.TIP_ATTR_NAME_FILTER_TYPE, value:_loc_2 || _loc_3 ? (TipsDef.CONSTANT_FILTER_FEMALE) : ("")});
+                    break;
+                }
+                default:
+                {
+                    sendNotification(TipsDef.NOTIFIC_UPDATE_TIP_ATTR, {attr:TipsDef.TIP_ATTR_NAME_FILTER_TYPE, value:_loc_2 || _loc_3 ? (TipsDef.CONSTANT_FILTER_COMMON) : ("")});
+                    break;
+                    break;
+                }
+            }
+            sendNotification(TipsDef.NOTIFIC_REQUEST_SHOW_TIP, TipsDef.TIP_ID_FILTER_OPEN_TIP);
+            return;
+        }// end function
+
         private function checkFilterBtnState() : Boolean
         {
             var _loc_2:uint = 0;
@@ -1978,7 +1946,7 @@
             return false;
         }// end function
 
-        private function checkHasNestEnjoableSkip(param1:int) : ISkipPointInfo
+        private function checkHasNestEnjoableSkip(param1:Boolean = false) : ISkipPointInfo
         {
             var _loc_3:uint = 0;
             var _loc_2:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
@@ -1990,7 +1958,7 @@
                     
                     if (_loc_2.curActor.movieModel.getSkipPointInfoAt(_loc_3).skipPointType == SkipPointEnum.ENJOYABLE)
                     {
-                        if (param1 < _loc_2.curActor.movieModel.getSkipPointInfoAt(_loc_3).endTime)
+                        if (_loc_2.curActor.currentTime < _loc_2.curActor.movieModel.getSkipPointInfoAt(_loc_3).startTime)
                         {
                             return _loc_2.curActor.movieModel.getSkipPointInfoAt(_loc_3);
                         }
@@ -2001,24 +1969,47 @@
             return null;
         }// end function
 
-        private function checkInEnjoyableSkipType(param1:int) : Boolean
+        private function firstEnjoyableSkipPointPlay() : void
         {
-            var _loc_3:uint = 0;
-            var _loc_2:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
-            if (_loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_ALREADY_READY))
+            var _loc_2:uint = 0;
+            this._isUserSeek = false;
+            var _loc_1:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
+            if (_loc_1.curActor.hasStatus(BodyDef.PLAYER_STATUS_ALREADY_READY))
             {
-                _loc_3 = 0;
-                while (_loc_3 < _loc_2.curActor.movieModel.skipPointInfoCount)
+                _loc_2 = 0;
+                while (_loc_2 < _loc_1.curActor.movieModel.skipPointInfoCount)
                 {
                     
-                    if (_loc_2.curActor.movieModel.getSkipPointInfoAt(_loc_3).skipPointType == SkipPointEnum.ENJOYABLE)
+                    if (_loc_1.curActor.movieModel.getSkipPointInfoAt(_loc_2).skipPointType == SkipPointEnum.ENJOYABLE)
                     {
-                        if (param1 >= _loc_2.curActor.movieModel.getSkipPointInfoAt(_loc_3).startTime && param1 < _loc_2.curActor.movieModel.getSkipPointInfoAt(_loc_3).endTime)
+                        this.onPlayerSeeking(_loc_1.curActor.movieModel.getSkipPointInfoAt(_loc_2).startTime, SeekTypeEnum.SKIP_ENJOYABLE_POINT);
+                        return;
+                    }
+                    _loc_2 = _loc_2 + 1;
+                }
+            }
+            this.onPlayerSeeking(_loc_1.curActor.currentTime);
+            return;
+        }// end function
+
+        private function checkInEnjoyableSkipType() : Boolean
+        {
+            var _loc_2:uint = 0;
+            var _loc_1:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
+            if (_loc_1.curActor.hasStatus(BodyDef.PLAYER_STATUS_ALREADY_READY))
+            {
+                _loc_2 = 0;
+                while (_loc_2 < _loc_1.curActor.movieModel.skipPointInfoCount)
+                {
+                    
+                    if (_loc_1.curActor.movieModel.getSkipPointInfoAt(_loc_2).skipPointType == SkipPointEnum.ENJOYABLE)
+                    {
+                        if (_loc_1.curActor.currentTime >= _loc_1.curActor.movieModel.getSkipPointInfoAt(_loc_2).startTime && _loc_1.curActor.currentTime < _loc_1.curActor.movieModel.getSkipPointInfoAt(_loc_2).endTime)
                         {
                             return true;
                         }
                     }
-                    _loc_3 = _loc_3 + 1;
+                    _loc_2 = _loc_2 + 1;
                 }
             }
             return false;
@@ -2068,90 +2059,6 @@
                 }
             }
             return _loc_3;
-        }// end function
-
-        private function onFilterTimerStart(param1:int) : void
-        {
-            this._controllBarProxy.filterBitmapData.showBmdIndex = Math.floor(param1 / 1000 / this._controllBarProxy.filterBitmapData.interval);
-            this._filterTimer.start();
-            this._isTimerRunning = true;
-            this._bmdNullTimes = 0;
-            return;
-        }// end function
-
-        private function onFilterTimer(event:TimerEvent) : void
-        {
-            var _loc_3:int = 0;
-            var _loc_4:ISkipPointInfo = null;
-            var _loc_5:ISkipPointInfo = null;
-            var _loc_2:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
-            if (_loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_ALREADY_READY) && _loc_2.curActor.hasStatus(BodyDef.PLAYER_STATUS_ALREADY_INFO_READY))
-            {
-                (this._controllBarProxy.filterBitmapData.showBmdIndex + 1);
-                _loc_3 = this._controllBarProxy.filterBitmapData.showBmdIndex * 1000 * this._controllBarProxy.filterBitmapData.interval;
-                if (!this.checkInEnjoyableSkipType(_loc_3))
-                {
-                    if (_loc_3 >= _loc_2.curActor.movieModel.duration)
-                    {
-                        this._filterTimer.stop();
-                        this._isTimerRunning = false;
-                        this.onFilterSeletedBtnClick();
-                        sendNotification(SettingDef.NOTIFIC_FILTER_SHOW_BMD, false);
-                        sendNotification(ContinuePlayDef.NOTIFIC_REQUEST_NEXT_VIDEO);
-                    }
-                    else
-                    {
-                        sendNotification(SettingDef.NOTIFIC_FILTER_SHOW_BMD, true);
-                        sendNotification(BodyDef.NOTIFIC_PLAYER_PAUSE);
-                    }
-                    if (this._controllBarProxy.filterBitmapData.getFilterbmd(this._controllBarProxy.filterBitmapData.showBmdIndex) == null)
-                    {
-                        var _loc_6:String = this;
-                        var _loc_7:* = this._bmdNullTimes + 1;
-                        _loc_6._bmdNullTimes = _loc_7;
-                        if (this._bmdNullTimes >= 5)
-                        {
-                            _loc_4 = this.checkHasNestEnjoableSkip(_loc_3);
-                            if (_loc_4 != null)
-                            {
-                                this.onPlayerSeeking(_loc_4.startTime, SeekTypeEnum.SKIP_ENJOYABLE_POINT);
-                            }
-                            else
-                            {
-                                this._filterTimer.stop();
-                                this._isTimerRunning = false;
-                                this.onFilterSeletedBtnClick();
-                                sendNotification(SettingDef.NOTIFIC_FILTER_SHOW_BMD, false);
-                                sendNotification(ContinuePlayDef.NOTIFIC_REQUEST_NEXT_VIDEO);
-                            }
-                        }
-                        this._controllBarProxy.addStatus(ControllBarDef.STATUS_LOAD_BTN_SHOW);
-                    }
-                    else
-                    {
-                        this._bmdNullTimes = 0;
-                        this._controllBarProxy.addStatus(ControllBarDef.STATUS_TRIGGER_BTN_SHOW);
-                    }
-                }
-                else
-                {
-                    this._filterTimer.stop();
-                    this._isTimerRunning = false;
-                    sendNotification(SettingDef.NOTIFIC_FILTER_SHOW_BMD, false);
-                    _loc_5 = this.checkHasNestEnjoableSkip(_loc_3);
-                    if (_loc_5 != null)
-                    {
-                        this.onPlayerSeeking(_loc_5.startTime, SeekTypeEnum.SKIP_ENJOYABLE_POINT);
-                    }
-                }
-            }
-            else
-            {
-                this._filterTimer.stop();
-                this._isTimerRunning = false;
-                sendNotification(SettingDef.NOTIFIC_FILTER_SHOW_BMD, false);
-            }
-            return;
         }// end function
 
     }

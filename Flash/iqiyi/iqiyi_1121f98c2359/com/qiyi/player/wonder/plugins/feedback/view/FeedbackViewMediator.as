@@ -286,7 +286,7 @@
                 {
                     this._feedbackView.createCopyrightLimitedView(FeedbackDef.FEEDBACK_LIMITED_AREA, _loc_1.curActor.errorCodeValue.st);
                 }
-                else if (_loc_1.curActor.errorCodeValue.st == 601 || _loc_1.curActor.errorCodeValue.st == 602 || _loc_1.curActor.errorCodeValue.st == 701)
+                else if (_loc_1.curActor.errorCodeValue.st == 601 || _loc_1.curActor.errorCodeValue.st == 602)
                 {
                     this._feedbackView.createDrmCopyrightLimitedView(_loc_1.curActor.errorCodeValue.st);
                 }

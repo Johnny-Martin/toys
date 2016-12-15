@@ -4,22 +4,17 @@
     import com.adobe.serialization.json.*;
     import com.iqiyi.components.global.*;
     import com.qiyi.player.base.logging.*;
-    import com.qiyi.player.core.model.def.*;
     import com.qiyi.player.wonder.body.*;
     import com.qiyi.player.wonder.body.model.*;
-    import com.qiyi.player.wonder.common.config.*;
     import com.qiyi.player.wonder.common.pingback.*;
     import com.qiyi.player.wonder.common.vo.*;
     import com.qiyi.player.wonder.plugins.ad.*;
     import com.qiyi.player.wonder.plugins.ad.model.*;
-    import com.qiyi.player.wonder.plugins.hint.*;
-    import com.qiyi.player.wonder.plugins.hint.model.*;
     import com.qiyi.player.wonder.plugins.scenetile.*;
     import com.qiyi.player.wonder.plugins.scenetile.model.*;
     import com.qiyi.player.wonder.plugins.scenetile.model.barrage.socket.*;
     import com.qiyi.player.wonder.plugins.scenetile.model.barrage.vo.*;
     import com.qiyi.player.wonder.plugins.scenetile.view.barragepart.*;
-    import com.qiyi.player.wonder.plugins.setting.*;
     import flash.events.*;
     import org.puremvc.as3.interfaces.*;
     import org.puremvc.as3.patterns.mediator.*;
@@ -28,7 +23,6 @@
     {
         private var _sceneTileProxy:SceneTileProxy;
         private var _playerProxy:PlayerProxy;
-        private var _hintproxy:HintProxy;
         private var _sceneTileView:SceneTileBarrageView;
         private var _log:ILogger;
         public static const NAME:String = "com.qiyi.player.wonder.plugins.scenetile.view.SceneTileBarrageViewMediator";
@@ -46,7 +40,6 @@
             super.onRegister();
             this._sceneTileProxy = facade.retrieveProxy(SceneTileProxy.NAME) as SceneTileProxy;
             this._playerProxy = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
-            this._hintproxy = facade.retrieveProxy(HintProxy.NAME) as HintProxy;
             this._sceneTileView.addEventListener(Event.ENTER_FRAME, this.onSceneTileViewEnterFrame);
             this._sceneTileView.addEventListener(SceneTileEvent.Evt_BarrageDeleteInfo, this.onBarrageDeleteInfo);
             this._sceneTileView.addEventListener(SceneTileEvent.Evt_BarrageItemClick, this.onBarrageItemClick);
@@ -55,7 +48,7 @@
 
         override public function listNotificationInterests() : Array
         {
-            return [SceneTileDef.NOTIFIC_ADD_STATUS, SceneTileDef.NOTIFIC_REMOVE_STATUS, SceneTileDef.NOTIFIC_RECEIVE_BARRAGE_INFO, SceneTileDef.NOTIFIC_STAR_HEAD_SHOW, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_REPLAY, BodyDef.NOTIFIC_PLAYER_REMOVE_STATUS, BodyDef.NOTIFIC_FULL_SCREEN, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_JS_CALL_SET_BARRAGE_STATUS, BodyDef.NOTIFIC_JS_CALL_SET_SELF_SEND_BARRAGE_INFO, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, BodyDef.NOTIFIC_JS_CALL_SET_BARRAGE_SETTING, BodyDef.NOTIFIC_PLAYER_RUNNING, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, BodyDef.NOTIFIC_JS_CALL_GET_BARRAGE_CONFIG, ADDef.NOTIFIC_ADD_STATUS, HintDef.NOTIFIC_ADD_STATUS, ADDef.NOTIFIC_ADD_STATUS, SettingDef.NOTIFIC_ADD_STATUS, SettingDef.NOTIFIC_REMOVE_STATUS];
+            return [SceneTileDef.NOTIFIC_ADD_STATUS, SceneTileDef.NOTIFIC_REMOVE_STATUS, SceneTileDef.NOTIFIC_RECEIVE_BARRAGE_INFO, SceneTileDef.NOTIFIC_STAR_HEAD_SHOW, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_REPLAY, BodyDef.NOTIFIC_PLAYER_REMOVE_STATUS, BodyDef.NOTIFIC_FULL_SCREEN, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_JS_CALL_SET_BARRAGE_STATUS, BodyDef.NOTIFIC_JS_CALL_SET_SELF_SEND_BARRAGE_INFO, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, BodyDef.NOTIFIC_JS_CALL_SET_BARRAGE_SETTING, BodyDef.NOTIFIC_PLAYER_RUNNING, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, BodyDef.NOTIFIC_JS_CALL_GET_BARRAGE_CONFIG, ADDef.NOTIFIC_ADD_STATUS];
         }// end function
 
         override public function handleNotification(param1:INotification) : void
@@ -245,30 +238,6 @@
                     this.onADStatusChanged(int(_loc_2), true);
                     break;
                 }
-                case HintDef.NOTIFIC_ADD_STATUS:
-                {
-                    this.onHintStatusChanged(int(_loc_2), true);
-                    break;
-                }
-                case SettingDef.NOTIFIC_ADD_STATUS:
-                {
-                    if (int(_loc_2) == SettingDef.STATUS_FILTER_SHOW_BMD)
-                    {
-                        this._sceneTileProxy.removeStatus(SceneTileDef.STATUS_BARRAGE_OPEN);
-                    }
-                    break;
-                }
-                case SettingDef.NOTIFIC_REMOVE_STATUS:
-                {
-                    if (int(_loc_2) == SettingDef.STATUS_FILTER_SHOW_BMD)
-                    {
-                        if (!LocalizaEnum.isTWLocalize(FlashVarConfig.localize))
-                        {
-                            this._sceneTileProxy.addStatus(SceneTileDef.STATUS_BARRAGE_OPEN);
-                        }
-                    }
-                    break;
-                }
                 default:
                 {
                     break;
@@ -376,31 +345,6 @@
             return;
         }// end function
 
-        private function onHintStatusChanged(param1:int, param2:Boolean) : void
-        {
-            switch(param1)
-            {
-                case HintDef.STATUS_OPEN:
-                {
-                    if (param2)
-                    {
-                        this._sceneTileView.removeEventListener(Event.ENTER_FRAME, this.onSceneTileViewEnterFrame);
-                        this._sceneTileProxy.removeStatus(SceneTileDef.STATUS_BARRAGE_STAR_HEAD_SHOW);
-                        if (this._playerProxy.curActor.movieInfo.putBarrage)
-                        {
-                            this._sceneTileProxy.barrageProxy.requestBarrageConfig(this._playerProxy.curActor.movieModel.tvid, this._playerProxy.curActor.movieModel.albumId, this._playerProxy.curActor.movieModel.channelID);
-                        }
-                    }
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-            return;
-        }// end function
-
         private function onSceneTileViewEnterFrame(event:Event) : void
         {
             var _loc_2:Vector.<BarrageInfoVO> = null;
@@ -432,7 +376,7 @@
         private function checkShowBarrage() : Boolean
         {
             var _loc_1:* = facade.retrieveProxy(ADProxy.NAME) as ADProxy;
-            if (this._sceneTileProxy.barrageProxy.isBarrageOpen && this._sceneTileProxy.barrageProxy.checkShowBarrage() && (!_loc_1.hasStatus(ADDef.STATUS_PLAYING) && !_loc_1.hasStatus(ADDef.STATUS_PAUSED) && !_loc_1.hasStatus(ADDef.STATUS_LOADING)) && !this._playerProxy.curActor.smallWindowMode && !this._hintproxy.hasStatus(HintDef.STATUS_OPEN))
+            if (this._sceneTileProxy.barrageProxy.isBarrageOpen && this._sceneTileProxy.barrageProxy.checkShowBarrage() && (!_loc_1.hasStatus(ADDef.STATUS_PLAYING) && !_loc_1.hasStatus(ADDef.STATUS_PAUSED) && !_loc_1.hasStatus(ADDef.STATUS_LOADING)) && !this._playerProxy.curActor.smallWindowMode)
             {
                 return true;
             }

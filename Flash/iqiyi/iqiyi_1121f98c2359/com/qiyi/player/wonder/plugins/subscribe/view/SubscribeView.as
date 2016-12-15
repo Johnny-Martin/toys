@@ -210,7 +210,7 @@
                         this._subscribePanel.addEventListener(MouseEvent.MOUSE_OVER, this.onMouseOver);
                         this._subscribePanel.addEventListener(MouseEvent.MOUSE_OUT, this.onMouseOut);
                     }
-                    this._delayCall = TweenLite.delayedCall(8, this.onDelayCallComplete);
+                    this._delayCall = TweenLite.delayedCall(6, this.onDelayCallComplete);
                     break;
                 }
                 default:
@@ -350,7 +350,6 @@
                 this._rewardTitleTf.htmlText = StringUtils.remainWord(this._rewardObj.rewardInfo, 15);
                 this._rewardTitleTf.x = (this._subscribePanel._rewardPanel.width - this._rewardTitleTf.width) * 0.5;
                 LoaderManager.instance.loader(param1.headUrl, this.imageComplete);
-                this.alpha = this._subInfo.subState == 0 ? (0.3) : (0);
                 if (!isNaN(this._subInfo.subState))
                 {
                     this.btnType = uint(this._subInfo.subState);
@@ -385,7 +384,6 @@
         {
             if (this._isNextframe)
             {
-                this.alpha = 1;
                 if (this._subscribePanel.currentFrame == 15)
                 {
                     return;
@@ -433,7 +431,6 @@
                         this._subscribePanel._head._mouseLayer.addEventListener(MouseEvent.MOUSE_OVER, this.onMouseLayerMouseOver);
                         this._subscribePanel._head._mouseLayer.addEventListener(MouseEvent.MOUSE_OUT, this.onMouseOut);
                     }
-                    dispatchEvent(new SubscribeEvent(SubscribeEvent.Evt_ShowComplete));
                 }
             }
             return;

@@ -38,8 +38,6 @@
         public static const AD_CONTEXT_DURATION_15_LIMIT:int = 900000;
         public static const PRE_LOAD_TIME:int = 20000;
         public static const DOCK_HIND_DELAY:int = 3000;
-        public static const INIT_AD_ORDER_BEFORE_VMS:int = 0;
-        public static const INIT_AD_ORDER_AFTER_VMS:int = 1;
 
         public function ADDef()
         {

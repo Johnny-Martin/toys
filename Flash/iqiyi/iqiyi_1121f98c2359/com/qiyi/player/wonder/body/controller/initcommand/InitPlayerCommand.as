@@ -24,11 +24,10 @@
         {
             var _loc_8:String = null;
             var _loc_9:String = null;
-            var _loc_10:String = null;
-            var _loc_11:JavascriptAPIProxy = null;
+            var _loc_10:JavascriptAPIProxy = null;
+            var _loc_11:String = null;
             var _loc_12:String = null;
-            var _loc_13:String = null;
-            var _loc_14:JavascriptAPIProxy = null;
+            var _loc_13:JavascriptAPIProxy = null;
             super.execute(param1);
             var _loc_2:* = param1.getBody() as AppView;
             var _loc_3:* = facade.retrieveProxy(PlayerProxy.NAME) as PlayerProxy;
@@ -60,28 +59,25 @@
                 {
                     _loc_8 = "";
                     _loc_9 = "";
-                    _loc_10 = "";
                     if (_loc_3.curActor.loadMovieParams)
                     {
                         _loc_8 = _loc_3.curActor.loadMovieParams.tvid;
                         _loc_9 = _loc_3.curActor.loadMovieParams.vid;
-                        _loc_10 = _loc_3.curActor.movieModel ? (_loc_3.curActor.movieModel.albumId) : ("");
                     }
-                    _loc_11 = facade.retrieveProxy(JavascriptAPIProxy.NAME) as JavascriptAPIProxy;
-                    _loc_11.callJsRecharge(_loc_8, _loc_9, _loc_10, "Q00311");
+                    _loc_10 = facade.retrieveProxy(JavascriptAPIProxy.NAME) as JavascriptAPIProxy;
+                    _loc_10.callJsRecharge(_loc_8, _loc_9, "Q00311");
                 }
                 else if (_loc_7.limitationType == UserDef.USER_LIMITATION_PERMANENT_CLOSING)
                 {
+                    _loc_11 = "";
                     _loc_12 = "";
-                    _loc_13 = "";
                     if (_loc_3.curActor.loadMovieParams)
                     {
-                        _loc_12 = _loc_3.curActor.loadMovieParams.tvid;
-                        _loc_13 = _loc_3.curActor.loadMovieParams.vid;
-                        _loc_10 = _loc_3.curActor.movieModel ? (_loc_3.curActor.movieModel.albumId) : ("");
+                        _loc_11 = _loc_3.curActor.loadMovieParams.tvid;
+                        _loc_12 = _loc_3.curActor.loadMovieParams.vid;
                     }
-                    _loc_14 = facade.retrieveProxy(JavascriptAPIProxy.NAME) as JavascriptAPIProxy;
-                    _loc_14.callJsRecharge(_loc_12, _loc_13, _loc_10, "Q00312");
+                    _loc_13 = facade.retrieveProxy(JavascriptAPIProxy.NAME) as JavascriptAPIProxy;
+                    _loc_13.callJsRecharge(_loc_11, _loc_12, "Q00312");
                 }
                 else if (FlashVarConfig.autoPlay)
                 {

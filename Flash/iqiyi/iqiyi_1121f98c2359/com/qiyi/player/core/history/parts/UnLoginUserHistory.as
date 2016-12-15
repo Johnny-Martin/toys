@@ -1,7 +1,6 @@
 ﻿package com.qiyi.player.core.history.parts
 {
     import com.qiyi.player.base.logging.*;
-    import com.qiyi.player.core.history.events.*;
     import com.qiyi.player.core.player.coreplayer.*;
     import com.qiyi.player.core.player.def.*;
     import com.qiyi.player.core.player.events.*;
@@ -51,7 +50,6 @@
             this._tvid = param1;
             this._ready = true;
             this.update(LocalHistorySO.readHistoryTime(this._tvid));
-            dispatchEvent(new HistoryEvent(HistoryEvent.Evt_Ready, this._tvid));
             return;
         }// end function
 

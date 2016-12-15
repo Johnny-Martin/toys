@@ -111,8 +111,6 @@
                 this._player.addEventListener(PlayerEvent.Evt_EnterPrepareLeaveSkipPoint, this.onEnterPrepareLeaveSkipPoint);
                 this._player.addEventListener(PlayerEvent.Evt_OutPrepareLeaveSkipPoint, this.onOutPrepareLeaveSkipPoint);
                 this._player.addEventListener(PlayerEvent.Evt_EnjoyableSubTypeInited, this.onEnjoyableSubTypeInited);
-                this._player.addEventListener(PlayerEvent.Evt_RenderAreaChanged, this.onPlayerAreaChanged);
-                this._player.addEventListener(PlayerEvent.Evt_HistoryReady, this.onHistoryReady);
                 this._timer.addEventListener(TimerEvent.TIMER, this.onTimer);
                 this._timer.start();
                 this._isInit = true;
@@ -723,16 +721,6 @@
         {
             this._player.startLoadP2PCore();
             return;
-        }// end function
-
-        public function get historyStartTime() : int
-        {
-            return this._player.historyStartTime;
-        }// end function
-
-        public function get checkEngineIsReady() : Boolean
-        {
-            return this._player.checkEngineIsReady;
         }// end function
 
         private function addStatus(param1:int, param2:Boolean = true) : void
@@ -1359,32 +1347,6 @@
             else
             {
                 this._facade.sendNotification(BodyDef.NOTIFIC_PLAYER_ENJOY_TYPE_INITED, event.data, BodyDef.PLAYER_ACTOR_NOTIFIC_TYPE_CUR);
-            }
-            return;
-        }// end function
-
-        private function onPlayerAreaChanged(event:PlayerEvent) : void
-        {
-            if (this._isPreload)
-            {
-                this._facade.sendNotification(BodyDef.NOTIFIC_PLAYER_AREA_CHANGED, event.data, BodyDef.PLAYER_ACTOR_NOTIFIC_TYPE_PRE);
-            }
-            else
-            {
-                this._facade.sendNotification(BodyDef.NOTIFIC_PLAYER_AREA_CHANGED, event.data, BodyDef.PLAYER_ACTOR_NOTIFIC_TYPE_CUR);
-            }
-            return;
-        }// end function
-
-        private function onHistoryReady(event:PlayerEvent) : void
-        {
-            if (this._isPreload)
-            {
-                this._facade.sendNotification(BodyDef.NOTIFIC_PLAYER_HistoryReady, event.data, BodyDef.PLAYER_ACTOR_NOTIFIC_TYPE_PRE);
-            }
-            else
-            {
-                this._facade.sendNotification(BodyDef.NOTIFIC_PLAYER_HistoryReady, event.data, BodyDef.PLAYER_ACTOR_NOTIFIC_TYPE_CUR);
             }
             return;
         }// end function

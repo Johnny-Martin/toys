@@ -3,7 +3,6 @@
     import __AS3__.vec.*;
     import com.iqiyi.components.global.*;
     import com.qiyi.player.core.model.*;
-    import com.qiyi.player.wonder.common.config.*;
     import com.qiyi.player.wonder.common.pingback.*;
     import com.qiyi.player.wonder.common.status.*;
     import com.qiyi.player.wonder.plugins.controllbar.*;
@@ -24,7 +23,7 @@
         private var _loadBar:Shape;
         private var _backWardBtn:BackWardBtn;
         private var _forWardBtn:ForWardBtn;
-        private var _slider:Object;
+        private var _slider:Slider;
         private var _totalTime:int = 1;
         private var _currentTime:int;
         private var _bufferTime:int;
@@ -72,7 +71,7 @@
             this._mouseMoveShape = new Shape();
             this._backWardBtn = new BackWardBtn();
             this._forWardBtn = new ForWardBtn();
-            this._slider = FlashVarConfig.isMMs ? (new MMSSlider()) : (new Slider());
+            this._slider = new Slider();
             var _loc_2:Boolean = true;
             this._slider.buttonMode = true;
             this._slider.useHandCursor = _loc_2;
@@ -765,11 +764,7 @@
             var _loc_2:String = this;
             var _loc_3:* = this._seekClickCount + 1;
             _loc_2._seekClickCount = _loc_3;
-            dispatchEvent(new ControllBarEvent(ControllBarEvent.Evt_Seek, {time:this._seekTime, type:1}));
-            if (this._status.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
-            {
-                PingBack.getInstance().userActionPing_4_0(PingBackDef.FILTER_FAST_FORWARD);
-            }
+            dispatchEvent(new ControllBarEvent(ControllBarEvent.Evt_Seek, this._seekTime));
             return;
         }// end function
 
@@ -798,11 +793,7 @@
             var _loc_2:String = this;
             var _loc_3:* = this._seekClickCount + 1;
             _loc_2._seekClickCount = _loc_3;
-            dispatchEvent(new ControllBarEvent(ControllBarEvent.Evt_Seek, {time:this._seekTime, type:1}));
-            if (this._status.hasStatus(ControllBarDef.STATUS_FILTER_OPEN))
-            {
-                PingBack.getInstance().userActionPing_4_0(PingBackDef.FILTER_FAST_REWIND);
-            }
+            dispatchEvent(new ControllBarEvent(ControllBarEvent.Evt_Seek, this._seekTime));
             return;
         }// end function
 
@@ -818,7 +809,7 @@
         private function onViewPointClick(event:MouseEvent) : void
         {
             var _loc_2:* = event.currentTarget as FocusPoint;
-            dispatchEvent(new ControllBarEvent(ControllBarEvent.Evt_Seek, {time:_loc_2.time, type:0}));
+            dispatchEvent(new ControllBarEvent(ControllBarEvent.Evt_Seek, _loc_2.time));
             var _loc_3:String = this;
             var _loc_4:* = this._seekClickCount + 1;
             _loc_3._seekClickCount = _loc_4;
@@ -868,7 +859,7 @@
             _loc_2._seekClickCount = _loc_3;
             GlobalStage.stage.removeEventListener(MouseEvent.MOUSE_MOVE, this.onStageMouseMove);
             GlobalStage.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onStageMouseUp);
-            dispatchEvent(new ControllBarEvent(ControllBarEvent.Evt_Seek, {time:this._seekTime, type:0}));
+            dispatchEvent(new ControllBarEvent(ControllBarEvent.Evt_Seek, this._seekTime));
             this.hideImagePreview();
             return;
         }// end function
@@ -1004,7 +995,7 @@
         private function onImagePreItemClick(event:ControllBarEvent) : void
         {
             this.hideImagePreview();
-            dispatchEvent(new ControllBarEvent(ControllBarEvent.Evt_Seek, {time:event.data, type:0}));
+            dispatchEvent(new ControllBarEvent(ControllBarEvent.Evt_Seek, event.data));
             PingBack.getInstance().userActionPing(PingBackDef.IMAGE_PREVIEW_CLICK);
             return;
         }// end function

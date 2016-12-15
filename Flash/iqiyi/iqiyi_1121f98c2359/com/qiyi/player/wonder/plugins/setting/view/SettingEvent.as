@@ -10,6 +10,9 @@
         public static const Evt_DefinitionClose:String = "evtDefinitionClose";
         public static const Evt_FilterOpen:String = "evtFilterOpen";
         public static const Evt_FilterClose:String = "evtFilterClose";
+        public static const Evt_FilterConfirmBtnClick:String = "evtFilterConfirmBtnClick";
+        public static const Evt_FilterSexRadioClick:String = "evtFilterSexRadioClick";
+        public static const Evt_FilterTimeRadioClick:String = "evtFilterTimeRadioClick";
         public static const Evt_DefinitionChangeClick:String = "evtDefinitionChangeClick";
         public static const Evt_VideoRateChanged:String = "evtSettingVideoRateChanged";
         public static const Evt_VideoRateIndexSubmit:String = "evtSettingVideoIndexSubmit";

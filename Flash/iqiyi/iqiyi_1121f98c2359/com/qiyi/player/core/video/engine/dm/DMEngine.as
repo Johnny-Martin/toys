@@ -107,7 +107,6 @@
                 _holder.addStatus(StatusEnum.WAITING_START_LOAD, false);
                 startLoadHistory();
                 startLoadMeta();
-                startLoadLicense();
                 this.startLoadP2PCore();
             }
             this.pause();
@@ -155,7 +154,6 @@
                     _holder.addStatus(StatusEnum.WAITING_PLAY, false);
                     startLoadHistory();
                     startLoadMeta();
-                    startLoadLicense();
                     this.startLoadP2PCore();
                 }
             }
@@ -341,7 +339,7 @@
             return;
         }// end function
 
-        override public function checkEngineIsReady() : Boolean
+        override protected function checkEngineIsReady() : Boolean
         {
             var _loc_1:* = !P2PFileLoader.instance.isLoading && P2PFileLoader.instance.loadDone;
             return _loc_1 && super.checkEngineIsReady();
@@ -478,7 +476,7 @@
                     {
                         
                         _loc_11 = _loc_6.findSegmentAt(_loc_9);
-                        _loc_8[_loc_9] = {url:_loc_11.url, totalBytes:_loc_11.totalBytes, vid:_loc_11.vid, index:_loc_11.index, startTime:_loc_11.startTime, totalTime:_loc_11.totalTime, e:_loc_11.isDrm};
+                        _loc_8[_loc_9] = {url:_loc_11.url, totalBytes:_loc_11.totalBytes, vid:_loc_11.vid, index:_loc_11.index, startTime:_loc_11.startTime, totalTime:_loc_11.totalTime};
                         _loc_9++;
                     }
                     _loc_10 = {};
@@ -774,28 +772,16 @@
             this._definitionIsSwitched = true;
             if (_movie.curDefinition && _movie.curDefinition.ready)
             {
-                this.onMovieLicenseUpdate();
                 this.onMovieMetaUpdate();
             }
             else
             {
                 this._openCheckDecoderData = false;
                 _movie.startLoadMeta();
-                _movie.startLoadLicense();
                 if (_movie.curDefinition.ready)
                 {
-                    this.onMovieLicenseUpdate();
                     this.onMovieMetaUpdate();
                 }
-            }
-            return;
-        }// end function
-
-        private function onMovieLicenseUpdate() : void
-        {
-            if (_movie.curDefinition.isDrm)
-            {
-                _decoder.setLicense(_movie.curDefinition.license);
             }
             return;
         }// end function
@@ -862,7 +848,7 @@
 
         override protected function onTimer(event:TimerEvent) : void
         {
-            if (_holder.hasStatus(StatusEnum.ALREADY_READY) && !_holder.hasStatus(StatusEnum.STOPED) && this._movie && this._movie.curDefinition && _movie.curDefinition.licenseReady)
+            if (_holder.hasStatus(StatusEnum.ALREADY_READY) && !_holder.hasStatus(StatusEnum.STOPED))
             {
                 super.onTimer(event);
                 this.checkDecoderData();
@@ -963,7 +949,6 @@
                 }
                 else if (this._definitionIsSwitched)
                 {
-                    this.onMovieLicenseUpdate();
                     this.onMovieMetaUpdate();
                 }
                 this._definitionIsSwitched = false;

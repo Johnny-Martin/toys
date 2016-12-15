@@ -43,7 +43,6 @@
         private static var _P00001:String = "";
         private static var _profileID:String = "";
         private static var _profileCookie:String = "";
-        private static var _vipuser:Boolean = true;
         private static var _pageOpenSrc:String = "0";
         private static var _outsite:Boolean = false;
         private static var _collectionID:String = "";
@@ -59,21 +58,10 @@
         private static var _couponVer:String = "";
         private static var _masflag:Boolean = false;
         private static var _localize:String = "cn_s";
-        private static var _isMMs:Boolean = false;
 
         public function FlashVarConfig()
         {
             return;
-        }// end function
-
-        public static function get isMMs() : Boolean
-        {
-            return _isMMs;
-        }// end function
-
-        public static function get vipuser() : Boolean
-        {
-            return _vipuser;
         }// end function
 
         public static function get masflag() : Boolean
@@ -510,18 +498,6 @@
                 if (param1.hasOwnProperty("masflag"))
                 {
                     _masflag = param1.masflag;
-                }
-                if (param1.hasOwnProperty("vipuser"))
-                {
-                    _vipuser = param1.vipuser == "2" ? (false) : (true);
-                }
-                if (param1.hasOwnProperty("isMMs"))
-                {
-                    _isMMs = param1.isMMs;
-                    if (_isMMs)
-                    {
-                        _preloaderURL = "http://www.iqiyi.com/common/flashplayer/20160907/MMSLoading.swf";
-                    }
                 }
                 _flashVarSource = param1;
                 if (_profileID == "" && _passportID != "")

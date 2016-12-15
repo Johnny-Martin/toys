@@ -47,7 +47,6 @@
         {
             var request:URLRequest;
             var variables:URLVariables;
-            var str:String;
             var qd:String;
             var qdItem:Array;
             var i:int;
@@ -58,25 +57,15 @@
                 this._holder.runtimeData.authenticationError = false;
                 request = new URLRequest(Config.VIP_AUTH_URL);
                 variables = new URLVariables();
-                str;
                 variables.version = "3.0";
-                str = str + ("AuthenticationRemote : " + Config.VIP_AUTH_URL + " param : version=3.0,");
                 variables.platform = this._holder.runtimeData.areaPlatform.name;
-                str = str + (" platform=" + this._holder.runtimeData.areaPlatform.name + ",");
                 variables.aid = this._holder.runtimeData.albumId;
-                str = str + (" aid=" + this._holder.runtimeData.albumId + ",");
                 variables.tvid = this._holder.runtimeData.qipuId;
-                str = str + (" tvid=" + this._holder.runtimeData.qipuId + ",");
                 variables.uid = UserManager.getInstance().user != null ? (UserManager.getInstance().user.passportID) : ("");
-                str = str + (" uid=" + variables.uid + ",");
                 variables.deviceId = UUIDManager.instance.uuid;
-                str = str + (" deviceId=" + UUIDManager.instance.uuid + ",");
                 variables.playType = this._holder.runtimeData.playerType != null ? (this._holder.runtimeData.playerType.name) : ("");
-                str = str + (" playType=" + variables.playType + ",");
                 variables.filename = this._segment.rid;
-                str = str + (" filename=" + this._segment.rid + ",");
                 variables.shareFlag = this._shareFlag;
-                str = str + (" shareFlag=" + this._shareFlag + ",");
                 qd = this._segment.url.substr((this._segment.url.indexOf("?") + 1));
                 qdItem = qd.split("&");
                 i;
@@ -86,12 +75,10 @@
                     item = qdItem[i];
                     delim = item.indexOf("=");
                     variables[item.substr(0, delim)] = item.substr((delim + 1));
-                    str = str + (" " + item.substr(0, delim) + "=" + item.substr((delim + 1)) + ",");
                     i = (i + 1);
                 }
                 request.method = URLRequestMethod.POST;
                 request.data = variables;
-                this._log.info(str);
             }
             catch (e:Error)
             {

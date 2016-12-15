@@ -31,9 +31,6 @@
     import com.qiyi.player.wonder.plugins.feedback.*;
     import com.qiyi.player.wonder.plugins.feedback.model.*;
     import com.qiyi.player.wonder.plugins.feedback.view.*;
-    import com.qiyi.player.wonder.plugins.hint.*;
-    import com.qiyi.player.wonder.plugins.hint.model.*;
-    import com.qiyi.player.wonder.plugins.hint.view.*;
     import com.qiyi.player.wonder.plugins.loading.*;
     import com.qiyi.player.wonder.plugins.loading.model.*;
     import com.qiyi.player.wonder.plugins.loading.view.*;
@@ -141,7 +138,6 @@
             this.checkInitSubscribePluginsView();
             this.checkInitADPluginsView();
             this.checkInitContinuePlayPluginsView();
-            this.checkInitHintPluginsView();
             try
             {
                 this._apiType = ExternalInterface.call("eval", "(function() {var e = \"application/x-shockwave-flash\"," + "t = navigator.mimeTypes;if (t && t[e] && t[e].enabledPlugin){var n = t[e].enabledPlugin.filename;" + "return n.match(/pepflashplayer|Pepper/gi)?\"ppapi\":\"npapi\";}else{return \"npapi\";}})()");
@@ -164,15 +160,14 @@
 
         override public function listNotificationInterests() : Array
         {
-            return [BodyDef.NOTIFIC_REQUEST_INIT_PLAYER, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_REMOVE_STATUS, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_PLAYER_RUNNING, BodyDef.NOTIFIC_PLAYER_UPDATE_OVER_BONUS, BodyDef.NOTIFIC_PLAYER_REPLAYED, BodyDef.NOTIFIC_PLAYER_TO_FOCUS_TIP, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, BodyDef.NOTIFIC_JS_CALL_SET_TIME_LISTENER, BodyDef.NOTIFIC_PLAYER_ARRIVE_TRYWATCH_TIME, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_JS_CALL_GET_COMMENT_CONFIG, ADDef.NOTIFIC_ADD_STATUS, ADDef.NOTIFIC_REMOVE_STATUS, ContinuePlayDef.NOTIFIC_ADD_STATUS, ContinuePlayDef.NOTIFIC_REMOVE_STATUS, ControllBarDef.NOTIFIC_ADD_STATUS, ControllBarDef.NOTIFIC_REMOVE_STATUS, DockDef.NOTIFIC_ADD_STATUS, DockDef.NOTIFIC_REMOVE_STATUS, FeedbackDef.NOTIFIC_ADD_STATUS, FeedbackDef.NOTIFIC_REMOVE_STATUS, LoadingDef.NOTIFIC_ADD_STATUS, LoadingDef.NOTIFIC_REMOVE_STATUS, OfflineWatchDef.NOTIFIC_ADD_STATUS, OfflineWatchDef.NOTIFIC_REMOVE_STATUS, RecommendDef.NOTIFIC_ADD_STATUS, RecommendDef.NOTIFIC_REMOVE_STATUS, SceneTileDef.NOTIFIC_ADD_STATUS, SceneTileDef.NOTIFIC_REMOVE_STATUS, SettingDef.NOTIFIC_ADD_STATUS, SettingDef.NOTIFIC_REMOVE_STATUS, ShareDef.NOTIFIC_ADD_STATUS, ShareDef.NOTIFIC_REMOVE_STATUS, TipsDef.NOTIFIC_ADD_STATUS, TipsDef.NOTIFIC_REMOVE_STATUS, TopBarDef.NOTIFIC_ADD_STATUS, TopBarDef.NOTIFIC_REMOVE_STATUS, VideoLinkDef.NOTIFIC_ADD_STATUS, VideoLinkDef.NOTIFIC_REMOVE_STATUS, HintDef.NOTIFIC_ADD_STATUS];
+            return [BodyDef.NOTIFIC_REQUEST_INIT_PLAYER, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_REMOVE_STATUS, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_PLAYER_RUNNING, BodyDef.NOTIFIC_PLAYER_UPDATE_OVER_BONUS, BodyDef.NOTIFIC_PLAYER_REPLAYED, BodyDef.NOTIFIC_PLAYER_TO_FOCUS_TIP, BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE, BodyDef.NOTIFIC_JS_CALL_SET_TIME_LISTENER, BodyDef.NOTIFIC_PLAYER_ARRIVE_TRYWATCH_TIME, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_JS_CALL_GET_COMMENT_CONFIG, ADDef.NOTIFIC_ADD_STATUS, ADDef.NOTIFIC_REMOVE_STATUS, ContinuePlayDef.NOTIFIC_ADD_STATUS, ContinuePlayDef.NOTIFIC_REMOVE_STATUS, ControllBarDef.NOTIFIC_ADD_STATUS, ControllBarDef.NOTIFIC_REMOVE_STATUS, DockDef.NOTIFIC_ADD_STATUS, DockDef.NOTIFIC_REMOVE_STATUS, FeedbackDef.NOTIFIC_ADD_STATUS, FeedbackDef.NOTIFIC_REMOVE_STATUS, LoadingDef.NOTIFIC_ADD_STATUS, LoadingDef.NOTIFIC_REMOVE_STATUS, OfflineWatchDef.NOTIFIC_ADD_STATUS, OfflineWatchDef.NOTIFIC_REMOVE_STATUS, RecommendDef.NOTIFIC_ADD_STATUS, RecommendDef.NOTIFIC_REMOVE_STATUS, SceneTileDef.NOTIFIC_ADD_STATUS, SceneTileDef.NOTIFIC_REMOVE_STATUS, SettingDef.NOTIFIC_ADD_STATUS, SettingDef.NOTIFIC_REMOVE_STATUS, ShareDef.NOTIFIC_ADD_STATUS, ShareDef.NOTIFIC_REMOVE_STATUS, TipsDef.NOTIFIC_ADD_STATUS, TipsDef.NOTIFIC_REMOVE_STATUS, TopBarDef.NOTIFIC_ADD_STATUS, TopBarDef.NOTIFIC_REMOVE_STATUS, VideoLinkDef.NOTIFIC_ADD_STATUS, VideoLinkDef.NOTIFIC_REMOVE_STATUS];
         }// end function
 
         override public function handleNotification(param1:INotification) : void
         {
             var _loc_5:String = null;
             var _loc_6:String = null;
-            var _loc_7:String = null;
-            var _loc_8:UserProxy = null;
+            var _loc_7:UserProxy = null;
             super.handleNotification(param1);
             var _loc_2:* = param1.getBody();
             var _loc_3:* = param1.getName();
@@ -211,9 +206,9 @@
                 }
                 case BodyDef.NOTIFIC_JS_CALL_SET_SMALL_WINDOW_MODE:
                 {
-                    var _loc_9:* = _loc_2;
+                    var _loc_8:* = _loc_2;
                     this._playerProxy.curActor.smallWindowMode = _loc_2;
-                    this._playerProxy.preActor.smallWindowMode = _loc_9;
+                    this._playerProxy.preActor.smallWindowMode = _loc_8;
                     this.onResize(GlobalStage.stage.stageWidth, GlobalStage.stage.stageHeight);
                     if (this._playerProxy.curActor.smallWindowMode)
                     {
@@ -232,14 +227,12 @@
                     GlobalStage.setNormalScreen();
                     _loc_5 = "";
                     _loc_6 = "";
-                    _loc_7 = "";
                     if (this._playerProxy.curActor.loadMovieParams)
                     {
                         _loc_5 = this._playerProxy.curActor.loadMovieParams.tvid;
                         _loc_6 = this._playerProxy.curActor.loadMovieParams.vid;
-                        _loc_7 = this._playerProxy.curActor.movieModel ? (this._playerProxy.curActor.movieModel.albumId) : ("");
                     }
-                    this._javascriptAPIProxy.callJsRecharge(_loc_5, _loc_6, _loc_7, "Q00304");
+                    this._javascriptAPIProxy.callJsRecharge(_loc_5, _loc_6, "Q00304");
                     sendNotification(BodyDef.NOTIFIC_PLAYER_PAUSE);
                     break;
                 }
@@ -249,8 +242,8 @@
                     {
                         if (FlashVarConfig.owner == FlashVarConfig.OWNER_PAGE)
                         {
-                            _loc_8 = facade.retrieveProxy(UserProxy.NAME) as UserProxy;
-                            _loc_8.savePlayOverBonus(this._playerProxy.curActor.playingDuration, int(_loc_2));
+                            _loc_7 = facade.retrieveProxy(UserProxy.NAME) as UserProxy;
+                            _loc_7.savePlayOverBonus(this._playerProxy.curActor.playingDuration, int(_loc_2));
                         }
                     }
                     break;
@@ -420,11 +413,6 @@
                     {
                         this._javascriptAPIProxy.callJsCommentAllowed(this._playerProxy.curActor.movieInfo.commentAllowed, this._playerProxy.curActor.movieInfo.qtId);
                     }
-                    break;
-                }
-                case HintDef.NOTIFIC_ADD_STATUS:
-                {
-                    this.onHintStatusChanged(int(_loc_2), true);
                     break;
                 }
                 default:
@@ -626,7 +614,6 @@
         {
             var _loc_1:String = null;
             var _loc_2:String = null;
-            var _loc_3:String = null;
             if (this._playerProxy.curActor.authenticationError && this._playerProxy.curActor.authenticationResult)
             {
                 if (this._playerProxy.curActor.authenticationResult.code == "Q00501" || this._playerProxy.curActor.authenticationResult.code == "Q00507")
@@ -644,14 +631,12 @@
                     }
                     _loc_1 = "";
                     _loc_2 = "";
-                    _loc_3 = "";
                     if (this._playerProxy.curActor.loadMovieParams)
                     {
                         _loc_1 = this._playerProxy.curActor.loadMovieParams.tvid;
                         _loc_2 = this._playerProxy.curActor.loadMovieParams.vid;
-                        _loc_3 = this._playerProxy.curActor.movieModel ? (this._playerProxy.curActor.movieModel.albumId) : ("");
                     }
-                    this._javascriptAPIProxy.callJsRecharge(_loc_1, _loc_2, _loc_3, this._playerProxy.curActor.authenticationResult.code);
+                    this._javascriptAPIProxy.callJsRecharge(_loc_1, _loc_2, this._playerProxy.curActor.authenticationResult.code);
                 }
             }
             else
@@ -845,7 +830,7 @@
             var _loc_1:* = facade.retrieveProxy(SettingProxy.NAME) as IStatus;
             if (_loc_1.hasStatus(SettingDef.STATUS_FILTER_VIEW_INIT))
             {
-                SettingPlugins.getInstance().initView(this._appView.filterLayer, this.Vector.<String>([FilterViewMediator.NAME]));
+                SettingPlugins.getInstance().initView(this._appView.popupLayer, this.Vector.<String>([FilterViewMediator.NAME]));
             }
             return;
         }// end function
@@ -916,16 +901,6 @@
             if (_loc_1.hasStatus(ContinuePlayDef.STATUS_VIEW_INIT))
             {
                 ContinuePlayPlugins.getInstance().initView(this._appView.fixLayer, this.Vector.<String>([ContinuePlayViewMediator.NAME]));
-            }
-            return;
-        }// end function
-
-        private function checkInitHintPluginsView() : void
-        {
-            var _loc_1:* = facade.retrieveProxy(HintProxy.NAME) as IStatus;
-            if (_loc_1.hasStatus(HintDef.STATUS_VIEW_INIT))
-            {
-                HintPlugins.getInstance().initView(this._appView.hintVideoLayer, this.Vector.<String>([HintViewMediator.NAME]));
             }
             return;
         }// end function
@@ -1231,26 +1206,6 @@
                     if (param2)
                     {
                         this.checkInitVideoLinkPluginsView();
-                    }
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-            return;
-        }// end function
-
-        private function onHintStatusChanged(param1:int, param2:Boolean) : void
-        {
-            switch(param1)
-            {
-                case HintDef.STATUS_VIEW_INIT:
-                {
-                    if (param2)
-                    {
-                        this.checkInitHintPluginsView();
                     }
                     break;
                 }

@@ -17,38 +17,36 @@
         private var _totalTime:Number;
         private var _totalBytes:Number;
         private var _currentKeyframeIndex:int = 0;
-        private var _isDrm:Number = 0;
         private var _keyframeInited:Boolean = false;
         private var _keyframeAdjusted:Boolean = false;
         private var _holder:ICorePlayer;
 
-        public function Segment(param1:ICorePlayer, param2:String, param3:int, param4:Number, param5:Number, param6:String, param7:Number, param8:Number, param9:Number)
+        public function Segment(param1:ICorePlayer, param2:String, param3:int, param4:Number, param5:Number, param6:String, param7:Number, param8:Number)
         {
-            var _loc_10:Array = null;
+            var _loc_9:Array = null;
+            var _loc_10:String = null;
             var _loc_11:String = null;
-            var _loc_12:String = null;
             this._holder = param1;
             this._vid = param2;
             this._index = param3;
             this._startTime = param4;
             this._startPosition = param5;
             this._url = param6;
-            this._isDrm = param9;
             if (this._url != "" && this._url != null)
             {
                 if (this._holder && this._holder.runtimeData.cacheServerIP != "" && this._holder.runtimeData.cacheServerIP != null)
                 {
-                    _loc_11 = "http://" + this._holder.runtimeData.cacheServerIP + "/";
-                    this._url = this._url.replace(/http:\/\/(\w|\.)*\/""http:\/\/(\w|\.)*\//, _loc_11);
+                    _loc_10 = "http://" + this._holder.runtimeData.cacheServerIP + "/";
+                    this._url = this._url.replace(/http:\/\/(\w|\.)*\/""http:\/\/(\w|\.)*\//, _loc_10);
                 }
-                _loc_10 = this._url.split("/");
-                if (_loc_10 && _loc_10.length > 0)
+                _loc_9 = this._url.split("/");
+                if (_loc_9 && _loc_9.length > 0)
                 {
-                    _loc_12 = _loc_10[(_loc_10.length - 1)];
-                    _loc_10 = _loc_12.split(".");
-                    if (_loc_10 && _loc_10.length > 0)
+                    _loc_11 = _loc_9[(_loc_9.length - 1)];
+                    _loc_9 = _loc_11.split(".");
+                    if (_loc_9 && _loc_9.length > 0)
                     {
-                        this._rid = _loc_10[0];
+                        this._rid = _loc_9[0];
                     }
                 }
             }
@@ -56,11 +54,6 @@
             this._totalTime = param8;
             this._endTime = this._startTime + this._totalTime;
             return;
-        }// end function
-
-        public function get isDrm() : Number
-        {
-            return this._isDrm;
         }// end function
 
         public function get vid() : String

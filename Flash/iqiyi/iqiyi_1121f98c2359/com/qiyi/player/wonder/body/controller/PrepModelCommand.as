@@ -6,7 +6,6 @@
     import com.qiyi.player.wonder.plugins.controllbar.*;
     import com.qiyi.player.wonder.plugins.dock.*;
     import com.qiyi.player.wonder.plugins.feedback.*;
-    import com.qiyi.player.wonder.plugins.hint.*;
     import com.qiyi.player.wonder.plugins.loading.*;
     import com.qiyi.player.wonder.plugins.offlinewatch.*;
     import com.qiyi.player.wonder.plugins.recommend.*;
@@ -55,7 +54,6 @@
             TopBarPlugins.getInstance().initModel();
             VideoLinkPlugins.getInstance().initModel();
             SubscribePlugins.getInstance().initModel();
-            HintPlugins.getInstance().initModel();
             return;
         }// end function
 

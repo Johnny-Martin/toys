@@ -26,10 +26,10 @@
             return this._userLocalSex;
         }// end function
 
-        public function login(param1:String, param2:String, param3:String = "", param4:String = "", param5:String = "", param6:Boolean = true) : void
+        public function login(param1:String, param2:String, param3:String = "", param4:String = "", param5:String = "") : void
         {
             this.destroyUser();
-            this._tmpUser = new User(param1, param2, param3, param4, param5, param6);
+            this._tmpUser = new User(param1, param2, param3, param4, param5);
             this._tmpUser.addEventListener(UserManagerEvent.Evt_LoginSuccess, this.onLoginSuccess);
             this._tmpUser.checkUser();
             return;

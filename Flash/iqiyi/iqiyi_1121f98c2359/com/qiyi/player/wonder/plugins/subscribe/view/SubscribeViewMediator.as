@@ -8,13 +8,9 @@
     import com.qiyi.player.wonder.plugins.ad.model.*;
     import com.qiyi.player.wonder.plugins.continueplay.*;
     import com.qiyi.player.wonder.plugins.controllbar.*;
-    import com.qiyi.player.wonder.plugins.controllbar.model.*;
-    import com.qiyi.player.wonder.plugins.hint.*;
-    import com.qiyi.player.wonder.plugins.hint.model.*;
     import com.qiyi.player.wonder.plugins.subscribe.*;
     import com.qiyi.player.wonder.plugins.subscribe.model.*;
     import gs.*;
-    import gs.easing.*;
     import org.puremvc.as3.interfaces.*;
     import org.puremvc.as3.patterns.mediator.*;
 
@@ -41,19 +37,17 @@
             this._subscribeView.addEventListener(SubscribeEvent.Evt_Open, this.onSubscribeViewOpen);
             this._subscribeView.addEventListener(SubscribeEvent.Evt_Close, this.onSubscribeViewClose);
             this._subscribeView.addEventListener(SubscribeEvent.Evt_RemovePromptUI, this.onRemovePrompt);
-            this._subscribeView.addEventListener(SubscribeEvent.Evt_ShowComplete, this.onShowComplete);
             this._subscribeView.addEventListener(SubscribeEvent.Evt_BtnAndIconClick, this.onBtnAndIconClick);
             return;
         }// end function
 
         override public function listNotificationInterests() : Array
         {
-            return [SubscribeDef.NOTIFIC_ADD_STATUS, SubscribeDef.NOTIFIC_REMOVE_STATUS, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_FULL_SCREEN, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_RUNNING, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_JS_CALL_SET_SUBSCRIBE_INFO, BodyDef.NOTIFIC_JS_CALL_SET_SUBSCRIBE_STATE_CHANGE, ControllBarDef.NOTIFIC_ADD_STATUS, ControllBarDef.NOTIFIC_REMOVE_STATUS, ContinuePlayDef.NOTIFIC_ADD_STATUS, ContinuePlayDef.NOTIFIC_REMOVE_STATUS, HintDef.NOTIFIC_ADD_STATUS, HintDef.NOTIFIC_REMOVE_STATUS];
+            return [SubscribeDef.NOTIFIC_ADD_STATUS, SubscribeDef.NOTIFIC_REMOVE_STATUS, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_FULL_SCREEN, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_RUNNING, BodyDef.NOTIFIC_PLAYER_SWITCH_PRE_ACTOR, BodyDef.NOTIFIC_JS_CALL_SET_SUBSCRIBE_INFO, BodyDef.NOTIFIC_JS_CALL_SET_SUBSCRIBE_STATE_CHANGE, ControllBarDef.NOTIFIC_ADD_STATUS, ControllBarDef.NOTIFIC_REMOVE_STATUS, ContinuePlayDef.NOTIFIC_ADD_STATUS, ContinuePlayDef.NOTIFIC_REMOVE_STATUS];
         }// end function
 
         override public function handleNotification(param1:INotification) : void
         {
-            var _loc_5:Number = NaN;
             super.handleNotification(param1);
             var _loc_2:* = param1.getBody();
             var _loc_3:* = param1.getName();
@@ -123,28 +117,29 @@
                 }
                 case ControllBarDef.NOTIFIC_ADD_STATUS:
                 {
-                    if (int(_loc_2) == ControllBarDef.STATUS_SEEK_BAR_THICK && !this._subscribeProxy.hasStatus(SubscribeDef.STATUS_SHOW_PROMPT))
+                    if (int(_loc_2) == ControllBarDef.STATUS_SHOW)
                     {
                         TweenLite.killTweensOf(this._subscribeView);
-                        TweenLite.to(this._subscribeView, 1, {y:-(ControllBarDef.BAR_WIDTH_WIDE - ControllBarDef.BAR_WIDTH_NARROW), alpha:1, ease:Elastic.easeOut});
+                        TweenLite.to(this._subscribeView, 0.5, {y:0});
+                    }
+                    if (int(_loc_2) == ControllBarDef.STATUS_SEEK_BAR_THICK)
+                    {
+                        TweenLite.killTweensOf(this._subscribeView);
+                        TweenLite.to(this._subscribeView, 0.5, {y:-(ControllBarDef.BAR_WIDTH_WIDE - ControllBarDef.BAR_WIDTH_NARROW)});
                     }
                     break;
                 }
                 case ControllBarDef.NOTIFIC_REMOVE_STATUS:
                 {
-                    _loc_5 = 0.3;
-                    if (this._subscribeProxy.subscribeInfo && this._subscribeProxy.subscribeInfo.subState == 0)
-                    {
-                        _loc_5 = 0.3;
-                    }
-                    else
-                    {
-                        _loc_5 = 0;
-                    }
-                    if (int(_loc_2) == ControllBarDef.STATUS_SEEK_BAR_THICK && !this._subscribeView.clipIsOpen && !this._subscribeProxy.hasStatus(SubscribeDef.STATUS_SHOW_PROMPT))
+                    if (int(_loc_2) == ControllBarDef.STATUS_SHOW)
                     {
                         TweenLite.killTweensOf(this._subscribeView);
-                        TweenLite.to(this._subscribeView, 0.5, {y:0, alpha:_loc_5});
+                        TweenLite.to(this._subscribeView, 0.5, {y:BodyDef.VIDEO_BOTTOM_RESERVE});
+                    }
+                    if (int(_loc_2) == ControllBarDef.STATUS_SEEK_BAR_THICK)
+                    {
+                        TweenLite.killTweensOf(this._subscribeView);
+                        TweenLite.to(this._subscribeView, 0.5, {y:0});
                     }
                     break;
                 }
@@ -162,16 +157,6 @@
                     {
                         this._subscribeView.addEvent();
                     }
-                    break;
-                }
-                case HintDef.NOTIFIC_ADD_STATUS:
-                {
-                    this.onHintStatusChanged(int(_loc_2), true);
-                    break;
-                }
-                case HintDef.NOTIFIC_REMOVE_STATUS:
-                {
-                    this.onHintStatusChanged(int(_loc_2), false);
                     break;
                 }
                 default:
@@ -205,26 +190,6 @@
             if (this._subscribeProxy.hasStatus(SubscribeDef.STATUS_SHOW_PROMPT))
             {
                 this._subscribeProxy.removeStatus(SubscribeDef.STATUS_SHOW_PROMPT);
-            }
-            return;
-        }// end function
-
-        private function onShowComplete(event:SubscribeEvent) : void
-        {
-            var _loc_2:Number = 0.3;
-            if (this._subscribeProxy.subscribeInfo && this._subscribeProxy.subscribeInfo.subState == 0)
-            {
-                _loc_2 = 0.3;
-            }
-            else
-            {
-                _loc_2 = 0;
-            }
-            var _loc_3:* = facade.retrieveProxy(ControllBarProxy.NAME) as ControllBarProxy;
-            if (!_loc_3.hasStatus(ControllBarDef.STATUS_SEEK_BAR_THICK))
-            {
-                TweenLite.killTweensOf(this._subscribeView);
-                TweenLite.to(this._subscribeView, 0.5, {y:0, alpha:_loc_2});
             }
             return;
         }// end function
@@ -284,30 +249,6 @@
             return;
         }// end function
 
-        private function onHintStatusChanged(param1:int, param2:Boolean) : void
-        {
-            switch(param1)
-            {
-                case HintDef.STATUS_OPEN:
-                {
-                    if (!param2)
-                    {
-                        this.handleSubscribeStatus();
-                    }
-                    else
-                    {
-                        this._subscribeProxy.removeStatus(SubscribeDef.STATUS_OPEN);
-                    }
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-            return;
-        }// end function
-
         private function onPlayerSwitchPreActor() : void
         {
             var _loc_1:Object = null;
@@ -335,7 +276,7 @@
                 if (param1 >= _loc_5 * SubscribeDef.PROMPT_PLAYING_DURATION - 500 && param1 <= _loc_5 * SubscribeDef.PROMPT_PLAYING_DURATION + 500)
                 {
                     this._subscribeView.panelType = SubscribeDef.PANEL_TYPE_SUBSCRIBE;
-                    this.checkShowPrompt();
+                    this._subscribeProxy.addStatus(SubscribeDef.STATUS_SHOW_PROMPT);
                 }
                 else if (param1 >= _loc_5 * SubscribeDef.PROMPT_PLAYING_POINT - 500 && param1 <= _loc_5 * SubscribeDef.PROMPT_PLAYING_POINT + 500)
                 {
@@ -347,7 +288,7 @@
                     {
                         this._subscribeView.panelType = SubscribeDef.PANEL_TYPE_SUBSCRIBE;
                     }
-                    this.checkShowPrompt();
+                    this._subscribeProxy.addStatus(SubscribeDef.STATUS_SHOW_PROMPT);
                 }
             }
             else if (this._playerProxy.curActor.movieInfo.isReward)
@@ -355,7 +296,7 @@
                 if (param1 >= _loc_5 * SubscribeDef.PROMPT_PLAYING_POINT - 500 && param1 <= _loc_5 * SubscribeDef.PROMPT_PLAYING_POINT + 500)
                 {
                     this._subscribeView.panelType = SubscribeDef.PANEL_TYPE_REWARD;
-                    this.checkShowPrompt();
+                    this._subscribeProxy.addStatus(SubscribeDef.STATUS_SHOW_PROMPT);
                 }
             }
             else
@@ -365,24 +306,10 @@
             return;
         }// end function
 
-        private function checkShowPrompt() : void
-        {
-            TweenLite.killTweensOf(this._subscribeView);
-            TweenLite.to(this._subscribeView, 1, {y:-(ControllBarDef.BAR_WIDTH_WIDE - ControllBarDef.BAR_WIDTH_NARROW), alpha:1, ease:Elastic.easeOut, onComplete:this.onComplete});
-            return;
-        }// end function
-
-        private function onComplete() : void
-        {
-            this._subscribeProxy.addStatus(SubscribeDef.STATUS_SHOW_PROMPT);
-            return;
-        }// end function
-
         private function checkShowSubscribe() : Boolean
         {
             var _loc_1:* = facade.retrieveProxy(ADProxy.NAME) as ADProxy;
-            var _loc_2:* = facade.retrieveProxy(HintProxy.NAME) as HintProxy;
-            if ((!_loc_1.hasStatus(ADDef.STATUS_LOADING) || !_loc_1.hasStatus(ADDef.STATUS_PLAYING) || !_loc_1.hasStatus(ADDef.STATUS_PAUSED)) && !_loc_2.hasStatus(HintDef.STATUS_OPEN) && this._subscribeProxy.subscribeInfo)
+            if ((!_loc_1.hasStatus(ADDef.STATUS_LOADING) || !_loc_1.hasStatus(ADDef.STATUS_PLAYING) || !_loc_1.hasStatus(ADDef.STATUS_PAUSED)) && this._subscribeProxy.subscribeInfo)
             {
                 return true;
             }

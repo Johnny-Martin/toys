@@ -9,7 +9,6 @@
         public var duration:int;
         public var time:int;
         public var jumpFragment:Boolean = false;
-        public var encode:Boolean = false;
 
         public function MediaData()
         {

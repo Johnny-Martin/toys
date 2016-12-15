@@ -42,6 +42,7 @@
         public static const NOTIFIC_ADD_STATUS:String = "controllBarAddStatus";
         public static const NOTIFIC_REMOVE_STATUS:String = "controllBarRemoveStatus";
         public static const NOTIFIC_DEF_BTN_POS_CHANGE:String = "controllBarDefBtnChange";
+        public static const NOTIFIC_FILTER_OPEN:String = "controllBarFilterOpen";
         public static const SEEKBAR_THIN_DELAY:int = 3000;
         public static const VOLUMETIP_DISAPPEARE_DELAY:int = 1000;
         public static const FF_BUTTONDOWNED_DELAY:int = 200;

@@ -102,11 +102,7 @@
 
         function getEnjoyableSubDurationList(param1:EnumItem) : Array;
 
-        function getSkipPointAnalysisData() : Object;
-
         function hasDefinitionByType(param1:EnumItem) : Boolean;
-
-        function get hintUrl() : String;
 
     }
 }

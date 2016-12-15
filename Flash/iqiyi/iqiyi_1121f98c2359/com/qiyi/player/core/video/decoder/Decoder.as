@@ -1,6 +1,5 @@
 ﻿package com.qiyi.player.core.video.decoder
 {
-    import CPlayer.*;
     import com.qiyi.player.base.logging.*;
     import com.qiyi.player.base.pub.*;
     import com.qiyi.player.core.video.def.*;
@@ -8,7 +7,7 @@
     import flash.events.*;
     import flash.net.*;
 
-    public class Decoder extends CNetStream implements IDecoder
+    public class Decoder extends NetStream implements IDecoder
     {
         private var _paused:Boolean = false;
         private var _bufferEmplty:Boolean = true;
@@ -20,7 +19,7 @@
         {
             this._status = DecoderStatusEnum.STOPPED;
             this._log = Log.getLogger("com.qiyi.player.core.video.decoder.Decoder");
-            super(param1);
+            super(param1, param2);
             client = new NetClient(this);
             addEventListener(NetStatusEvent.NET_STATUS, this.onNetStatus, false, int.MAX_VALUE);
             return;
@@ -38,7 +37,7 @@
 
         public function get netstream() : NetStream
         {
-            return this as NetStream;
+            return this;
         }// end function
 
         public function get metadata() : Object
@@ -197,18 +196,6 @@
             this._metadata = param1;
             dispatchEvent(new DecoderEvent(DecoderEvent.Evt_MetaData));
             return;
-        }// end function
-
-        override public function setLicense(param1:String) : int
-        {
-            this._log.info("set license: " + param1);
-            var _loc_2:* = super.setLicense(param1);
-            if (!_loc_2)
-            {
-                this._log.error("license parse error");
-            }
-            this._log.info("license updated");
-            return _loc_2;
         }// end function
 
     }

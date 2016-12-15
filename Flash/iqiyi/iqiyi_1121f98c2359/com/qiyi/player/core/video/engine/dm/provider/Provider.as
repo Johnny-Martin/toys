@@ -159,7 +159,6 @@
                     _loc_2.time = _loc_1.time;
                     _loc_2.jumpFragment = _loc_1.jumpFragment;
                     _loc_2.bytes = _loc_1.bytes;
-                    _loc_2.encode = _loc_1.encode;
                     return _loc_2;
                 }
             }

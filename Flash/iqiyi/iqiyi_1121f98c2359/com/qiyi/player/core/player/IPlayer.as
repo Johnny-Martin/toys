@@ -152,8 +152,6 @@
 
         function startLoadMeta() : void;
 
-        function startLoadLicense() : void;
-
         function startLoadHistory() : void;
 
         function uploadHistory() : void;
@@ -173,10 +171,6 @@
         function set localize(param1:String) : void;
 
         function set areaPlatform(param1:EnumItem) : void;
-
-        function get historyStartTime() : int;
-
-        function get checkEngineIsReady() : Boolean;
 
     }
 }

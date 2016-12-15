@@ -6,7 +6,6 @@
     import com.qiyi.player.wonder.common.vo.*;
     import com.qiyi.player.wonder.plugins.ad.*;
     import com.qiyi.player.wonder.plugins.continueplay.model.*;
-    import com.qiyi.player.wonder.plugins.hint.*;
     import com.qiyi.player.wonder.plugins.loading.*;
     import com.qiyi.player.wonder.plugins.loading.model.*;
     import org.puremvc.as3.interfaces.*;
@@ -36,7 +35,7 @@
 
         override public function listNotificationInterests() : Array
         {
-            return [LoadingDef.NOTIFIC_ADD_STATUS, LoadingDef.NOTIFIC_REMOVE_STATUS, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_REMOVE_STATUS, BodyDef.NOTIFIC_PLAYER_START_REFRESH, ADDef.NOTIFIC_ADD_STATUS, ADDef.NOTIFIC_REMOVE_STATUS, HintDef.NOTIFIC_ADD_STATUS];
+            return [LoadingDef.NOTIFIC_ADD_STATUS, LoadingDef.NOTIFIC_REMOVE_STATUS, BodyDef.NOTIFIC_RESIZE, BodyDef.NOTIFIC_CHECK_USER_COMPLETE, BodyDef.NOTIFIC_PLAYER_ADD_STATUS, BodyDef.NOTIFIC_PLAYER_REMOVE_STATUS, BodyDef.NOTIFIC_PLAYER_START_REFRESH, ADDef.NOTIFIC_ADD_STATUS, ADDef.NOTIFIC_REMOVE_STATUS];
         }// end function
 
         override public function handleNotification(param1:INotification) : void
@@ -98,11 +97,6 @@
                 case ADDef.NOTIFIC_REMOVE_STATUS:
                 {
                     this.onADStatusChanged(int(_loc_2), false);
-                    break;
-                }
-                case HintDef.NOTIFIC_ADD_STATUS:
-                {
-                    this.onHintStatusChanged(int(_loc_2));
                     break;
                 }
                 default:
@@ -198,23 +192,6 @@
                     {
                         this._loadingProxy.removeStatus(LoadingDef.STATUS_OPEN);
                     }
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-            return;
-        }// end function
-
-        private function onHintStatusChanged(param1:int) : void
-        {
-            switch(param1)
-            {
-                case HintDef.STATUS_PLAYING:
-                {
-                    this._loadingProxy.removeStatus(LoadingDef.STATUS_OPEN);
                     break;
                 }
                 default:

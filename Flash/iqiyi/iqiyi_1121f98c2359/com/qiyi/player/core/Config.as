@@ -7,7 +7,7 @@
         public static const CHECK_V_INFO_URL:String = "http://data.video.qiyi.com/v.f4v";
         public static const VIP_AUTH_URL:String = "http://api.vip.iqiyi.com/services/cknsp.action";
         public static const MIXER_VX_URL:String = "http://cache.video.qiyi.com";
-        public static const MIXER_BACKUP_URL:String = "http://115.182.125.142";
+        public static const MIXER_BACKUP_URL:String = "http://211.151.158.155";
         public static const ENJOYABLE_SKIP_POINT_URL:String = "http://cache.video.qiyi.com/sci/gm/3/";
         public static const LOGO_URL:String = "http://cache.video.qiyi.com/logo/";
         public static const BRAND_URL:String = "http://www.iqiyi.com/player/cupid/common/icon.swf";
@@ -28,7 +28,6 @@
         public static const VRS_INFO_TIMEOUT:int = 10000;
         public static const VRS_INFO_MAX_RETRY:int = 2;
         public static const META_TIMEOUT:int = 10000;
-        public static const LICENSE_TIMEOUT:int = 10000;
         public static const DISPATCH_TIMEOUT:int = 10000;
         public static const DISPATCH_MAX_RETRY:int = 2;
         public static const SUBTITLE_TIMEOUT:int = 10000;

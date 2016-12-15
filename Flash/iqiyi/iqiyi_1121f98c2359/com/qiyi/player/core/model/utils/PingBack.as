@@ -57,7 +57,6 @@
         private static const PING_BACK_URL:String = "http://msg.71.am/vpb.gif";
         private static const PING_SAVE_BANDWIDTH:String = "http://msg.71.am/vcache.gif";
         private static const PING_KA_URL:String = "http://uestat.video.qiyi.com/stat.html";
-        private static const PING_BACK_BARRAGE:String = "http://msg.71.am/core";
         private static const PING_TMP_STATS_URL:String = "http://msg.71.am/tmpstats.gif";
         private static const PING_BACK_QOE_URL:String = "http://activity.m.iqiyi.com/qoe.gif";
         private static const QOE_USERCHECK:String = "player_usercheck_succ";
@@ -497,10 +496,6 @@
             var _loc_10:String = null;
             var _loc_11:Segment = null;
             var _loc_12:Object = null;
-            if (param1 == 4015)
-            {
-                this.fireData(PING_BACK_BARRAGE + "?t=8" + this.conmmonParam_4_0());
-            }
             if (this._holder && param1 > 0)
             {
                 _loc_2 = "";
@@ -656,7 +651,6 @@
             var _loc_2:* = "?flag=" + PingBackFlagEnum.PLAYER_ACT.name + "&plyract=" + PingBackPlayerActionEnum.START_PLAY.name + "&prgr=" + int(this._holder.currentTime / 1000) + "&ltm=" + param1 + "&purl=" + this.getPageLocationHref() + "&vvfrmtp=" + this._VVFromtp + "&clltid=" + this._holder.runtimeData.collectionID + "&src=" + this._src + "&rfr=" + this.getPageReferrer() + this.commonParam();
             UUIDManager.instance.isNewUser = false;
             this.fireData(PING_BACK_URL + _loc_2);
-            this.fireData(PING_BACK_BARRAGE + "?t=1" + this.conmmonParam_4_0());
             return;
         }// end function
 
@@ -668,7 +662,6 @@
             }
             var _loc_1:* = "?flag=" + PingBackFlagEnum.PLAYER_ACT.name + "&plyract=" + PingBackPlayerActionEnum.READY.name + "&purl=" + this.getPageLocationHref() + "&vvfrmtp=" + this._VVFromtp + "&rfr=" + this.getPageReferrer() + this.commonParam();
             this.fireData(PING_BACK_URL + _loc_1);
-            this.fireData(PING_BACK_BARRAGE + "?t=15" + this.conmmonParam_4_0());
             return;
         }// end function
 
@@ -737,7 +730,6 @@
             }
             var _loc_2:* = "?flag=" + PingBackFlagEnum.PLAYER_ACT.name + "&plyract=" + PingBackPlayerActionEnum.STOP_PLAY.name + "&prgr=" + int(this._holder.currentTime / 1000) + "&src=" + this._src + "&finish=" + param1 + this.commonParam();
             this.fireData(PING_BACK_URL + _loc_2);
-            this.fireData(PING_BACK_BARRAGE + "?t=13" + this.conmmonParam_4_0());
             return;
         }// end function
 
@@ -749,7 +741,6 @@
             }
             var _loc_2:* = "?flag=" + PingBackFlagEnum.PLAYER_ACT.name + "&plyract=" + PingBackPlayerActionEnum.TIMMING.name + "&prgr=" + int(this._holder.currentTime / 1000) + "&lostfrm=" + this._droppedFrames.toString() + "&lostfrmsec=" + this._droppedFramesSeconds.toString() + "&tl=" + param1 + "&src=" + this._src + "&purl=" + this.getPageLocationHref() + "&rfr=" + this.getPageReferrer() + this.commonParam();
             this.fireData(PING_BACK_URL + _loc_2);
-            this.fireData(PING_BACK_BARRAGE + "?t=2" + this.conmmonParam_4_0());
             return;
         }// end function
 
@@ -942,25 +933,6 @@
             return;
         }// end function
 
-        private function conmmonParam_4_0() : String
-        {
-            var _loc_1:IUser = null;
-            var _loc_2:String = null;
-            var _loc_3:String = null;
-            var _loc_4:String = null;
-            var _loc_5:String = null;
-            if (this._holder)
-            {
-                _loc_1 = UserManager.getInstance().user;
-                _loc_2 = this._holder.movie ? (this._holder.movie.tvid) : ("");
-                _loc_3 = this._holder.runtimeData.platform.name;
-                _loc_4 = this._holder.uuid;
-                _loc_5 = "&ptid=11" + "&pf=1" + "&p=10" + "&p1=101" + "&c1=" + (this._holder.movie ? (this._holder.movie.channelID.toString()) : ("")) + "&r=" + _loc_2 + "&aid=" + (this._holder.movie ? (this._holder.movie.albumId) : ("")) + "&u=" + _loc_4 + "&pu=" + (_loc_1 ? (_loc_1.passportID) : ("")) + "&v=" + Version.VERSION + "&ra=" + (this._holder.movie && this._holder.movie.curDefinition && this._holder.movie.curDefinition.type ? (this._holder.movie.curDefinition.type.id.toString()) : ("" + "&as=" + this.getMD5Code(_loc_2, _loc_3, _loc_4, this._holder.videoEventID))) + "&ve=" + UUIDManager.instance.getWebEventID() + "&vfrm=" + this._VFrm + "&vfrmtp=" + this._VVFromtp + "&sdktp=" + (this._holder.runtimeData.playerType.id + 1) + "&hu=" + this.getVipUserType() + "&ht=" + (this._holder.movie && this._holder.movie.member ? ("1") : ("0")) + "&mod=" + this._holder.runtimeData.localize + "&islocal=0" + "&rn=" + Math.random();
-                return _loc_5;
-            }
-            return "";
-        }// end function
-
         private function commonParam() : String
         {
             var _loc_1:String = null;
@@ -968,24 +940,23 @@
             var _loc_3:String = null;
             var _loc_4:String = null;
             var _loc_5:String = null;
-            var _loc_6:Boolean = false;
+            var _loc_6:String = null;
             var _loc_7:String = null;
             var _loc_8:String = null;
             var _loc_9:String = null;
             var _loc_10:String = null;
             var _loc_11:String = null;
             var _loc_12:String = null;
-            var _loc_13:String = null;
-            var _loc_14:IMovie = null;
+            var _loc_13:IMovie = null;
+            var _loc_14:String = null;
             var _loc_15:String = null;
             var _loc_16:String = null;
             var _loc_17:String = null;
             var _loc_18:String = null;
-            var _loc_19:String = null;
-            var _loc_20:IUser = null;
-            var _loc_21:String = null;
-            var _loc_22:Segment = null;
-            var _loc_23:Object = null;
+            var _loc_19:IUser = null;
+            var _loc_20:String = null;
+            var _loc_21:Segment = null;
+            var _loc_22:Object = null;
             if (this._holder)
             {
                 _loc_1 = "";
@@ -993,81 +964,79 @@
                 _loc_3 = "";
                 _loc_4 = "";
                 _loc_5 = "";
-                _loc_6 = false;
-                _loc_7 = this._holder.uuid;
-                _loc_8 = UUIDManager.instance.isNewUser ? ("1") : ("0");
+                _loc_6 = this._holder.uuid;
+                _loc_7 = UUIDManager.instance.isNewUser ? ("1") : ("0");
+                _loc_8 = "";
                 _loc_9 = "";
                 _loc_10 = "";
                 _loc_11 = "";
                 _loc_12 = "";
-                _loc_13 = "";
-                _loc_14 = this._holder.movie;
-                if (_loc_14)
+                _loc_13 = this._holder.movie;
+                if (_loc_13)
                 {
-                    _loc_1 = _loc_14.vid;
-                    _loc_2 = _loc_14.albumId;
-                    _loc_5 = _loc_14.tvid;
-                    _loc_3 = _loc_14.channelID.toString();
-                    _loc_6 = this._holder.movieModel ? (this._holder.movieModel.multiAngle) : (false);
-                    _loc_13 = _loc_14.uploaderID;
-                    if (_loc_14.curDefinition && _loc_14.curDefinition.type)
+                    _loc_1 = _loc_13.vid;
+                    _loc_2 = _loc_13.albumId;
+                    _loc_5 = _loc_13.tvid;
+                    _loc_3 = _loc_13.channelID.toString();
+                    _loc_12 = _loc_13.uploaderID;
+                    if (_loc_13.curDefinition && _loc_13.curDefinition.type)
                     {
-                        _loc_4 = _loc_14.curDefinition.type.id.toString();
+                        _loc_4 = _loc_13.curDefinition.type.id.toString();
                     }
                     if (this._holder.hasStatus(StatusEnum.PLAYING) || this._holder.hasStatus(StatusEnum.PAUSED) || this._holder.hasStatus(StatusEnum.SEEKING) || this._holder.hasStatus(StatusEnum.WAITING))
                     {
-                        _loc_22 = _loc_14.getSegmentByTime(this._holder.currentTime);
-                        if (_loc_22 && this._holder.runtimeData.userDisInfo)
+                        _loc_21 = _loc_13.getSegmentByTime(this._holder.currentTime);
+                        if (_loc_21 && this._holder.runtimeData.userDisInfo)
                         {
-                            _loc_23 = this._holder.runtimeData.userDisInfo[_loc_22.index];
-                            if (_loc_23)
+                            _loc_22 = this._holder.runtimeData.userDisInfo[_loc_21.index];
+                            if (_loc_22)
                             {
-                                _loc_9 = _loc_23.t;
-                                _loc_10 = _loc_23.z;
+                                _loc_8 = _loc_22.t;
+                                _loc_9 = _loc_22.z;
                             }
                         }
                     }
-                    _loc_11 = _loc_14.member ? ("1") : ("0");
-                    _loc_12 = _loc_14.streamType == StreamEnum.RTMP ? ("1") : ("2");
+                    _loc_10 = _loc_13.member ? ("1") : ("0");
+                    _loc_11 = _loc_13.streamType == StreamEnum.RTMP ? ("1") : ("2");
                 }
                 else
                 {
                     _loc_5 = this._holder.runtimeData.tvid;
                     _loc_1 = this._holder.runtimeData.vid;
                 }
-                _loc_15 = this._holder.runtimeData.platform.name;
-                _loc_16 = this._holder.runtimeData.station.id.toString();
-                _loc_17 = this._holder.runtimeData.playerType.id.toString();
-                _loc_18 = Version.VERSION;
-                _loc_19 = this.getVipUserType();
-                _loc_20 = UserManager.getInstance().user;
-                _loc_21 = "&aid=" + _loc_2 + "&tvid=" + _loc_5 + "&vid=" + _loc_1 + "&cid=" + _loc_3 + "&lev=" + _loc_4 + "&puid=" + (_loc_20 ? (_loc_20.passportID) : ("")) + "&pru=" + (_loc_20 ? (_loc_20.profileID) : ("")) + "&veid=" + this._holder.videoEventID + "&weid=" + UUIDManager.instance.getWebEventID() + "&newusr=" + _loc_8 + "&pla=" + _loc_15 + "&visits=" + _visits + "&sttntp=" + _loc_16 + "&plyrtp=" + _loc_17 + "&plyrver=" + _loc_18 + "&z=" + _loc_10 + "&suid=" + _loc_7 + "&diaoduuip=" + _loc_9 + "&plid=" + this._playListID + "&vvfrom=" + this._VVFrom + "&vfrm=" + this._VFrm + "&vfm=" + this._vfm + "&restp=" + _loc_12 + "&ispur=" + _loc_11 + "&as=" + this.getMD5Code(_loc_5, _loc_15, _loc_7, this._holder.videoEventID) + "&isdm=" + (this._openBarrage ? ("1") : ("0")) + "&isstar=" + (this._isStarBarrage ? ("1") : ("0")) + "&hu=" + _loc_19 + "&mod=" + this._holder.runtimeData.localize + "&videotp=" + (_loc_6 ? (1) : (0)) + "&tn=" + String(Math.random());
+                _loc_14 = this._holder.runtimeData.platform.name;
+                _loc_15 = this._holder.runtimeData.station.id.toString();
+                _loc_16 = this._holder.runtimeData.playerType.id.toString();
+                _loc_17 = Version.VERSION;
+                _loc_18 = this.getVipUserType();
+                _loc_19 = UserManager.getInstance().user;
+                _loc_20 = "&aid=" + _loc_2 + "&tvid=" + _loc_5 + "&vid=" + _loc_1 + "&cid=" + _loc_3 + "&lev=" + _loc_4 + "&puid=" + (_loc_19 ? (_loc_19.passportID) : ("")) + "&pru=" + (_loc_19 ? (_loc_19.profileID) : ("")) + "&veid=" + this._holder.videoEventID + "&weid=" + UUIDManager.instance.getWebEventID() + "&newusr=" + _loc_7 + "&pla=" + _loc_14 + "&visits=" + _visits + "&sttntp=" + _loc_15 + "&plyrtp=" + _loc_16 + "&plyrver=" + _loc_17 + "&z=" + _loc_9 + "&suid=" + _loc_6 + "&diaoduuip=" + _loc_8 + "&plid=" + this._playListID + "&vvfrom=" + this._VVFrom + "&vfrm=" + this._VFrm + "&vfm=" + this._vfm + "&restp=" + _loc_11 + "&ispur=" + _loc_10 + "&as=" + this.getMD5Code(_loc_5, _loc_14, _loc_6, this._holder.videoEventID) + "&isdm=" + (this._openBarrage ? ("1") : ("0")) + "&isstar=" + (this._isStarBarrage ? ("1") : ("0")) + "&hu=" + _loc_18 + "&mod=" + this._holder.runtimeData.localize + "&tn=" + String(Math.random());
                 if (_coop != "")
                 {
-                    _loc_21 = _loc_21 + ("&coop=" + _coop);
+                    _loc_20 = _loc_20 + ("&coop=" + _coop);
                 }
                 else if (_source != "")
                 {
-                    _loc_21 = _loc_21 + ("&source=" + _source);
+                    _loc_20 = _loc_20 + ("&source=" + _source);
                 }
-                if (_loc_13 && _loc_13 != "0")
+                if (_loc_12 && _loc_12 != "0")
                 {
-                    _loc_21 = _loc_21 + ("&upderid=" + _loc_13);
+                    _loc_20 = _loc_20 + ("&upderid=" + _loc_12);
                 }
                 if (this._holder.runtimeData.playerType == PlayerTypeEnum.SHARE && this._holder.runtimeData.tg != "")
                 {
-                    _loc_21 = _loc_21 + ("&tg=" + this._holder.runtimeData.tg);
+                    _loc_20 = _loc_20 + ("&tg=" + this._holder.runtimeData.tg);
                 }
                 if (this._holder.runtimeData.movieIsMember && this._holder.authenticationResult && this._holder.authenticationResult.data && this._holder.authenticationResult.data.u)
                 {
-                    _loc_21 = _loc_21 + ("&qy_uid=" + this._holder.authenticationResult.data.u);
-                    _loc_21 = _loc_21 + ("&qy_cid=" + this._holder.authenticationResult.data.cid);
-                    _loc_21 = _loc_21 + ("&qy_user_type=" + this._holder.authenticationResult.data.u_type);
-                    _loc_21 = _loc_21 + ("&qy_prv=" + this._holder.authenticationResult.data.prv);
-                    _loc_21 = _loc_21 + ("&qy_vip_level=" + this._holder.authenticationResult.data.v_level);
-                    _loc_21 = _loc_21 + ("&qy_chl_uid=" + this._holder.authenticationResult.data.chl_u);
+                    _loc_20 = _loc_20 + ("&qy_uid=" + this._holder.authenticationResult.data.u);
+                    _loc_20 = _loc_20 + ("&qy_cid=" + this._holder.authenticationResult.data.cid);
+                    _loc_20 = _loc_20 + ("&qy_user_type=" + this._holder.authenticationResult.data.u_type);
+                    _loc_20 = _loc_20 + ("&qy_prv=" + this._holder.authenticationResult.data.prv);
+                    _loc_20 = _loc_20 + ("&qy_vip_level=" + this._holder.authenticationResult.data.v_level);
+                    _loc_20 = _loc_20 + ("&qy_chl_uid=" + this._holder.authenticationResult.data.chl_u);
                 }
-                return _loc_21;
+                return _loc_20;
             }
             return "";
         }// end function

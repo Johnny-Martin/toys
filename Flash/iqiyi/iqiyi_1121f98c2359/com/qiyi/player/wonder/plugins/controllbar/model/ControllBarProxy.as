@@ -2,7 +2,6 @@
 {
     import com.qiyi.player.wonder.common.status.*;
     import com.qiyi.player.wonder.plugins.controllbar.*;
-    import com.qiyi.player.wonder.plugins.controllbar.model.filterdata.*;
     import com.qiyi.player.wonder.plugins.controllbar.view.preview.image.*;
     import flash.geom.*;
     import org.puremvc.as3.patterns.proxy.*;
@@ -20,7 +19,6 @@
         private var _seekCount:uint = 0;
         private var _isFirstPlay:Boolean = false;
         private var _controlbarRect:Rectangle;
-        private var _filterBitmapData:FilterBitmapData;
         public static const NAME:String = "com.qiyi.player.wonder.plugins.controllbar.model.ControllBarProxy";
 
         public function ControllBarProxy(param1:Object = null)
@@ -30,13 +28,7 @@
             this._status.addStatus(ControllBarDef.STATUS_VIEW_INIT);
             this._status.addStatus(ControllBarDef.STATUS_FULL_SCREEN_BTN_SHOW);
             PreviewImageLoader.instance.init();
-            this._filterBitmapData = new FilterBitmapData();
             return;
-        }// end function
-
-        public function get filterBitmapData() : FilterBitmapData
-        {
-            return this._filterBitmapData;
         }// end function
 
         public function get isFirstPlay() : Boolean

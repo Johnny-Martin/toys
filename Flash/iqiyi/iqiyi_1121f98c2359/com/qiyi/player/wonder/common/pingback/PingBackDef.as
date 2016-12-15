@@ -40,6 +40,8 @@
         public static const VVPING_AUTO_PLAY:String = "autoctply";
         public static const FILTER_OPEN:String = "greenscenestrt";
         public static const FILTER_CLOSE:String = "greensceneclos";
+        public static const FILTER_CONTINUE_PLAY:String = "greensceneon";
+        public static const SCENE_TILE_TIP_SHOW:String = "1080pshow";
         public static const SCORE_PANEL_SHOW:String = "1411042_pnlshw";
         public static const SCORE_CLOSE_BTN_CLICK:String = "1411042_pnlcls";
         public static const CONCUR_LIMIT_SHOW:String = "1501061_shw";
@@ -63,13 +65,6 @@
         public static const SUBSCRIBE_HOVER_REWARD_CLICK:String = "512181_reward_h";
         public static const REWARD_CLICK:String = "604081_rewardbtn_2";
         public static const REWARD_OPEN:String = "604082_rewardbtn_2";
-        public static const FILTER_FAST_FORWARD:String = "609083_kfright";
-        public static const FILTER_FAST_REWIND:String = "609083_kfleft";
-        public static const FILTER_SEEK_ENJOYABLE_SEGMENT:String = "609083_kfseekzc";
-        public static const FILTER_SEEK_NOT_ENJOYABLE_SEGMENT:String = "609083_kfseekkf";
-        public static const VR_PANORAMICTOOL_CLICK:String = "609281_vrdirection";
-        public static const VR_DRAG_COMPLETE:String = "609281_vrdrag";
-        public static const VR_CODE_SHOW:String = "609281_vrcode";
 
         public function PingBackDef()
         {
