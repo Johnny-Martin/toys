@@ -61,14 +61,13 @@
         private var _videoPlaySecondsOfDay:int;
         private var _language:String;
         private var _vipFalseReason:Object;
-        private var _autoPlay:Boolean;
         private const PLAYER_TIMEOUT_LENGTHS:Array;
         private var _env:Dictionary;
         private var _adBlockedBlackScreen:AdBlockedBlackScreen;
         private const IQIYI_WEB_AM_URL:String = "http://www.iqiyi.com/player/cupid/common/iamw.swf";
         private const IQIYI_WEBEX_AM_URL:String = "http://www.iqiyi.com/player/cupid/common/iamo.swf";
         private static var log:Log = new Log("main");
-        public static const VERSION:String = "3.6.0";
+        public static const VERSION:String = "3.5.0";
 
         public function CupidAdPlayer(param1:CupidParam)
         {
@@ -99,7 +98,6 @@
             this._videoPlaySecondsOfDay = param1.videoPlaySecondsOfDay;
             this._language = param1.language;
             this._vipFalseReason = param1.vipFalseReason;
-            this._autoPlay = param1.autoPlay;
             if (this.isQiyiWebEx())
             {
                 this._adClientUrl = this.IQIYI_WEBEX_AM_URL;

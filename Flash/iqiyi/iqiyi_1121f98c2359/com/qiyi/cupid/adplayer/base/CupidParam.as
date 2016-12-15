@@ -41,7 +41,6 @@
         public var language:String;
         public var isMuteMode:Boolean = false;
         public var vipFalseReason:Object;
-        public var autoPlay:Boolean = true;
 
         public function CupidParam()
         {
@@ -50,7 +49,7 @@
 
         public function toObject() : Object
         {
-            var _loc_1:* = "videoPlayerVersion playerUrl videoId tvId channelId collectionId " + "playerId albumId adContainer stageWidth stageHeight userId webEventId dispatcher " + "cacheMachineIp videoEventId vipRight terminal duration passportId passportCookie " + "videoDefinitionId passportKey baiduMainVideo disablePreroll disableSkipAd " + "enableVideoCore volume videoIndex isUGC couponCode couponVer videoPlaySecondsOfDay language isMuteMode vipFalseReason autoPlay";
+            var _loc_1:* = "videoPlayerVersion playerUrl videoId tvId channelId collectionId " + "playerId albumId adContainer stageWidth stageHeight userId webEventId dispatcher " + "cacheMachineIp videoEventId vipRight terminal duration passportId passportCookie " + "videoDefinitionId passportKey baiduMainVideo disablePreroll disableSkipAd " + "enableVideoCore volume videoIndex isUGC couponCode couponVer videoPlaySecondsOfDay language isMuteMode vipFalseReason";
             var _loc_2:Object = {};
             var _loc_3:* = _loc_1.split(" ");
             var _loc_4:int = 0;
