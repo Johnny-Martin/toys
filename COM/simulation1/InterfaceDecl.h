@@ -34,6 +34,8 @@ public:
 	virtual bool    _stdcall LookupWord(std::string word);
 	virtual bool    _stdcall UnInit(void);
 	virtual bool    _stdcall CheckSpell(std::string word);
+private:
+	unsigned long m_ref;
 };
 
 IUnKnown* CreateInstance(void);

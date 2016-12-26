@@ -17,7 +17,7 @@ static const IID IID_ISpellCheck = {
 };
 
 
-CDictionary::CDictionary() {}
+CDictionary::CDictionary():m_ref(0){}
 CDictionary::~CDictionary() {}
 
 HRESULT _stdcall CDictionary::QueryIntertface(const IID& iid, void** ppv) {
@@ -40,12 +40,16 @@ HRESULT _stdcall CDictionary::QueryIntertface(const IID& iid, void** ppv) {
 
 ULONG _stdcall CDictionary::AddRef() {
 	std::cout << "CDictionary::AddRef" << std::endl;
-	return 0;
+	return ++m_ref;
 }
 
 ULONG _stdcall CDictionary::Releace() {
 	std::cout << "CDictionary::Releace" << std::endl;
-	return 0;
+	if (--m_ref == 0) {
+		delete this;
+		std::cout << "Destory CDictionary" << std::endl;
+	}
+	return m_ref;
 }
 
 bool _stdcall CDictionary::Init() {

@@ -6,11 +6,11 @@
 
 int main()
 {
-	IUnKnown* pIUnknowm = CreateInstance();
+	IUnKnown* pIUnknown = CreateInstance();
 	IDictionary* pIDictionary;
 	ISpellCheck* pISpellCheck;
 
-	HRESULT hr = pIUnknowm->QueryIntertface(IID_IDictionary,(void**) &pIDictionary);
+	HRESULT hr = pIUnknown->QueryIntertface(IID_IDictionary,(void**) &pIDictionary);
 	if (SUCCEEDED(hr)) {
 		pIDictionary->Init();
 		pIDictionary->LookupWord("hello");
@@ -23,21 +23,23 @@ int main()
 			pISpellCheck->CheckSpell("fuck");
 			pISpellCheck->Releace();
 			pISpellCheck = NULL;
-
 		}
 
 		pIDictionary->Releace();
 		pIDictionary = NULL;
 	}
 
-	hr = pIUnknowm->QueryIntertface(IID_ISpellCheck, (void**)&pISpellCheck);
+	//使用pIUnknowm 获得 pISpellCheck
+	hr = pIUnknown->QueryIntertface(IID_ISpellCheck, (void**)&pISpellCheck);
 	if (SUCCEEDED(hr)) {
 		std::cout << pISpellCheck << std::endl;
 		pISpellCheck->CheckSpell("fuck");
 		pISpellCheck->Releace();
 		pISpellCheck = NULL;
-
 	}
+
+	pIUnknown->Releace();
+
     return 0;
 }
 
