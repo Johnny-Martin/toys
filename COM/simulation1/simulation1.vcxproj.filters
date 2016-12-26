@@ -24,16 +24,7 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="IUnKnown.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="IDictionary.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="DictionaryImp.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ISpellCheck.h">
+    <ClInclude Include="InterfaceDecl.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,13 +32,10 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="RawCom.cpp">
+    <ClCompile Include="simulation1.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="DictionaryImp.cpp">
+    <ClCompile Include="InterfaceImpl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

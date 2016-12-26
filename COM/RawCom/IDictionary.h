@@ -5,7 +5,7 @@
 
 class IDictionary : public IUnKnown {
 public:
-	virtual bool Init(std::string word)       = 0;
-	virtual bool LookupWord(std::string word) = 0;
-	virtual bool UnInit(std::string word)     = 0;
+	virtual bool _stdcall Init()					   = 0;
+	virtual bool _stdcall LookupWord(std::string word) = 0;
+	virtual bool _stdcall UnInit()                     = 0;
 };
