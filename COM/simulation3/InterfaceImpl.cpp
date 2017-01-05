@@ -63,92 +63,95 @@ IUnKnown* CreateInstance() {
 }
 
 
-HRESULT __stdcall DLLRegisterServer() {
+LSTATUS SetRegValue(HKEY rootKey, std::wstring wsSubKey, std::wstring wsData) {
+	HKEY key;
+	LSTATUS retValue = RegOpenKeyEx(rootKey, _T(""), 0, KEY_WRITE | KEY_READ, &key);
+	if (retValue != ERROR_SUCCESS) {
+		std::cout << "´ò¿ª×¢²á±íÊ§°Ü" << std::endl;
+		return retValue;
+	}
+
+	//ÒÀ´Î´´½¨wsSubKeyÂ·¾¶ÖÐµÄ×Ó¼ü
+	std::vector<std::wstring> subKeyVec;
+	int newPos = 0;
+	int oldPos = 0;
+	while (true) {
+		newPos = wsSubKey.find(_T("\\"), oldPos);
+		if (newPos != std::string::npos) {
+			subKeyVec.push_back(wsSubKey.substr(oldPos, newPos - oldPos));
+			oldPos = newPos + 1;
+		}
+		else {
+			break;
+		}
+	}
+	if (subKeyVec.size() == 0) {
+		return ERROR_INVALID_FUNCTION;
+	}
+
+	HKEY fatherKey = key;
+	HKEY subKey = 0;
+	for (size_t i = 0; i < subKeyVec.size(); ++i) {
+		DWORD dw;
+		RegCreateKeyEx(fatherKey,
+			subKeyVec[i].c_str(),
+			NULL,
+			NULL,
+			REG_OPTION_NON_VOLATILE,
+			KEY_WRITE | KEY_READ, NULL,
+			&subKey,
+			&dw);
+		RegCloseKey(fatherKey);
+		fatherKey = subKey;
+	}
+
+	retValue = RegSetValue(subKey, _T(""), REG_SZ, wsData.c_str(), wsData.length());
+	RegCloseKey(subKey);
+
+	return retValue;
+}
+HRESULT __stdcall DllRegisterServer() {
 	/*HKEY_CLASSES_ROOT
-			|--CLSID
-			     |--{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}--SimulationComObject
-				                     |--InprocServer32    --C:\XXX\SSS\simulation3.dll
-									 |--ProgID            --COM.Simulation.1
-		   ...
-			|--COM.Simulation
-			     |--CLSID--{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}
-				 |--CurVer--COM.Simulation.1
+	|--CLSID
+	|--{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}--SimulationComObject
+	|--InprocServer32    --C:\XXX\SSS\simulation3.dll
+	|--ProgID            --COM.Simulation.1
+	...
+	|--COM.Simulation
+	|--CLSID--{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}
+	|--CurVer--COM.Simulation.1
 
 	*/
 
-
-	// {354CD5C5-839B-4A1E-8033-0EBC5246A4EF}
 	//static const GUID ComponentCLSID = { 0x354cd5c5, 0x839b, 0x4a1e,{ 0x80, 0x33, 0xe, 0xbc, 0x52, 0x46, 0xa4, 0xef } };
-	
-	wchar_t wszCLSID[] = _T("{354cd5c5-839b-4a1e-8033-0ebc5246ef}");
-	//::StringFromGUID2(ComponentCLSID, wszCLSID, 39);
+	wchar_t wszCLSID[] = _T("{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}");
 
-	HKEY Key;
-	DWORD length = sizeof(wszCLSID) / sizeof(wchar_t);
 
-	LSTATUS retValue;
-	//½«{354¡£¡£¡£}Ð´µ½CLSIDÏÂ
-	//RegCreateKey(HKEY_CLASSES_ROOT, _T("CLSID"), &Key);
-	//retValue = RegSetValue(Key, _T(""), REG_SZ, wszCLSID, length);
-	//if (ERROR_SUCCESS != retValue) {
-	//	std::cout << "Ð´×¢²á±íÊ§°Ü" << std::endl;
-	//	return;
-	//}
-	
+	SetRegValue(HKEY_CLASSES_ROOT, _T("CLSID\\{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}\\"), _T("SimulationComObject"));
 
-	wchar_t wszComponentDesc[] = _T("SimulationComObject");
-	length = sizeof(wszComponentDesc) / sizeof(wchar_t);
-	RegCreateKey(HKEY_CLASSES_ROOT, _T("CLSID//{354cd5c5-839b-4a1e-8033-0ebc5246ef}"), &Key);
-	retValue = RegSetValue(Key, _T(""), REG_SZ, wszComponentDesc, length);
-	if (ERROR_SUCCESS != retValue) {
-		std::cout << "Ð´×¢²á±íÊ§°Ü" << std::endl;
-		return S_FALSE;
+	wchar_t wszModulePath[MAX_PATH] = { 0 };
+	HMODULE hModule;
+	GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPTSTR)DllRegisterServer, &hModule);
+	if (NULL == hModule)
+	{
+		std::cout << "NULL == hModule";
+		return S_OK;
 	}
-	RegCloseKey(Key);
+	GetModuleFileName(hModule, wszModulePath, MAX_PATH);
+	SetRegValue(HKEY_CLASSES_ROOT, _T("CLSID\\{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}\\InprocServer32\\"), wszModulePath);
 
-	wchar_t wszModulePath[MAX_PATH] = {0};
-	GetModuleFileName(NULL, wszModulePath, MAX_PATH);
-	length =wcslen(wszModulePath);
-	RegCreateKey(HKEY_CLASSES_ROOT, _T("CLSID//{354cd5c5-839b-4a1e-8033-0ebc5246ef}//InprocServer32"), &Key);
-	retValue = RegSetValue(Key, _T(""), REG_SZ, wszModulePath, length);
-	if (ERROR_SUCCESS != retValue) {
-		std::cout << "Ð´×¢²á±íÊ§°Ü" << std::endl;
-		return S_FALSE;
-	}
-	RegCloseKey(Key);
+	SetRegValue(HKEY_CLASSES_ROOT, _T("CLSID\\{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}\\ProgID\\"), _T("COM.Simulation.1"));
 
-	wchar_t wszProgID[] = _T("COM.Simulation.1");
-	length = sizeof(wszProgID) / sizeof(wchar_t);
-	RegCreateKey(HKEY_CLASSES_ROOT, _T("CLSID//{354cd5c5-839b-4a1e-8033-0ebc5246ef}//ProgID"), &Key);
-	retValue = RegSetValue(Key, _T(""), REG_SZ, wszProgID, length);
-	if (ERROR_SUCCESS != retValue) {
-		std::cout << "Ð´×¢²á±íÊ§°Ü" << std::endl;
-		return S_FALSE;
-	}
-	RegCloseKey(Key);
+	SetRegValue(HKEY_CLASSES_ROOT, _T("COM.Simulation\\"), _T(""));
 
-	length = sizeof(wszCLSID) / sizeof(wchar_t);
-	RegCreateKey(HKEY_CLASSES_ROOT, _T("CLSID//COM.Simulation//CLSID"), &Key);
-	retValue = RegSetValue(Key, _T(""), REG_SZ, wszCLSID, length);
-	if (ERROR_SUCCESS != retValue) {
-		std::cout << "Ð´×¢²á±íÊ§°Ü" << std::endl;
-		return S_FALSE;
-	}
-	RegCloseKey(Key);
+	SetRegValue(HKEY_CLASSES_ROOT, _T("COM.Simulation\\CLSID\\"), _T("{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}"));
 
-	length = sizeof(wszProgID) / sizeof(wchar_t);
-	RegCreateKey(HKEY_CLASSES_ROOT, _T("CLSID//COM.Simulation//CurVer"), &Key);
-	retValue = RegSetValue(Key, _T(""), REG_SZ, wszProgID, length);
-	if (ERROR_SUCCESS != retValue) {
-		std::cout << "Ð´×¢²á±íÊ§°Ü" << std::endl;
-		return S_FALSE;
-	}
-	RegCloseKey(Key);
+	SetRegValue(HKEY_CLASSES_ROOT, _T("COM.Simulation\\CurVer\\"), _T("COM.Simulation.1"));
 
 	return S_OK;
 }
 
-HRESULT __stdcall DLLUnregisterServer() {
+HRESULT __stdcall DllUnregisterServer() {
 
 	return S_OK;
 }

@@ -38,7 +38,7 @@ private:
 	unsigned long m_ref;
 };
 
-IUnKnown* CreateInstance(void);
+extern"C" IUnKnown* CreateInstance(void);
 
 extern const IID IID_IUnknown;
 extern const IID IID_IDictionary;

@@ -11,6 +11,7 @@
 // Windows м╥нд╪Ч: 
 #include <windows.h>
 #include "string"
+#include "vector"
 #include "iostream"
 #include"Winreg.h"
 #include <tchar.h>

@@ -39,8 +39,8 @@ private:
 };
 
 IUnKnown* CreateInstance(void);
-extern"C" HRESULT __stdcall DLLRegisterServer();
-extern"C" HRESULT __stdcall DLLUnregisterServer();
+extern"C" HRESULT __stdcall DllRegisterServer();
+extern"C" HRESULT __stdcall DllUnregisterServer();
 
 extern const IID IID_IUnknown;
 extern const IID IID_IDictionary;
