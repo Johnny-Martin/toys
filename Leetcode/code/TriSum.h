@@ -11,12 +11,18 @@ public:
 		for (unsigned int i = 0; i < src.size(); ++i) {
 			vector<int> srcTmp = src[i];
 			vector<int> tarTmp = tar;
-			for (unsigned int iSrc = srcTmp.size(); iSrc > 0; ++iSrc) {
-				for (unsigned int iTar = tarTmp.size(); iTar > 0; ++iTar) {
-
+			for ( int iSrc = srcTmp.size() - 1; iSrc >= 0; --iSrc) {
+				for ( int iTar = tarTmp.size() - 1; iTar >= 0; --iTar) {
+					if (srcTmp[iSrc] == tarTmp[iTar]) {
+						auto it = srcTmp.begin() + iSrc;
+						srcTmp.erase(it);
+						it = tarTmp.begin() + iTar;
+						tarTmp.erase(it);
+						break;
+					}
 				}
 			}
-			if (count == src[i].size()) {
+			if (srcTmp.size() == 0 && tarTmp.size() == 0) {
 				return false;
 			}
 		}
@@ -35,8 +41,9 @@ public:
 						item.push_back(nums[j]);
 						item.push_back(nums[k]);
 
-						if(Judgement(result, item))
+						if (Judgement(result, item)) {
 							result.push_back(item);
+						}
 					}
 				}
 			}
