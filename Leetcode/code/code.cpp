@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "TwoSum.h"
 #include "TriSum.h"
+#include "AddTwoNumbers.h"
 
 
 int main()
@@ -13,6 +14,8 @@ int main()
 
 	vector<vector<int>> ret = sul.threeSum(test);
 
+	AddTwoNumsSolution AddTwoNumsSolutionTest;
+	AddTwoNumsSolutionTest.test();
     return 0;
 }
 
