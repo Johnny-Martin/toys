@@ -4,6 +4,11 @@ class CallType {
 public:
 	int DefaultCall(int a, int b) {
 		this->data = a + b;
+		this->data2 = a - b;
+		return this->data;
+	}
+
+	int DefaultCall_Get() {
 		return this->data;
 	}
 	int _cdecl CdeclCall(int a, int b) {
@@ -24,4 +29,5 @@ public:
 	}
 private:
 	int data;
+	int data2;
 };

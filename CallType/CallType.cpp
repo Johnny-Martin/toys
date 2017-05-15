@@ -8,6 +8,7 @@
 int main()
 {
 	CallType callType;
+	int tmp = callType.DefaultCall_Get();
 	callType.DefaultCall(1, 2);
 	callType.CdeclCall(3, 2); 
 	callType.StdCall(1, 3);
