@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 8.00.0603 */
-/* at Sun Jan 22 10:41:10 2017
+/* at Tue Dec 27 15:09:02 2016
  */
 /* Compiler settings for ATLProject.idl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 8.00.0603 
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.00.0603 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -16,7 +16,7 @@
 */
 /* @@MIDL_FILE_HEADING(  ) */
 
-#if defined(_M_AMD64)
+#if !defined(_M_IA64) && !defined(_M_AMD64) && !defined(_ARM_)
 
 
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
@@ -28,6 +28,9 @@
 #pragma warning( disable: 4232 )  /* dllimport identity*/
 #pragma warning( disable: 4024 )  /* array to pointer mapping*/
 #pragma warning( disable: 4152 )  /* function/data pointer conversion in expression */
+#pragma warning( disable: 4100 ) /* unreferenced arguments in x86 call */
+
+#pragma optimize("", off ) 
 
 #define USE_STUBLESS_PROXY
 
@@ -47,7 +50,7 @@
 #include "ATLProject_i.h"
 
 #define TYPE_FORMAT_STRING_SIZE   7                                 
-#define PROC_FORMAT_STRING_SIZE   51                                
+#define PROC_FORMAT_STRING_SIZE   49                                
 #define EXPR_FORMAT_STRING_SIZE   1                                 
 #define TRANSMIT_AS_TABLE_SIZE    0            
 #define WIRE_MARSHAL_TABLE_SIZE   0            
@@ -88,9 +91,17 @@ extern const MIDL_STUBLESS_PROXY_INFO ISmpMath_ProxyInfo;
 
 
 
-#if !defined(__RPC_WIN64__)
+#if !defined(__RPC_WIN32__)
 #error  Invalid build platform for this stub.
 #endif
+
+#if !(TARGET_IS_NT50_OR_LATER)
+#error You need Windows 2000 or later to run this stub because it uses these features:
+#error   /robust command line switch.
+#error However, your C/C++ compilation flags indicate you intend to run this app on earlier systems.
+#error This app will fail with the RPC_X_WRONG_STUB_VERSION error.
+#endif
+
 
 static const ATLProject_MIDL_PROC_FORMAT_STRING ATLProject__MIDL_ProcFormatString =
     {
@@ -103,44 +114,43 @@ static const ATLProject_MIDL_PROC_FORMAT_STRING ATLProject__MIDL_ProcFormatStrin
 			0x6c,		/* Old Flags:  object, Oi2 */
 /*  2 */	NdrFcLong( 0x0 ),	/* 0 */
 /*  6 */	NdrFcShort( 0x7 ),	/* 7 */
-/*  8 */	NdrFcShort( 0x28 ),	/* X64 Stack size/offset = 40 */
+/*  8 */	NdrFcShort( 0x1c ),	/* x86 Stack size/offset = 28 */
 /* 10 */	NdrFcShort( 0x20 ),	/* 32 */
 /* 12 */	NdrFcShort( 0x2c ),	/* 44 */
 /* 14 */	0x44,		/* Oi2 Flags:  has return, has ext, */
 			0x4,		/* 4 */
-/* 16 */	0xa,		/* 10 */
+/* 16 */	0x8,		/* 8 */
 			0x1,		/* Ext Flags:  new corr desc, */
 /* 18 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 20 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 22 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 24 */	NdrFcShort( 0x28 ),	/* 40 */
 
 	/* Parameter f */
 
-/* 26 */	NdrFcShort( 0x48 ),	/* Flags:  in, base type, */
-/* 28 */	NdrFcShort( 0x8 ),	/* X64 Stack size/offset = 8 */
-/* 30 */	0xc,		/* FC_DOUBLE */
+/* 24 */	NdrFcShort( 0x48 ),	/* Flags:  in, base type, */
+/* 26 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
+/* 28 */	0xc,		/* FC_DOUBLE */
 			0x0,		/* 0 */
 
 	/* Parameter s */
 
-/* 32 */	NdrFcShort( 0x48 ),	/* Flags:  in, base type, */
-/* 34 */	NdrFcShort( 0x10 ),	/* X64 Stack size/offset = 16 */
-/* 36 */	0xc,		/* FC_DOUBLE */
+/* 30 */	NdrFcShort( 0x48 ),	/* Flags:  in, base type, */
+/* 32 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
+/* 34 */	0xc,		/* FC_DOUBLE */
 			0x0,		/* 0 */
 
 	/* Parameter o */
 
-/* 38 */	NdrFcShort( 0x2150 ),	/* Flags:  out, base type, simple ref, srv alloc size=8 */
-/* 40 */	NdrFcShort( 0x18 ),	/* X64 Stack size/offset = 24 */
-/* 42 */	0xc,		/* FC_DOUBLE */
+/* 36 */	NdrFcShort( 0x2150 ),	/* Flags:  out, base type, simple ref, srv alloc size=8 */
+/* 38 */	NdrFcShort( 0x14 ),	/* x86 Stack size/offset = 20 */
+/* 40 */	0xc,		/* FC_DOUBLE */
 			0x0,		/* 0 */
 
 	/* Return value */
 
-/* 44 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
-/* 46 */	NdrFcShort( 0x20 ),	/* X64 Stack size/offset = 32 */
-/* 48 */	0x8,		/* FC_LONG */
+/* 42 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 44 */	NdrFcShort( 0x18 ),	/* x86 Stack size/offset = 24 */
+/* 46 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
 			0x0
@@ -314,10 +324,11 @@ const ExtendedProxyFileInfo ATLProject_ProxyFileInfo =
     0, /* Filler2 */
     0  /* Filler3 */
 };
+#pragma optimize("", on )
 #if _MSC_VER >= 1200
 #pragma warning(pop)
 #endif
 
 
-#endif /* defined(_M_AMD64)*/
+#endif /* !defined(_M_IA64) && !defined(_M_AMD64) && !defined(_ARM_) */
 
