@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+#include "..\stdafx.h"
 
 //Definition for singly-linked list.
 struct ListNode {

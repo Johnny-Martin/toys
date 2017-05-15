@@ -10,7 +10,7 @@ public:
 	vector<int> twoSum(vector<int>& nums, int target) {
 		unordered_map<int, int> hashMap;
 		vector<int> result;
-		for (int i = 0; i < nums.size(); ++i) {
+		for (unsigned  int i = 0; i < nums.size(); ++i) {
 			if (hashMap.find(target - nums[i]) == hashMap.end()) {
 				hashMap[nums[i]] = i;
 			}else {

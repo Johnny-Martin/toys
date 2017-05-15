@@ -6,6 +6,7 @@
 #include "Solutions\TriSum.h"
 #include "Solutions\AddTwoNumbers.h"
 #include "Solutions\LongestSubString.h"
+#include "Solutions\LongestPalindromic.h"
 
 int main()
 {
@@ -20,6 +21,9 @@ int main()
 
 	LongestSubStringSolution LongestSubStringSolutionTGest;
 	LongestSubStringSolutionTGest.test();
+
+	LongestPalindromeSolution LongestPalindromeSolutionTest;
+	LongestPalindromeSolutionTest.test();
     return 0;
 }
 

@@ -8,9 +8,9 @@ using namespace std;
 class LongestSubStringSolution {
 public:
 	int lengthOfLongestSubstring(string s) {
-		vector<int> bucket(256, -1);
-		int maxLength = 0, startIndex = -1;
-		for (int i = 0; i < s.length(); ++i) {
+		vector<unsigned  int> bucket(256, -1);
+		unsigned  int maxLength = 0, startIndex = -1;
+		for (unsigned  int i = 0; i < s.length(); ++i) {
 			if (bucket[s[i]] > startIndex)
 				startIndex = bucket[s[i]];
 
