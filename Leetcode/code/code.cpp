@@ -5,6 +5,7 @@
 #include "TwoSum.h"
 #include "TriSum.h"
 #include "AddTwoNumbers.h"
+#include "LongestSubString.h"
 
 
 int main()
@@ -16,6 +17,9 @@ int main()
 
 	AddTwoNumsSolution AddTwoNumsSolutionTest;
 	AddTwoNumsSolutionTest.test();
+
+	LongestSubStringSolution LongestSubStringSolutionTGest;
+	LongestSubStringSolutionTGest.test();
     return 0;
 }
 

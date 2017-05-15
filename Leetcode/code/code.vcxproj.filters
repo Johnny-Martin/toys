@@ -33,6 +33,9 @@
     <ClInclude Include="AddTwoNumbers.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="LongestSubString.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
