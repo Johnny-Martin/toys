@@ -19,11 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{914E48BE-A20F-4D61-BE23-D932D5F88DFE}</ProjectGuid>
+    <ProjectGuid>{850D83BB-4C5A-4560-85E4-6356CFE1BF5B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>code</RootNamespace>
+    <RootNamespace>Leetcode</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>LeetCode</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -142,16 +141,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AddTwoNumbers.h" />
-    <ClInclude Include="LongestPalindromicSubstring .h" />
-    <ClInclude Include="LongestSubString.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="TriSum.h" />
-    <ClInclude Include="TwoSum.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="code.cpp" />
+    <ClCompile Include="Leetcode.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

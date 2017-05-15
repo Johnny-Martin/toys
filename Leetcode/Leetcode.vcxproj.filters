@@ -24,27 +24,12 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="TwoSum.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="TriSum.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AddTwoNumbers.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="LongestSubString.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="LongestPalindromicSubstring .h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="code.cpp">
+    <ClCompile Include="Leetcode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
