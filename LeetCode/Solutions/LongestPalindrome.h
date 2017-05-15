@@ -36,7 +36,7 @@ public:
 		string ret = longestPalindrome("bacbbcad");
 		ret = longestPalindrome("cbbd");
 		ret = longestPalindrome("babad");
-		//int ret = IsPalindrome("bacbbcad", 1, 6);
+		
 		cout << ret << endl;
 	}
 };
