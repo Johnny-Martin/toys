@@ -5,7 +5,6 @@
 using namespace std;
 
 class TriSumSolution {
-public:
 	bool Judgement(vector<vector<int>> src, vector<int> tar) {
 		int count = 0;
 		for (unsigned int i = 0; i < src.size(); ++i) {
@@ -29,6 +28,7 @@ public:
 
 		return true;
 	}
+public:
 	vector<vector<int>> threeSum(vector<int>& nums) {
 		vector<vector<int>> result;
 
@@ -50,5 +50,11 @@ public:
 		}
 
 		return result;
+	}
+
+	void test() {
+		vector<int> test = { 0,3,0,1,1,-1,-5,-5,3,-3,-3,0 };
+
+		vector<vector<int>> ret = threeSum(test);
 	}
 };

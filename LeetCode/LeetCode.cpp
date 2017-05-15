@@ -9,10 +9,11 @@
 
 int main()
 {
-	vector<int> test = { 0,3,0,1,1,-1,-5,-5,3,-3,-3,0 };
-	TriSumSolution sul;
+	TwoSumSolution TwoSumSolutionTest;
+	TwoSumSolutionTest.test();
 
-	vector<vector<int>> ret = sul.threeSum(test);
+	TriSumSolution TriSumSolutionTest;
+	TriSumSolutionTest.test();
 
 	AddTwoNumsSolution AddTwoNumsSolutionTest;
 	AddTwoNumsSolutionTest.test();
