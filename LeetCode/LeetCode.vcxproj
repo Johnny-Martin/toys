@@ -142,7 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Solutions\AddTwoNumbers.h" />
-    <ClInclude Include="Solutions\LongestPalindromic.h" />
+    <ClInclude Include="Solutions\LongestPalindrome.h" />
     <ClInclude Include="Solutions\LongestSubString.h" />
     <ClInclude Include="Solutions\TriSum.h" />
     <ClInclude Include="Solutions\TwoSum.h" />

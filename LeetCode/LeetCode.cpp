@@ -6,7 +6,7 @@
 #include "Solutions\TriSum.h"
 #include "Solutions\AddTwoNumbers.h"
 #include "Solutions\LongestSubString.h"
-#include "Solutions\LongestPalindromic.h"
+#include "Solutions\LongestPalindrome.h"
 
 int main()
 {

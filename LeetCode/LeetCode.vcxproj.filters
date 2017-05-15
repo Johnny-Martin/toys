@@ -36,7 +36,7 @@
     <ClInclude Include="Solutions\TwoSum.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Solutions\LongestPalindromic.h">
+    <ClInclude Include="Solutions\LongestPalindrome.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
