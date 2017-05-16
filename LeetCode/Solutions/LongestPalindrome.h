@@ -12,20 +12,24 @@ class LongestPalindromeSolution {
 			if (s[i] != s[sum - i])
 				return 0;
 		}
-		return iEnd - iBegin;
+		return iEnd - iBegin + 1;
 	}
 public:
 	string longestPalindrome(string s) {
 		unsigned int length = 0;
 		unsigned  int iBegin = 0;
 		unsigned  int iEnd = 0;
+
 		for(unsigned  int i=0; i<s.length(); ++i)
-			for (unsigned  int j = i + 1; j < s.length(); ++j) {
+			for (unsigned  int j = s.length() - 1; j > i; --j) {
 				unsigned  int tmp = IsPalindrome(s, i, j);
 				if (tmp > length) {
 					length = tmp;
 					iBegin = i;
 					iEnd = j;
+					break;
+				}else if (tmp > 0) {
+					break;
 				}
 			}
 
@@ -36,7 +40,10 @@ public:
 		string ret = longestPalindrome("bacbbcad");
 		ret = longestPalindrome("cbbd");
 		ret = longestPalindrome("babad");
+		ret = longestPalindrome("a");
+		ret = longestPalindrome("babadada");
 		
+		//longestPalindrome();
 		cout << ret << endl;
 	}
 };
