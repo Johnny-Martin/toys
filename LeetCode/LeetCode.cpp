@@ -7,6 +7,7 @@
 #include "Solutions\AddTwoNumbers.h"
 #include "Solutions\LongestSubString.h"
 #include "Solutions\LongestPalindrome.h"
+#include "Solutions\ReverseInteger.h"
 
 int main()
 {
@@ -24,6 +25,9 @@ int main()
 
 	LongestPalindromeSolution LongestPalindromeSolutionTest;
 	LongestPalindromeSolutionTest.test();
+
+	ReverseIntegerSolution ReverseIntegerSolutionTest;
+	ReverseIntegerSolutionTest.test();
     return 0;
 }
 
