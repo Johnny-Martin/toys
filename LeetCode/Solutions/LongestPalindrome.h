@@ -5,6 +5,8 @@
 #include <iostream>
 using namespace std;
 
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+
 class LongestPalindromeSolution {
 	int IsPalindrome(string s, unsigned  int iBegin, unsigned  int iEnd) {
 		int sum = iBegin + iEnd;
@@ -20,8 +22,8 @@ public:
 		unsigned  int iBegin = 0;
 		unsigned  int iEnd = 0;
 
-		for(unsigned  int i=0; i<s.length(); ++i)
-			for (unsigned  int j = s.length() - 1; j > i; --j) {
+		for(unsigned  int i=0; i<s.length(); ++i){
+			for (unsigned  int j = s.length() - 1; j >= MAX(i, iEnd); --j) {
 				unsigned  int tmp = IsPalindrome(s, i, j);
 				if (tmp > length) {
 					length = tmp;
@@ -32,13 +34,13 @@ public:
 					break;
 				}
 			}
-
+		}
 		return s.substr(iBegin, iEnd - iBegin + 1);
 	}
 
 	void test() {
 		string ret = longestPalindrome("bacbbcad");
-		ret = longestPalindrome("cbbd");
+		ret = longestPalindrome("bb");
 		ret = longestPalindrome("babad");
 		ret = longestPalindrome("a");
 		ret = longestPalindrome("babadada");
