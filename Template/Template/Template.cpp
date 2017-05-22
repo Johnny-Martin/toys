@@ -3,8 +3,9 @@
 
 #include "stdafx.h"
 #include "trait.h"
+#include "static_assert.h"
 #include <iostream>
-using namespace std;
+//using namespace std;
 
 class Special {
 public:
@@ -21,6 +22,9 @@ struct str_a {
 class cls_a {
 	int data;
 };
+
+
+
 int main()
 {
 	/*
@@ -44,11 +48,12 @@ int main()
 
 	/////////////////////////promotion trait////////////////////
 	auto AddRetA = Add(123, 333.4);
-	cout << AddRetA << "    " << typeid(AddRetA).name() << endl;
-	cout << 333.4 << "    " << typeid(333.4).name() << endl;
+	std::cout << AddRetA << "    " << typeid(AddRetA).name() << std::endl;
+	std::cout << 333.4 << "    " << typeid(333.4).name() << std::endl;
 
 	auto AddRetB = Add(123, 'a');
-	cout << AddRetB << "    " << typeid(AddRetB).name() << endl;
+	std::cout << AddRetB << "    " << typeid(AddRetB).name() << std::endl;
 
+	ASSERT(true, EROROROROROR);
 	return 0;
 }
