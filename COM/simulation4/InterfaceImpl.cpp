@@ -93,10 +93,10 @@ ULONG _stdcall CFactory::Releace() {
 }
 
 HRESULT _stdcall CFactory::CreateInstance(const IID& iid, void** ppv) {
-
+	return S_OK;
 }
 HRESULT _stdcall CFactory::LockServer(bool bLock) {
-
+	return S_OK;
 }
 IUnKnown* CreateInstance() {
 	IUnKnown* pRet = static_cast<IDictionary*>(new CDictionary);

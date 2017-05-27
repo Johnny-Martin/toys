@@ -24,30 +24,16 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="InterfaceDecl.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="simulation4.cpp">
+    <ClCompile Include="simulation5.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="GUID.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="InterfaceImpl.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="simulation4.def">
-      <Filter>源文件</Filter>
-    </None>
   </ItemGroup>
 </Project>
