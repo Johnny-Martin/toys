@@ -1,0 +1,5 @@
+LIBRARY "simulation4"
+EXPORTS
+	DllRegisterServer
+	DllUnregisterServer
+	DllGetClassObject

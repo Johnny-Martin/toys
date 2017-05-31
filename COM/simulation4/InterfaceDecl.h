@@ -11,7 +11,7 @@ public:
 
 class IClassFactory : public IUnKnown {
 public:
-	virtual HRESULT _stdcall CreateInstance(const IID& iid, void** ppv) = 0;
+	virtual HRESULT _stdcall CreateInstance(IUnKnown* pUnKnownOuter, const IID& iid, void** ppv) = 0;
 	virtual HRESULT _stdcall LockServer(bool bLock) = 0;
 };
 
@@ -52,7 +52,7 @@ public:
 	virtual HRESULT _stdcall QueryIntertface(const IID& iid, void** ppv);
 	virtual ULONG   _stdcall AddRef();
 	virtual ULONG   _stdcall Releace();
-	virtual HRESULT _stdcall CreateInstance(const IID& iid, void** ppv);
+	virtual HRESULT _stdcall CreateInstance(IUnKnown* pUnKnownOuter, const IID& iid, void** ppv);
 	virtual HRESULT _stdcall LockServer(bool bLock);
 
 	CFactory() :m_cRef(1) {}
@@ -60,11 +60,13 @@ public:
 private:
 	long m_cRef;
 };
-IUnKnown* CreateInstance(void);
+HRESULT CreateInstance(const IID& clsid, IUnKnown* pUnKnownOuter, const IID& iid, void** ppv);
 extern"C" HRESULT __stdcall DllRegisterServer();
-extern"C" HRESULT __stdcall DllUnregisterServer();
+extern"C" HRESULT __stdcall DllUnregisterServer(); 
+extern"C" HRESULT __stdcall DllGetClassObject(const IID& clsid, const IID& iid, void** ppv);
 
-extern const IID IID_IUnknown;
-extern const IID IID_IDictionary;
-extern const IID IID_ISpellCheck; 
-extern const IID IID_IClassFactory;
+//extern const IID IID_IUnknown;
+//extern const IID IID_IDictionary;
+//extern const IID IID_ISpellCheck; 
+//extern const IID IID_IClassFactory; 
+//extern const IID CLSID_DictionaryComponent;

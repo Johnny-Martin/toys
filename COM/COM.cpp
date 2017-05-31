@@ -2,6 +2,8 @@
 //
 #include "stdafx.h"
 #include "InterfaceDecl.h"  
+//#include "simulation4/ComFun.h"  
+//#include "simulation4/GUID.h"  
 
 void TestATLProject(void) {
 	//CoInitialize(NULL);
@@ -144,11 +146,14 @@ void TestSimulation3(void) {
 	}
 }
 
+void TestSimulation4(void) {
+
+}
 int main()
 {
 	//DLLRegisterServer();
 	//TestSimulation2();
-	TestSimulation3();
+	//TestSimulation3();
 	return 0;
 }
 

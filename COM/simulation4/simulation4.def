@@ -1,5 +1,0 @@
-LIBRARY
-EXPORTS
-	CreateInstance
-	DllRegisterServer
-	DllUnregisterServer

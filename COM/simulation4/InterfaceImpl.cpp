@@ -1,11 +1,16 @@
 #include "stdafx.h"
+#include"GUID.h"
 #include"InterfaceDecl.h"
+#include"Utils.h"
 
 static HMODULE g_hMoudle = NULL;
 static long    g_cComponents = 0;
 static long    g_cServerLocks = 0;
 
 
+/****************************************************************
+*					字典组件接口、方法的实现
+*****************************************************************/
 CDictionary::CDictionary():m_ref(0){}
 CDictionary::~CDictionary() {}
 
@@ -61,8 +66,9 @@ bool _stdcall CDictionary::CheckSpell(std::string word) {
 	return true;
 }
 
-
-
+/****************************************************************
+*					类厂接口、方法的实现
+*****************************************************************/
 HRESULT _stdcall CFactory::QueryIntertface(const IID& iid, void** ppv) {
 	if (IID_IUnknown == iid) {
 		*ppv = static_cast<IClassFactory*>(this);
@@ -92,79 +98,48 @@ ULONG _stdcall CFactory::Releace() {
 	return m_cRef;
 }
 
-HRESULT _stdcall CFactory::CreateInstance(const IID& iid, void** ppv) {
+/*第一个参数pUnKnownOuter暂时用不到，聚合时才会用到。
+*CFactory::CreateInstance并不接受clsid参数，也就是
+*CFactory::CreateInstance只能创建一个固定的组件对象
+*/
+HRESULT _stdcall CFactory::CreateInstance(IUnKnown* pUnKnownOuter, const IID& iid, void** ppv) {
+	// Cannot aggregate.
+	if (pUnKnownOuter != NULL)
+	{
+		return CLASS_E_NOAGGREGATION;
+	}
+	CDictionary* pComponent = new CDictionary();
+	if (pComponent == NULL) {
+		return E_OUTOFMEMORY;
+	}
+
+	//类厂CreateInstance方法创建对象，并且请求对象的iid接口指针
+	HRESULT hr = pComponent->QueryIntertface(iid, ppv);
+	pComponent->Releace();
 	return S_OK;
 }
+
 HRESULT _stdcall CFactory::LockServer(bool bLock) {
 	return S_OK;
 }
-IUnKnown* CreateInstance() {
-	IUnKnown* pRet = static_cast<IDictionary*>(new CDictionary);
-	pRet->AddRef();
-	return pRet;
-}
 
 
-LSTATUS SetRegValue(HKEY rootKey, std::wstring wsSubKey, std::wstring wsData) {
-	HKEY key;
-	LSTATUS retValue = RegOpenKeyEx(rootKey, _T(""), 0, KEY_WRITE | KEY_READ, &key);
-	if (retValue != ERROR_SUCCESS) {
-		std::cout << "打开注册表失败" << std::endl;
-		return retValue;
-	}
-
-	//依次创建wsSubKey路径中的子键
-	std::vector<std::wstring> subKeyVec;
-	int newPos = 0;
-	int oldPos = 0;
-	while (true) {
-		newPos = wsSubKey.find(_T("\\"), oldPos);
-		if (newPos != std::string::npos) {
-			subKeyVec.push_back(wsSubKey.substr(oldPos, newPos - oldPos));
-			oldPos = newPos + 1;
-		}
-		else {
-			break;
-		}
-	}
-	if (subKeyVec.size() == 0) {
-		return ERROR_INVALID_FUNCTION;
-	}
-
-	HKEY fatherKey = key;
-	HKEY subKey = 0;
-	for (size_t i = 0; i < subKeyVec.size(); ++i) {
-		DWORD dw;
-		RegCreateKeyEx(fatherKey,
-			subKeyVec[i].c_str(),
-			NULL,
-			NULL,
-			REG_OPTION_NON_VOLATILE,
-			KEY_WRITE | KEY_READ, NULL,
-			&subKey,
-			&dw);
-		RegCloseKey(fatherKey);
-		fatherKey = subKey;
-	}
-
-	retValue = RegSetValue(subKey, _T(""), REG_SZ, wsData.c_str(), wsData.length());
-	RegCloseKey(subKey);
-
-	return retValue;
-}
+/****************************************************************
+*					导出到DLL的方法的实现
+*****************************************************************/
 HRESULT __stdcall DllRegisterServer() {
 	/*HKEY_CLASSES_ROOT
 	|--CLSID
-	|--{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}--SimulationComObject
-	|--InprocServer32    --C:\XXX\SSS\simulation3.dll
-	|--ProgID            --COM.Simulation.1
+		|--{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}--SimulationComObject
+			|--InprocServer32    --C:\XXX\SSS\simulation3.dll
+			|--ProgID            --COM.Simulation.1
 	...
 	|--COM.Simulation
 	|--CLSID--{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}
 	|--CurVer--COM.Simulation.1
 
 	*/
-
+	//使用字典组件的clsid（CLSID_DictionaryComponent）注册到系统中
 	//static const GUID ComponentCLSID = { 0x354cd5c5, 0x839b, 0x4a1e,{ 0x80, 0x33, 0xe, 0xbc, 0x52, 0x46, 0xa4, 0xef } };
 	wchar_t wszCLSID[] = _T("{354CD5C5-839B-4A1E-8033-0EBC5246A4EF}");
 
@@ -198,3 +173,21 @@ HRESULT __stdcall DllUnregisterServer() {
 	return S_OK;
 }
 
+HRESULT __stdcall DllGetClassObject(const IID& clsid, const IID& iid, void** ppv) {
+	if (clsid == CLSID_DictionaryComponent) {
+		CFactory* pFactory = new CFactory();
+		if (pFactory == NULL) {
+			return E_OUTOFMEMORY;
+		}
+		//将类厂的指针返回给CoGetClassObject（本文中是MyCoGetClassObject）
+		HRESULT hr = pFactory->QueryIntertface(iid, ppv);
+		pFactory->Releace();
+
+		return hr;
+	}
+	else//DLL内可以有多个组件，可以根据clsid判断想要的组件是否
+	{   //在本dll内，本例中DLL内只实现了一个组件以及对应的一个类厂
+		return CLASS_E_CLASSNOTAVAILABLE;
+	}
+	return S_OK;
+}
