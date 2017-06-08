@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CAA79180-5926-43A4-99EC-84AE5FDAC1CE}</ProjectGuid>
+    <ProjectGuid>{A5010A7D-303E-4089-AF6A-0A4B08BE246A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>simulation5</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
