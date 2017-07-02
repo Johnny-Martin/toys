@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "trait.h"
 #include "static_assert.h"
+#include "finalclass.h"
 #include <iostream>
 //using namespace std;
 
@@ -45,6 +46,9 @@ int main()
 	cout << IsClassType<cls_a>::YES << endl;
 	cout << IsClassType<int>::YES << endl;
 	*/
+
+	///////////////////////////final class//////////////////////
+	TestFinal test;
 
 	/////////////////////////promotion trait////////////////////
 	auto AddRetA = Add(123, 333.4);
