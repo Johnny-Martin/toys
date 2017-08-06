@@ -6,6 +6,7 @@
 #include "static_assert.h"
 #include "finalclass.h"
 #include <iostream>
+#include <functional>
 //using namespace std;
 
 class Special {
@@ -24,7 +25,16 @@ class cls_a {
 	int data;
 };
 
+std::function<void(void)> cbk;
 
+void TestLambdaCapture(int a, int b)
+{
+	auto callback = [a, b]() {
+		std::cout << "a: " << a << " b: " << b << std::endl;
+	}
+
+
+}
 
 int main()
 {
