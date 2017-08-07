@@ -148,12 +148,14 @@
     <ClInclude Include="AtomCout.h" />
     <ClInclude Include="DeadLock.h" />
     <ClInclude Include="define.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="Producer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="define.cpp" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="MultiThread.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

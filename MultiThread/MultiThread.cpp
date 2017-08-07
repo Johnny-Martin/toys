@@ -8,6 +8,7 @@
 #include "Producer.h"
 #include "DeadLock.h"
 #include "AtomCout.h"
+#include "Log.h"
 
 using namespace std;
 
@@ -42,6 +43,7 @@ int main(){
 		hArr[i]   = CreateThread(NULL, 0, Customer, 0, 0, &idC);
 	}
 
+	//Sleep(1000*50);
 	WaitForMultipleObjects(6, hArr, true, INFINITE);
     return 0;
 }
@@ -49,6 +51,7 @@ int main(){
 DWORD WINAPI SwaperA(LPVOID) {
 	while (true) {
 		SwapResDataEx(a, b);
+		INFO("SwaperA a: {}, b: {}", a.data, b.data);
 		Sleep(1000);
 	}
 	return 0;
@@ -56,6 +59,7 @@ DWORD WINAPI SwaperA(LPVOID) {
 DWORD WINAPI SwaperB(LPVOID) {
 	while (true) {
 		SwapResDataEx(b, a);
+		INFO("SwaperA a: {}, b: {}", a.data, b.data);
 		Sleep(1000);
 	}
 	return 0;

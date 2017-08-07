@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include"define.h"
+#include "Log.h"
 
 extern AtomCout atomcout;
 extern CSLocker::CriticalSection g_cs;
@@ -16,6 +17,7 @@ DWORD WINAPI Producer(LPVOID) {
 		WaitForSingleObject(hEmpty, INFINITE);
 		WaitForSingleObject(hMutex, INFINITE);
 		atomcout.out("生产一次, ", ++iRes,"\n");
+		INFO("Producer a:, b: ");
 		ReleaseMutex(hMutex);
 		ReleaseSemaphore(hFull, 1, NULL);
 	}
@@ -28,6 +30,7 @@ DWORD WINAPI Customer(LPVOID) {
 		WaitForSingleObject(hFull, INFINITE);
 		WaitForSingleObject(hMutex, INFINITE);
 		atomcout.out( "消费一次, ", --iRes, "\n");
+		INFO("Customer a:, b: ");
 		ReleaseMutex(hMutex);
 		ReleaseSemaphore(hEmpty, 1, NULL);
 	}
