@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "Test.h"
-
+#include <map>
 
 int main()
 {
@@ -25,7 +25,15 @@ int main()
 	//(*spName)[0] = '4';
 	cout << *spName << endl;
 
+	int a = 10;
+	map<string, string> testMap;
+	testMap.insert(pair<string, string>("A", "AAA"));
 
+	string pA = testMap["A"];
+	pA = testMap["B"];
+
+	if (testMap.end() != testMap.find("B"))
+		cout << "what the fuck";
     return 0;
 }
 
