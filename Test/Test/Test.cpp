@@ -154,9 +154,33 @@ int main()
 		cout << "match failed" << endl;
 	}
 
-	regex pattern2("([0-9heigtwd\\+\\-\\*/#]+).([0-9heigtwd\\+\\-\\*/#]+)");
-	string str = "height+-*/#.width";
+	regex pattern2("([0-9heigtwd\\+\\-\\*\\(\\)/#]+).([0-9heigtwd\\+\\-\\*/#]+)");
+	string str = "(#height-100)/2.width";
 	if (regex_match(str, pattern2)) {
+		cout << "match success" << endl;
+	}
+
+
+	string sExp = "[0-9\\+\\-\\*\\(\\)/]*";
+	string sCmd = "((#mid)*(#height)*(#width)*)*";
+	regex patternAll("(" + sExp + sCmd + sExp + ")*");
+	regex pattern3("([0-9\\+\\-\\*\\(\\)/]*((#mid)*(#height)*(#width)*)*)"); //(".*#hello.*");//
+	string str3 = "10+#heigh";// (#height - 100) / 2.width";
+
+	auto ret1 = regex_match("#mid", patternAll);
+	auto ret2 = regex_match("#height", patternAll);
+	auto ret3 = regex_match("#width", patternAll);
+	auto ret4 = regex_match("#width+1", patternAll);
+	auto ret5 = regex_match("2-#mid", patternAll);
+	auto ret6 = regex_match("10+#height-9", patternAll);
+	auto ret7 = regex_match("(#height-#width)/2", patternAll);
+	auto ret8 = regex_match("(#height-#width)/2-#mid", patternAll);
+	auto ret9 = regex_match("10+#heght-9", patternAll);
+	auto ret10 = regex_match("#mqd", patternAll);
+	auto ret11 = regex_match("(#height-#widwth)/2-#mid", patternAll);
+	auto ret12 = regex_match("5+(#height-#width)/2-#mid", patternAll);
+
+	if (regex_match(str3, pattern3)) {
 		cout << "match success" << endl;
 	}
 	UIBase base;
