@@ -127,6 +127,9 @@ int main()
 
 */
 
+#define SSEXP "[0-9\\+\\-\\*\\(\\)/]*"
+#define SSCMD "((#mid)*(#height)*(#width)*)*"
+
 int main()
 {
 	auto eraseSpace = [](string& str) {
@@ -137,7 +140,7 @@ int main()
 			}
 		}
 	};
-	regex pattern("([0-9heigtwdm\\+\\-\\*/#]+),([0-9heigtwdm\\+\\-\\*/#]+),([0-9heigtwdm\\+\\-\\*/#]+),([0-9heigtwdm\\+\\-\\*/#]+)");
+	regex pattern("(([0-9heigtwdm\\+\\-\\*/#]*),([0-9heigtwdm\\+\\-\\*/#]*),([0-9heigtwdm\\+\\-\\*/#]*),([0-9heigtwdm\\+\\-\\*/#]*))*");
 	string pos = "#mid, #height/2 - 50, 200, 100";
 	
 	eraseSpace(pos);
@@ -154,6 +157,17 @@ int main()
 		cout << "match failed" << endl;
 	}
 
+	auto posRet1 = regex_match(",,,", pattern);
+	auto posRet2 = regex_match(",2,3,#mid", pattern);
+	auto posRet3 = regex_match("1,,3,#mid", pattern);
+	auto posRet4 = regex_match("2,3,#mid", pattern);
+	auto posRet5 = regex_match("#height/2-50,,,", pattern);
+	auto posRet6 = regex_match("#height/2-50,#height/2-50,#height/2-50,#height/2-50", pattern);
+	auto posRet7 = regex_match("1,,3,#mkd", pattern);
+	auto posRet8 = regex_match("1,,3,#mId", pattern);
+	auto posRet9 = regex_match(",,", pattern);
+	auto posRet10 = regex_match("", pattern);
+
 	regex pattern2("([0-9heigtwd\\+\\-\\*\\(\\)/#]+).([0-9heigtwd\\+\\-\\*/#]+)");
 	string str = "(#height-100)/2.width";
 	if (regex_match(str, pattern2)) {
@@ -163,7 +177,8 @@ int main()
 
 	string sExp = "[0-9\\+\\-\\*\\(\\)/]*";
 	string sCmd = "((#mid)*(#height)*(#width)*)*";
-	regex patternAll("(" + sExp + sCmd + sExp + ")*");
+	//regex patternAll("(" + sExp + sCmd + sExp + ")*");
+	regex patternAll("(" SSEXP SSCMD SSEXP ")*");
 	regex pattern3("([0-9\\+\\-\\*\\(\\)/]*((#mid)*(#height)*(#width)*)*)"); //(".*#hello.*");//
 	string str3 = "10+#heigh";// (#height - 100) / 2.width";
 
