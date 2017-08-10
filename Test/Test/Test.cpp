@@ -127,7 +127,7 @@ int main()
 
 */
 
-#define SSEXP "[0-9\\+\\-\\*\\(\\)/]*"
+#define SSEXP "[0-9\\+\\-\\*\\(\\)/\\\s*]*"
 #define SSCMD "((#mid)*(#height)*(#width)*)*"
 
 int main()
@@ -135,21 +135,58 @@ int main()
 	auto eraseSpace = [](string& str) {
 		for (string::iterator it = str.end(); it != str.begin();) {
 			--it;
-			if (iswspace(*it)) {
+			if ((*it) == ' ' || (*it) == '\t') {
 				str.erase(it);
 			}
 		}
 	};
-	regex pattern("(([0-9heigtwdm\\+\\-\\*/#]*),([0-9heigtwdm\\+\\-\\*/#]*),([0-9heigtwdm\\+\\-\\*/#]*),([0-9heigtwdm\\+\\-\\*/#]*))*");
-	string pos = "#mid, #height/2 - 50, 200, 100";
+
+	// ([^=>]*)
+	//(((\\s*(=>)*\\s*)*))*
+	// ((\\s*(=>)*\\s*)*)*  
+	//((\\s*(=>)*\\s*)*)([^=>]*)
+	regex funcPattern("([^=>]*)(=>)*([^=>]*)");
+	auto funcRet1 = regex_match(".\\³ÌÐò File\\test.lua=>OnWindowCreate", funcPattern);
+	string file   = regex_replace(".\\Program File\\test.lua=>OnWindowCreate", funcPattern, string("$1"));
+	string fname  = regex_replace(".\\Program File\\test.lua=>OnWindowCreate", funcPattern, string("$3"));
+
+	auto funcRet2 = regex_match(" .\\Program File\\test.lua =>	OnWindowCreate", funcPattern);
+	file		  = regex_replace(" .\\Program File\\test.lua =>	OnWindowCreate", funcPattern, string("$1"));
+	fname		  = regex_replace(" .\\Program File\\test.lua =>	OnWindowCreate		", funcPattern, string("$3"));
+
+	auto funcRet3 = regex_match("OnWindowCreate", funcPattern);
+	auto funcRet4 = regex_match("InputBox.bkg", funcPattern);
+	auto funcRet5 = regex_match("", funcPattern);
+
+	regex boolPattern("[01]");
+	auto boolRet1 = regex_match("0", boolPattern);
+	auto boolRet2 = regex_match("1", boolPattern);
+	auto boolRet3 = regex_match(" ", boolPattern);
+	auto boolRet4 = regex_match("", boolPattern);
+	auto boolRet5 = regex_match("01", boolPattern);
+	auto boolRet6 = regex_match("5", boolPattern);
+
+	regex intPattern("[0-9]+");
+	auto intRet1 = regex_match("0", intPattern);
+	auto intRet2 = regex_match("6", intPattern);
+	auto intRet3 = regex_match("255", intPattern);
+	auto intRet4 = regex_match("0.9", intPattern);
+	auto intRet5 = regex_match("", intPattern);
+	auto intRet6 = regex_match(" ", intPattern);
+
+
+	string sPattern = "(([0-9heigtwdm\\+\\-\\*/#\\\s*]*),([0-9heigtwdm\\+\\-\\*/#\\\s*]*),([0-9heigtwdm\\+\\-\\*/#\\\s*]*),([0-9heigtwdm\\+\\-\\*/#\\\s*]*))*";
+	regex pattern(sPattern.c_str());
+	string pos = "	, #height / 2 - 50, 200,	100		";
 	
-	eraseSpace(pos);
+	//pos = "";
+	//eraseSpace(pos);
 	if (regex_match(pos, pattern)) {
 		cout << "match success" << endl;
-		string left	  = regex_replace(pos, pattern, string("$1"));
-		string top	  = regex_replace(pos, pattern, string("$2"));
-		string width  = regex_replace(pos, pattern, string("$3"));
-		string height = regex_replace(pos, pattern, string("$4"));
+		string left	  = regex_replace(pos, pattern, string("$2"));
+		string top	  = regex_replace(pos, pattern, string("$3"));
+		string width  = regex_replace(pos, pattern, string("$4"));
+		string height = regex_replace(pos, pattern, string("$5"));
 
 		cout << "left: " << left<< " top: " << top << " width: " << width << " height: " << height << endl;
 
@@ -175,22 +212,22 @@ int main()
 	}
 
 
-	string sExp = "[0-9\\+\\-\\*\\(\\)/]*";
+	string sExp = "[0-9\\+\\-\\*\\(\\)/\\\s*]*";
 	string sCmd = "((#mid)*(#height)*(#width)*)*";
 	//regex patternAll("(" + sExp + sCmd + sExp + ")*");
 	regex patternAll("(" SSEXP SSCMD SSEXP ")*");
 	regex pattern3("([0-9\\+\\-\\*\\(\\)/]*((#mid)*(#height)*(#width)*)*)"); //(".*#hello.*");//
 	string str3 = "10+#heigh";// (#height - 100) / 2.width";
 
-	auto ret1 = regex_match("#mid", patternAll);
-	auto ret2 = regex_match("#height", patternAll);
-	auto ret3 = regex_match("#width", patternAll);
+	auto ret1 = regex_match(" #mid", patternAll);
+	auto ret2 = regex_match("#height ", patternAll);
+	auto ret3 = regex_match(" #width ", patternAll);
 	auto ret4 = regex_match("#width+1", patternAll);
 	auto ret5 = regex_match("2-#mid", patternAll);
 	auto ret6 = regex_match("10+#height-9", patternAll);
-	auto ret7 = regex_match("(#height-#width)/2", patternAll);
-	auto ret8 = regex_match("(#height-#width)/2-#mid", patternAll);
-	auto ret9 = regex_match("10+#heght-9", patternAll);
+	auto ret7 = regex_match("(#height-#width) / 2", patternAll);
+	auto ret8 = regex_match("(#height-#width) / 2 -#mid", patternAll);
+	auto ret9 = regex_match("10+ #heght-9", patternAll);
 	auto ret10 = regex_match("#mqd", patternAll);
 	auto ret11 = regex_match("(#height-#widwth)/2-#mid", patternAll);
 	auto ret12 = regex_match("5+(#height-#width)/2-#mid", patternAll);
