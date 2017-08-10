@@ -155,6 +155,9 @@ int main()
 	fname		  = regex_replace(" .\\Program File\\test.lua =>	OnWindowCreate		", funcPattern, string("$3"));
 
 	auto funcRet3 = regex_match("OnWindowCreate", funcPattern);
+	file = regex_replace("OnWindowCreate", funcPattern, string("$1"));
+	fname = regex_replace("OnWindowCreate", funcPattern, string("$3"));
+
 	auto funcRet4 = regex_match("InputBox.bkg", funcPattern);
 	auto funcRet5 = regex_match("", funcPattern);
 
