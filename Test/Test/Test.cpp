@@ -6,6 +6,7 @@
 #include <map>
 #include<cctype>
 #include<iostream>
+#include <sstream>
 #include<map>
 #include<string>
 #include <regex> 
@@ -140,6 +141,17 @@ int main()
 			}
 		}
 	};
+
+	auto I2Str = [](auto param)->string {
+		stringstream strStream;
+		string ret;
+		strStream << param;
+		strStream >> ret;
+		return ret;
+	};
+
+	string strParentWidth = I2Str(unsigned int(155));
+	string strParentHeight = I2Str(unsigned int(693355));
 
 	//去掉路径、函数名两端的空白符
 	auto EraseEndsSpace = [](string& str) {
