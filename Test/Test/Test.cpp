@@ -141,22 +141,50 @@ int main()
 		}
 	};
 
+	//去掉路径、函数名两端的空白符
+	auto EraseEndsSpace = [](string& str) {
+		//去掉头部空白符
+		for (string::iterator it = str.begin(); it != str.end(); ) {
+			if ((*it) == ' ' || (*it) == '\t' || (*it) == '\n' || (*it) == '\r') {
+				str.erase(it);
+				it = str.begin();
+				continue;
+			}
+			break;
+		}
+		//去掉尾部空白符
+		for (string::iterator it = str.end(); it != str.begin();) {
+			--it;
+			if ((*it) == ' ' || (*it) == '\t' || (*it) == '\n' || (*it) == '\r') {
+				str.erase(it);
+				it = str.end();
+				continue;
+			}
+			break;
+		}
+	};
+
 	// ([^=>]*)
 	//(((\\s*(=>)*\\s*)*))*
 	// ((\\s*(=>)*\\s*)*)*  
 	//((\\s*(=>)*\\s*)*)([^=>]*)
-	regex funcPattern("([^=>]*)(=>)*([^=>]*)");
+	regex funcPattern("([^=>]*)(=>)?([^=>\.]*)");
 	auto funcRet1 = regex_match(".\\程序 File\\test.lua=>OnWindowCreate", funcPattern);
 	string file   = regex_replace(".\\Program File\\test.lua=>OnWindowCreate", funcPattern, string("$1"));
 	string fname  = regex_replace(".\\Program File\\test.lua=>OnWindowCreate", funcPattern, string("$3"));
 
 	auto funcRet2 = regex_match(" .\\Program File\\test.lua =>	OnWindowCreate", funcPattern);
-	file		  = regex_replace(" .\\Program File\\test.lua =>	OnWindowCreate", funcPattern, string("$1"));
-	fname		  = regex_replace(" .\\Program File\\test.lua =>	OnWindowCreate		", funcPattern, string("$3"));
+	file		  = regex_replace("  .\\Program File\\test.lua  =>	OnWindowCreate", funcPattern, string("$1"));
+	fname		  = regex_replace("  .\\Program File\\test.lua  =>	OnWindowCreate		", funcPattern, string("$3"));
+	EraseEndsSpace(file);
+	EraseEndsSpace(fname);
 
 	auto funcRet3 = regex_match("OnWindowCreate", funcPattern);
 	file = regex_replace("OnWindowCreate", funcPattern, string("$1"));
 	fname = regex_replace("OnWindowCreate", funcPattern, string("$3"));
+
+	file = regex_replace(".\\Program File\\test.lua", funcPattern, string("$1"));
+	fname = regex_replace(".\\Program File\\test.lua", funcPattern, string("$3"));
 
 	auto funcRet4 = regex_match("InputBox.bkg", funcPattern);
 	auto funcRet5 = regex_match("", funcPattern);
