@@ -163,11 +163,13 @@ int main()
 			break;
 		}
 	};
+	regex midPattern("#mid");
+	string width  = "#width/2";
+	string height = "#height/2";
+	string midExp = "((#width) - (" + width + "))/2";
 
-	// ([^=>]*)
-	//(((\\s*(=>)*\\s*)*))*
-	// ((\\s*(=>)*\\s*)*)*  
-	//((\\s*(=>)*\\s*)*)([^=>]*)
+	auto  strRet = regex_replace("5-#mid+#mid2", midPattern, "qq");
+
 	regex funcPattern("([^=>]*)(=>)?([^=>\.]*)");
 	auto funcRet1 = regex_match(".\\³ÌÐò File\\test.lua=>OnWindowCreate", funcPattern);
 	string file   = regex_replace(".\\Program File\\test.lua=>OnWindowCreate", funcPattern, string("$1"));
