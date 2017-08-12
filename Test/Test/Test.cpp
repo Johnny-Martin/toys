@@ -8,6 +8,7 @@
 #include<iostream>
 #include <sstream>
 #include<map>
+#include<stack>
 #include<string>
 #include <regex> 
 
@@ -131,8 +132,109 @@ int main()
 #define SSEXP "[0-9\\+\\-\\*\\(\\)/\\\s*]*"
 #define SSCMD "((#mid)*(#height)*(#width)*)*"
 
+//仅支持+-/*()六种操作符,sExp中除了数字之外就是六种操作符，不再有其他字符
+//不支持负数(可以用0-正数代替)，不支持小数(可以用分数表示)。
+double TestCalcExp(const string& sExp)
+{
+	if (sExp.empty()) return 0.0;
+	stack<double> outputStack;
+	stack<char> operatorStack;
+	
+	auto IsNumber = [](const char& test) { return test >= '0' && test <= '9'; };
+
+	auto PushToOutputStack = [&IsNumber, &outputStack](const string& originalExp, string::size_type begin) {
+		string::size_type end = begin;
+		while (end < originalExp.size() && IsNumber(originalExp[end])) { ++end; };
+		--end;
+		string strOperand = originalExp.substr(begin, end - begin + 1);
+		_ASSERT(!strOperand.empty());
+		int iOperand = atoi(strOperand.c_str());
+		outputStack.push(iOperand);
+		//返回当前操作数的末尾在串中的位置
+		return end;
+	};
+	
+	auto CalcOutputStack = [&outputStack](const char& op) {
+		if (outputStack.size() < 2) {
+			//ERR("CalcOutputStack error: outputStack size: error.");
+			return false;
+		}
+		int rightOp = outputStack.top();
+		outputStack.pop();
+		int leftOp = outputStack.top();
+		outputStack.pop();
+		switch (op){
+			case '+':
+				outputStack.push(leftOp + rightOp);
+				break;
+			case '-':
+				outputStack.push(leftOp - rightOp);
+				break;
+			case '*':
+				outputStack.push(leftOp * rightOp);
+				break;
+			case '/':
+				//除0异常由外层捕获
+				outputStack.push(leftOp / rightOp);
+				break;
+		//default:
+			//ERR("CalcOutputStack error: unsupported operator: {}", op);
+			//return false;
+		}
+		return true;
+	};
+
+	for (string::size_type i = 0; i < sExp.size(); ++i) {
+		//遇到操作数了，压入操作数栈
+		if (IsNumber(sExp[i])) {
+			i = PushToOutputStack(sExp, i);
+			continue;
+		}
+		char curOperator = sExp[i];
+		//如果是*/号，只要下一个字符是数字，就可以计算自己。否则入栈
+		if (curOperator == '*' || curOperator == '/') {
+			if (IsNumber(sExp[i + 1])) {
+				//将下一个操作数找出、入栈，然后计算
+				i = PushToOutputStack(sExp, i + 1);
+				CalcOutputStack(curOperator);
+				continue;
+			}
+			operatorStack.push(curOperator);
+		}else if (curOperator == '+' || curOperator == '-') {
+			//如果是+-号，只要栈顶不空、不是'(', 则先计算栈顶符号，再将自己入栈
+			if (operatorStack.empty() || operatorStack.top() == '(') {
+				operatorStack.push(curOperator);
+				continue;
+			}
+			CalcOutputStack(operatorStack.top());
+			operatorStack.pop();
+			operatorStack.push(curOperator);
+		}else if (curOperator == '(') {
+			//左括号,直接入栈
+			operatorStack.push(sExp[i]);
+		}else if (curOperator == ')') {
+			//边处理边计算，则符号栈中的()之间一定只有一个操作符
+			CalcOutputStack(operatorStack.top());
+			operatorStack.pop();
+			_ASSERT(operatorStack.top() == '(');
+			operatorStack.pop();
+		}
+	}
+	if (!operatorStack.empty()) {
+		cout << "operatorStack size: " << operatorStack.size() << endl;
+		CalcOutputStack(operatorStack.top());
+		operatorStack.pop();
+	}
+	return outputStack.top();
+}
 int main()
 {
+	auto retDouble1 = TestCalcExp("19-4*2");
+	auto retDouble2 = TestCalcExp("19-4*2+21");
+	auto retDouble3 = TestCalcExp("(19-4)*2+21");
+	auto retDouble4 = TestCalcExp("100");
+	auto retDouble5 = TestCalcExp("");
+
 	auto eraseSpace = [](string& str) {
 		for (string::iterator it = str.end(); it != str.begin();) {
 			--it;
