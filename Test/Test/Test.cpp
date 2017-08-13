@@ -225,16 +225,32 @@ double TestCalcExp(const string& sExp)
 		CalcOutputStack(operatorStack.top());
 		operatorStack.pop();
 	}
+	auto rettt = round(2.3);
 	return outputStack.top();
 }
+
 int main()
 {
-	auto retDouble1 = TestCalcExp("19-4*2");
-	auto retDouble2 = TestCalcExp("19-4*2+21");
-	auto retDouble3 = TestCalcExp("(19-4)*2+21");
-	auto retDouble4 = TestCalcExp("100");
-	auto retDouble5 = TestCalcExp("");
-
+	try {
+		auto retDouble1 = TestCalcExp("19-4*2");
+		auto retDouble2 = TestCalcExp("19-4*2+21");
+		auto retDouble3 = TestCalcExp("(19-4)*2+21");
+		auto retDouble4 = TestCalcExp("100");
+		auto retDouble5 = TestCalcExp("");
+	}
+	catch (...) {
+		cout << "catch exception" << endl;
+	}
+	try {
+		stack<int> testMap;
+		testMap.top();
+	}
+	catch (exception e) {
+		cout << "catch exception" << endl;
+	}
+	catch(...){
+		cout << "catch exception" << endl;
+	}
 	auto eraseSpace = [](string& str) {
 		for (string::iterator it = str.end(); it != str.begin();) {
 			--it;
