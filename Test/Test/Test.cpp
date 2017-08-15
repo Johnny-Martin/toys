@@ -153,16 +153,25 @@ double TestCalcExp(const string& sExp)
 		//返回当前操作数的末尾在串中的位置
 		return end;
 	};
+	auto StackSafeTop = [](auto& paramStack) {
+		if (paramStack.empty()) throw false;
+		return paramStack.top();
+	};
+
+	auto StackSafePop = [](auto& paramStack) {
+		if (paramStack.empty()) throw false;
+		paramStack.pop();
+	};
 	
-	auto CalcOutputStack = [&outputStack](const char& op) {
+	auto CalcOutputStack = [&](const char& op) {
 		if (outputStack.size() < 2) {
 			//ERR("CalcOutputStack error: outputStack size: error.");
-			return false;
+			throw false;
 		}
-		int rightOp = outputStack.top();
-		outputStack.pop();
-		int leftOp = outputStack.top();
-		outputStack.pop();
+		int rightOp = StackSafeTop(outputStack);
+		StackSafePop(outputStack);
+		int leftOp = StackSafeTop(outputStack);
+		StackSafePop(outputStack);
 		switch (op){
 			case '+':
 				outputStack.push(leftOp + rightOp);
@@ -177,9 +186,9 @@ double TestCalcExp(const string& sExp)
 				//除0异常由外层捕获
 				outputStack.push(leftOp / rightOp);
 				break;
-		//default:
+		//default:8
 			//ERR("CalcOutputStack error: unsupported operator: {}", op);
-			//return false;
+			//throw false;
 		}
 		return true;
 	};
@@ -202,31 +211,32 @@ double TestCalcExp(const string& sExp)
 			operatorStack.push(curOperator);
 		}else if (curOperator == '+' || curOperator == '-') {
 			//如果是+-号，只要栈顶不空、不是'(', 则先计算栈顶符号，再将自己入栈
-			if (operatorStack.empty() || operatorStack.top() == '(') {
+			if (operatorStack.empty() || StackSafeTop(operatorStack) == '(') {
 				operatorStack.push(curOperator);
 				continue;
 			}
-			CalcOutputStack(operatorStack.top());
-			operatorStack.pop();
+			CalcOutputStack(StackSafeTop(operatorStack));
+			StackSafePop(operatorStack);
 			operatorStack.push(curOperator);
 		}else if (curOperator == '(') {
 			//左括号,直接入栈
 			operatorStack.push(sExp[i]);
 		}else if (curOperator == ')') {
 			//边处理边计算，则符号栈中的()之间一定只有一个操作符
-			CalcOutputStack(operatorStack.top());
-			operatorStack.pop();
-			_ASSERT(operatorStack.top() == '(');
-			operatorStack.pop();
+			CalcOutputStack(StackSafeTop(operatorStack));
+			StackSafePop(operatorStack);
+			_ASSERT(StackSafeTop(operatorStack) == '(');
+			StackSafePop(operatorStack);
 		}
 	}
 	if (!operatorStack.empty()) {
 		cout << "operatorStack size: " << operatorStack.size() << endl;
-		CalcOutputStack(operatorStack.top());
-		operatorStack.pop();
+		CalcOutputStack(StackSafeTop(operatorStack));
+		StackSafePop(operatorStack);
 	}
-	auto rettt = round(2.3);
-	return outputStack.top();
+	
+
+	return StackSafeTop(outputStack);
 }
 
 int main()
@@ -234,7 +244,7 @@ int main()
 	try {
 		auto retDouble1 = TestCalcExp("19-4*2");
 		auto retDouble2 = TestCalcExp("19-4*2+21");
-		auto retDouble3 = TestCalcExp("(19-4)*2+21");
+		auto retDouble3 = TestCalcExp("(19-4)))*2+21");
 		auto retDouble4 = TestCalcExp("100");
 		auto retDouble5 = TestCalcExp("");
 	}
@@ -242,15 +252,14 @@ int main()
 		cout << "catch exception" << endl;
 	}
 	try {
-		stack<int> testMap;
-		testMap.top();
+		int* pInt;
+		pInt = (int*)0x00001234;
+		*pInt = 6;
 	}
-	catch (exception e) {
+	catch (...) {
 		cout << "catch exception" << endl;
 	}
-	catch(...){
-		cout << "catch exception" << endl;
-	}
+
 	auto eraseSpace = [](string& str) {
 		for (string::iterator it = str.end(); it != str.begin();) {
 			--it;
