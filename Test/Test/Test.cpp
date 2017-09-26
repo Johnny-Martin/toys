@@ -238,9 +238,66 @@ double TestCalcExp(const string& sExp)
 
 	return StackSafeTop(outputStack);
 }
+class UIObject
+{
+public:
+	UIObject(int z):m_z(z){}
+public:
+	int GetAttrValue(const string& sname) {
+		return m_z;
+	}
+private:
+	int m_z;
+};
+
+typedef  pair<string, UIObject*> PAIR;
+class CmpByZorder {
+public:
+	bool operator()(const PAIR& k1, const PAIR& k2) {
+		return k1.second->GetAttrValue("") < k2.second->GetAttrValue("");
+	}
+};
+void TestMapSort()
+{
+	map<string, UIObject*> childrenMap;
+	childrenMap["111"] = new UIObject(1);
+	childrenMap["11"] = new UIObject(5);
+	childrenMap["22"] = new UIObject(6);
+	childrenMap["33"] = new UIObject(9);
+	childrenMap["44"] = new UIObject(11);
+
+	string a = "21";
+	string b = "100";
+	cout << (a > b) << endl;
+	vector<PAIR> childrenVec(childrenMap.begin(), childrenMap.end());
+	sort(childrenVec.begin(), childrenVec.end(), CmpByZorder());
+	cout << "排序后:" << endl;
+	for (int i = 0; i != childrenVec.size(); ++i) {
+		//可在此对按value排完序之后进行操作  
+		cout<< childrenVec[i].first <<"         "<< childrenVec[i].second->GetAttrValue("") << endl;
+	}
+}
 
 int main()
 {
+	TestMapSort();
+		regex colorPattern("([0-9a-fA-F]*)");
+		//bool colorRet1 = regex_match("AAFF00", colorPattern);
+		//string value1 = regex_replace("AAFF00", colorPattern, string("$0"));
+
+		//bool colorRet2 = regex_match("AAFF00FF", colorPattern);
+		//string value2 = regex_replace("AAFF00FF", colorPattern, string("$0"));
+
+		//bool colorRet3 = regex_match("AAff00F", colorPattern);
+		//string value3 = regex_replace("AAff00F", colorPattern, string("$0"));
+
+		//bool colorRet4 = regex_match("AAFF00FX", colorPattern);
+		//string value4 = regex_replace("AAFF00FX", colorPattern, string("$0"));
+	try {
+	}
+	catch (...) {
+		cout << "catch exception" << endl;
+	}
 	try {
 		auto retDouble1 = TestCalcExp("19-4*2");
 		auto retDouble2 = TestCalcExp("19-4*2+21");
