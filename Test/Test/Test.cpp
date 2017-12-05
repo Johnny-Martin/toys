@@ -7,6 +7,7 @@
 #include<cctype>
 #include<iostream>
 #include <sstream>
+#include <fstream>
 #include<map>
 #include<stack>
 #include<string>
@@ -278,8 +279,53 @@ void TestMapSort()
 	}
 }
 
+void MultiLineTextToSingleLine(const string& inFilePath, const string& outFilePath)
+{
+	auto ReplaceAll = [](string& src, const string& tarSubStr, const string& dstSubStr) {
+		std::size_t posBegin = src.find(tarSubStr);
+		while (posBegin != std::string::npos){
+			src		 = src.replace(posBegin, tarSubStr.length(), dstSubStr);
+			posBegin = src.find("\n", posBegin + tarSubStr.length());
+		}
+	};
+
+	ifstream inFile(inFilePath.c_str());
+	stringstream buffer;
+	buffer << inFile.rdbuf();
+	string allLines(buffer.str());
+	
+	ReplaceAll(allLines, "\n", "\\n");
+	ReplaceAll(allLines, "\r", "\\r");
+
+	ofstream outFile(outFilePath);
+	outFile << allLines;
+}
+
+class Node
+{
+public:
+	~Node() {
+		cout << "destructor node" << endl;
+	}
+};
+
+void TestVec() {
+	vector<Node*> vec;
+	for (auto i = 0; i < 4; ++i) {
+		auto item = new Node();
+		vec.push_back(item);
+	}
+}
 int main()
 {
+	TestCMF obj;
+	auto getRet = CallMemberFunction(&obj, &TestCMF::Add, 10, 11);
+
+	TestVec();
+	auto ret = TMAX(5.5, 8.5, 4.5,1.5,3.5);
+	ret = ret;
+	MultiLineTextToSingleLine("xmlTemp.xml", "xmlTemp2.xml");
+	return 0;
 	TestMapSort();
 		regex colorPattern("([0-9a-fA-F]*)");
 		//bool colorRet1 = regex_match("AAFF00", colorPattern);
