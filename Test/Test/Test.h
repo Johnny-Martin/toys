@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include <functional>
 
 
 using namespace std;
@@ -96,3 +97,35 @@ public:
 protected:
 	map<string, string>						m_attrMap;
 };
+
+#define		MAX(x,y)		((x)>(y)?(x):(y))
+
+template<typename T>
+T TMAX(T first, T sec) {
+	return MAX(first, sec);
+}
+
+template<typename T, typename... args>
+T TMAX(T first, args... rest) {
+	return MAX(first, TMAX(rest...));
+}
+
+class TestCMF {
+public:
+	int Add(int a, int b) { return a + b; };
+	int AddB(int a, int b) { return a + b; };
+};
+
+template <typename T, typename Ret, typename... Args>
+Ret CallMemberFunction(T* pObj, Ret(T::*mf)(Args...), Args... args)
+{
+	return (pObj->*mf)(args...);
+}
+
+template <typename T, typename Ret, typename... Args>
+std::function<Ret(Args...)> GetLambda(T* pObj, Ret(T::*mf)(Args...))
+{
+	return [pObj, mf](Args... args)->Ret {
+		return (pObj->*mf)(args...);
+	};
+}
