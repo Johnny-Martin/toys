@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "Test.h"
+#include "rvalue.h"
 #include <map>
 #include<cctype>
 #include<iostream>
@@ -239,8 +240,39 @@ double TestCalcExp(const string& sExp)
 	return StackSafeTop(outputStack);
 }
 
+TestRValue SomeCalc(TestRValue rvalue)
+{
+	*rvalue.m_data = *rvalue.m_data + 11;
+	return rvalue;
+}
+TestRValue&& SomeCalcEx(TestRValue rvalue)
+{
+	*rvalue.m_data = *rvalue.m_data + 11;
+	return std::move(rvalue);
+}
+TestRValue&& SomeCalc3(TestRValue& rvalue)
+{
+	*rvalue.m_data = *rvalue.m_data + 11;
+	return std::move(rvalue);
+}
+void TestRValueFunc()
+{
+	TestRValue obj;
+	auto ret = SomeCalc(obj);
+	cout << "value: " <<*ret.m_data<< endl;
+
+	auto ret2 = SomeCalcEx(obj);
+	cout << "value: " << *ret2.m_data << endl;
+	cout << "obj.m_data: " << obj.m_data << endl;
+	
+	auto ret3 = SomeCalc3(obj);
+	cout << "value: " << *ret3.m_data << endl;
+	cout << "obj.m_data: " << obj.m_data << endl;
+	int i = 1;
+}
 int main()
 {
+	TestRValueFunc();
 	try {
 		auto retDouble1 = TestCalcExp("19-4*2");
 		auto retDouble2 = TestCalcExp("19-4*2+21");
