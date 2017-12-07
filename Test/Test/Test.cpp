@@ -320,6 +320,8 @@ int main()
 {
 	TestCMF obj;
 	auto getRet = CallMemberFunction(&obj, &TestCMF::Add, 10, 11);
+	auto lambda = GetLambda(&obj, &TestCMF::Add);
+	auto getRet2 = lambda(15, 16);
 
 	TestVec();
 	auto ret = TMAX(5.5, 8.5, 4.5,1.5,3.5);
