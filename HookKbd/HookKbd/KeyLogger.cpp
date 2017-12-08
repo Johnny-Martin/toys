@@ -14,6 +14,7 @@ KeyLogger::~KeyLogger()
 	}
 
 	if (m_hotkeyFile) {
+		PrintReportH();
 		m_logFile.close();
 	}
 }
@@ -26,8 +27,11 @@ void KeyLogger::OnKeyDown(const DWORD& vk)
 			m_modifierStack.push_back(vk);
 		}
 	} else {
-		if (PrintModifier()) {
-			m_hotkeyFile << vkMapToStr[vk] << std::endl;
+		if (m_modifierStack.size() > 0) {
+			std::string strHotkey = GetHotkeyStr(vk);
+			m_statistics_H[strHotkey]++;
+
+			m_hotkeyFile << strHotkey << std::endl;
 		} else {
 			m_logFile << vkMapToStr[vk] << " ";
 			m_count++;
@@ -86,16 +90,6 @@ bool KeyLogger::IsModifierKey(const DWORD& vk)
 	return true;
 }
 
-bool KeyLogger::PrintModifier()
-{
-	if (m_modifierStack.size() == 0) return false;
-
-	for (std::size_t i = 0; i < m_modifierStack.size(); ++i) {
-		m_hotkeyFile << vkMapToStr[m_modifierStack[i]] << " + ";
-	}
-	return true;
-}
-
 void KeyLogger::PrintReport()
 {
 	//std::sort(m_statistics.begin(), m_statistics.end(), );
@@ -111,8 +105,36 @@ void KeyLogger::PrintReport()
 			m_logFile << vkMapToStr[it->first] << " : " << it->second << " 次" << std::endl;
 		}
 	}
+	m_logFile << "======================================================================================================" << std::endl;
 }
 
+void KeyLogger::PrintReportH()
+{
+	//std::sort(m_statistics.begin(), m_statistics.end(), );
+	std::vector<PAIR_H> temp(m_statistics_H.begin(), m_statistics_H.end());
+	std::sort(temp.begin(), temp.end(), CmpByCount_H());
+
+	m_hotkeyFile << std::endl << "===============================================快捷键统计===============================================" << std::endl;
+	for (auto it = temp.begin(); it != temp.end(); ++it)
+	{
+		if (it->second > 0)
+		{
+			m_hotkeyFile << it->first << " : " << it->second << " 次" << std::endl;
+		}
+	}
+	m_hotkeyFile << "======================================================================================================" << std::endl;
+}
+
+std::string KeyLogger::GetHotkeyStr(const DWORD& vk)
+{
+	std::stringstream ss;
+
+	for (std::size_t i = 0; i < m_modifierStack.size(); ++i) {
+		ss << vkMapToStr[m_modifierStack[i]] << " + ";
+	}
+	ss << vkMapToStr[vk];
+	return ss.str();
+}
 
 std::map<DWORD, const char*> vkMapToStr = {
 	{ VK_LSHIFT ,		"LShift" },
