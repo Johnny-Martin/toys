@@ -135,8 +135,14 @@ public:
 		return obj;
 	}
 	~KeyLogger() {
-		if (m_logFile)
+		if (m_logFile) {
+			m_logFile << std::endl << "==============================================共按键 "<< m_count<<" 次(不包括快捷键)====================================="<< std::endl;
 			m_logFile.close();
+		}
+
+		if (m_hotkeyFile){
+			m_logFile.close();
+		}
 	}
 
 	void OnKeyDown(const DWORD& vk) {
@@ -147,9 +153,13 @@ public:
 			}
 		} else {
 			if (PrintModifier()) {
-				m_logFile << vkMapToStr[vk] << std::endl;
+				m_hotkeyFile << vkMapToStr[vk] << std::endl;
 			} else {
 				m_logFile << vkMapToStr[vk] << " ";
+				m_count++;
+				if (m_count %50 == 0){
+					m_logFile << std::endl;
+				}
 			}
 		}
 	}
@@ -166,10 +176,18 @@ public:
 	}
 
 private:
-	KeyLogger() :m_logFilePath("D:\\KeyboardRecord.txt") {
+	KeyLogger()
+		:m_logFilePath("D:\\KeyboardRecord.txt")
+		, m_hotFilePath("D:\\KeyboardRecord_hotkey.txt")
+		, m_count(0)
+	{
 		m_logFile.open(m_logFilePath, std::ios::app);
 		if (!m_logFile)
 			std::cout << "Open File failed!" << std::endl;
+
+		m_hotkeyFile.open(m_hotFilePath, std::ios::app);
+		if (!m_hotkeyFile)
+			std::cout << "Open m_hotkeyFile failed!" << std::endl;
 	}
 
 	bool IsModifierKey(const DWORD& vk) {
@@ -187,16 +205,18 @@ private:
 	bool PrintModifier() {
 		if (m_modifierStack.size() == 0) return false;
 
-		m_logFile << std::endl;
 		for (std::size_t i = 0; i < m_modifierStack.size(); ++i) {
-			m_logFile << vkMapToStr[m_modifierStack[i]] << " + ";
+			m_hotkeyFile << vkMapToStr[m_modifierStack[i]] << " + ";
 		}
 		return true;
 	}
 private:
 	std::string					m_logFilePath;
+	std::string					m_hotFilePath;
 	std::ofstream				m_logFile;
+	std::ofstream				m_hotkeyFile;
 	std::vector<DWORD>			m_modifierStack;
+	unsigned long long			m_count;
 };
 
 
