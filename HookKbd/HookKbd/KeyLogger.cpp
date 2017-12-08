@@ -105,7 +105,7 @@ void KeyLogger::PrintReport()
 			m_logFile << vkMapToStr[it->first] << " : " << it->second << " 次" << std::endl;
 		}
 	}
-	m_logFile << "======================================================================================================" << std::endl;
+	m_logFile << "====================================================================================================" << std::endl;
 }
 
 void KeyLogger::PrintReportH()
@@ -191,7 +191,7 @@ std::map<DWORD, const char*> vkMapToStr = {
 	{ VK_DECIMAL ,		"Num." },
 	{ VK_DIVIDE ,		"Num/" },
 	{ VK_OEM_NEC_EQUAL ,"Num=" },
-
+	{ VK_CLEAR ,		"Clear"},//数字小键盘不打开numlock时，5键是clear键
 	//F区
 	{ VK_F1 ,			"F1" },
 	{ VK_F2 ,			"F2" },
