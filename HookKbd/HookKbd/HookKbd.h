@@ -6,6 +6,15 @@
 #include <String>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
+
+typedef  std::pair<DWORD, unsigned long long> PAIR;
+class CmpByCount {
+public:
+	inline bool operator()(const PAIR& k1, const PAIR& k2) {
+		return k1.second > k2.second;
+	}
+};
 
 std::map<DWORD, const char*> vkMapToStr = {
 	{ VK_LSHIFT ,		"LShift" },
@@ -136,7 +145,7 @@ public:
 	}
 	~KeyLogger() {
 		if (m_logFile) {
-			m_logFile << std::endl << "==============================================共按键 "<< m_count<<" 次(不包括快捷键)====================================="<< std::endl;
+			PrintReport();
 			m_logFile.close();
 		}
 
@@ -160,6 +169,7 @@ public:
 				if (m_count %50 == 0){
 					m_logFile << std::endl;
 				}
+				m_statistics[vk]++;
 			}
 		}
 	}
@@ -187,6 +197,7 @@ private:
 		:m_logFilePath("D:\\KeyboardRecord.txt")
 		, m_hotFilePath("D:\\KeyboardRecord_hotkey.txt")
 		, m_count(0)
+		, m_statistics()
 	{
 		m_logFile.open(m_logFilePath, std::ios::app);
 		if (!m_logFile)
@@ -217,13 +228,30 @@ private:
 		}
 		return true;
 	}
+
+	void PrintReport() {
+		//std::sort(m_statistics.begin(), m_statistics.end(), );
+		std::vector<PAIR> temp(m_statistics.begin(), m_statistics.end());
+		std::sort(temp.begin(), temp.end(), CmpByCount());
+
+		m_logFile << std::endl << "===============================================按键统计===============================================" << std::endl;
+		m_logFile << "共按键 " << m_count << " 次(不包括快捷键)"<< std::endl;
+		for (auto it= temp.begin(); it != temp.end(); ++it)
+		{
+			if (it->second > 0)
+			{
+				m_logFile << vkMapToStr[it->first] << " : " << it->second << " 次" << std::endl;
+			}
+		}
+	}
 private:
-	std::string					m_logFilePath;
-	std::string					m_hotFilePath;
-	std::ofstream				m_logFile;
-	std::ofstream				m_hotkeyFile;
-	std::vector<DWORD>			m_modifierStack;
-	unsigned long long			m_count;
+	std::string							m_logFilePath;
+	std::string							m_hotFilePath;
+	std::ofstream						m_logFile;
+	std::ofstream						m_hotkeyFile;
+	std::vector<DWORD>					m_modifierStack;
+	std::map<DWORD, unsigned long long>	m_statistics;
+	unsigned long long					m_count;
 };
 
 
