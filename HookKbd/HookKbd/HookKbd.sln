@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HookKbd", "HookKbd.vcxproj"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HookDll", "..\HookDll\HookDll.vcxproj", "{E7B239AB-C05B-4BC0-B1BF-E38756643E65}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HookKbdWnd", "HookKbdWnd\HookKbdWnd.vcxproj", "{801B4856-FD4D-41DA-B6CA-A23CB792A89A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HookKbdWnd", "..\HookKbdWnd\HookKbdWnd.vcxproj", "{801B4856-FD4D-41DA-B6CA-A23CB792A89A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
