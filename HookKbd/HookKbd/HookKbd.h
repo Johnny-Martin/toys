@@ -130,8 +130,8 @@ std::map<DWORD, const char*> vkMapToStr = {
 
 class KeyLogger {
 public:
-	static KeyLogger& GetInstance() { 
-		static KeyLogger obj{}; 
+	static KeyLogger* GetInstance() { 
+		KeyLogger* obj = new KeyLogger(); 
 		return obj;
 	}
 	~KeyLogger() {
@@ -168,6 +168,13 @@ public:
 		if (!IsModifierKey(vk))
 			return;
 
+		//不同于ctrl与alt,shift与win键单独按下是有意义的(输入法、大小写、开始菜单)，需要打印shift与win键
+		if (m_modifierStack.size() == 1){
+			if (m_modifierStack[0] == VK_LSHIFT || m_modifierStack[0] == VK_RSHIFT|| m_modifierStack[0] == VK_LWIN || m_modifierStack[0] == VK_RWIN)
+			{//假如按了诸如ctrl + shift + g这样的快捷键，先松开ctrl 跟 g,最后松开shift,也会进到这里，考虑到这样复杂的快捷键频率较小，不做处理了。
+				m_hotkeyFile << vkMapToStr[m_modifierStack[0]] << std::endl;
+			}
+		}
 		auto itFind = std::find(m_modifierStack.begin(), m_modifierStack.end(), vk);
 		if (itFind != m_modifierStack.end()) {
 			m_modifierStack.erase(itFind);
