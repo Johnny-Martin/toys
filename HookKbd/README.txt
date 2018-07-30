@@ -1,0 +1,2 @@
+Hook键盘消息，并保存到D盘根目录下KeyboardRecord.txt  KeyboardRecord_hotkey.txt
+两个文件内。无任何网络请求
