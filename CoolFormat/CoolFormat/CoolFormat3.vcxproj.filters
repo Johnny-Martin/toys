@@ -495,13 +495,13 @@
     <ResourceCompile Include="CoolFormat3.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="..\..\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010Black.rc">
+    <ResourceCompile Include="C:\Program Files (x86)\BCGSoft\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010Black.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="..\..\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010Blue.rc">
+    <ResourceCompile Include="C:\Program Files (x86)\BCGSoft\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010Blue.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="..\..\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010White.rc">
+    <ResourceCompile Include="C:\Program Files (x86)\BCGSoft\BCGControlBarPro\BCGCBPro\Styles\BCGPStyle2010White.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
   </ItemGroup>
