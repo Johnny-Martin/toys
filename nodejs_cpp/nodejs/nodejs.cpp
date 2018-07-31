@@ -38,8 +38,13 @@ void Init(Handle<Object> exports) {
 }
 
 NODE_MODULE(Factorial, Init)
-int main()
+
+int main(int argc, char* argv[])
 {
-    return 0;
+	setvbuf(stdout, nullptr, _IONBF, 0);
+	setvbuf(stderr, nullptr, _IONBF, 0);
+	//return node::Start(argc, argv);
+
+	return node::Start(1, argv);
 }
 
