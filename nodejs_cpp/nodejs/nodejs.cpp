@@ -37,14 +37,12 @@ void Init(Handle<Object> exports) {
 	NODE_SET_METHOD(exports, "factorial", Factorial);
 }
 
-NODE_MODULE(Factorial, Init)
+//NODE_MODULE(Factorial, Init)
 
 int main(int argc, char* argv[])
 {
 	setvbuf(stdout, nullptr, _IONBF, 0);
 	setvbuf(stderr, nullptr, _IONBF, 0);
-	//return node::Start(argc, argv);
-
-	return node::Start(1, argv);
+	return node::Start(argc, argv);
 }
 
